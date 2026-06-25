@@ -115,7 +115,7 @@ def build_market_summary(items: list[dict[str, Any]], timeframe: str) -> dict[st
     }
 
 
-async def analyze_symbol_live(symbol: str, timeframe: str, limit: int) -> dict[str, Any]:
+async def analyze_symbol_live(symbol: str, timeframe: str, limit: int, persist: bool = True) -> dict[str, Any]:
     try:
         if is_commodity_symbol(symbol):
             normalized = normalize_commodity_symbol(symbol) or symbol
@@ -142,7 +142,8 @@ async def analyze_symbol_live(symbol: str, timeframe: str, limit: int) -> dict[s
         result["change_percent"] = price_change_percent(candles)
         result["source"] = "Binance"
         result["last_candle_at"] = candles[-1]["timestamp"] if candles else None
-        await save_binance_candles(symbol=symbol, interval=timeframe, limit=limit)
+        if persist:
+            await save_binance_candles(symbol=symbol, interval=timeframe, limit=limit)
         return result
     except Exception as exc:
         return {
@@ -160,8 +161,9 @@ async def build_market_report(
     symbols: list[str],
     timeframe: str = "5m",
     limit: int = 100,
+    persist: bool = True,
 ) -> dict[str, Any]:
-    tasks = [analyze_symbol_live(symbol=symbol, timeframe=timeframe, limit=limit) for symbol in symbols]
+    tasks = [analyze_symbol_live(symbol=symbol, timeframe=timeframe, limit=limit, persist=persist) for symbol in symbols]
     items = await asyncio.gather(*tasks)
     summary = build_market_summary(items, timeframe=timeframe)
     return {

@@ -207,7 +207,12 @@ async def answer_trading_question(question: str, timeframe: str | None = None, l
     selected_timeframe = timeframe or extract_timeframe(question)
     symbols = extract_symbols(question)
     top_n = extract_top_n(question)
-    report = await build_market_report(symbols=symbols, timeframe=selected_timeframe, limit=max(80, min(limit, 250)))
+    report = await build_market_report(
+        symbols=symbols,
+        timeframe=selected_timeframe,
+        limit=max(80, min(limit, 180)),
+        persist=False,
+    )
     ranked = sorted(
         [score_candidate(item) for item in report["items"]],
         key=lambda item: item["score"],
