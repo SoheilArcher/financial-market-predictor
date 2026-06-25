@@ -7,6 +7,7 @@ from app.database import AsyncSessionLocal
 from app.models.market import Exchange, Symbol, Candle
 from app.models.user import User
 from app.services.analyzer import analyze_market
+from app.services.signal_journal import record_signal
 from app.services.subscription import authorize_analysis
 
 router = APIRouter(prefix="/market", tags=["market"])
@@ -71,9 +72,11 @@ async def analyze_symbol(
     candles = await fetch_candles(exchange_name, symbol, timeframe, limit)
     result = analyze_market(
         candles=candles,
-        symbol=symbol,
+        symbol=symbol.upper(),
         timeframe=timeframe,
     )
+    record = await record_signal(session=session, user=current_user, analysis=result)
+    if record:
+        result["signal_record_id"] = record.id
     result["subscription"] = usage
     return result
-
