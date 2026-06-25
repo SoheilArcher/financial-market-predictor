@@ -1,29 +1,101 @@
-.iranMarketGrid {
+.iranMarketTools {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(260px, 1fr) minmax(220px, 320px);
   gap: 10px;
+  margin-bottom: 10px;
 }
 
-.iranMarketGrid div {
+.iranSummary {
+  display: grid;
+  grid-template-columns: 160px 180px 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.iranSummary div,
+.iranMiniTable {
   background: var(--surface-2);
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 12px;
-  display: grid;
-  gap: 8px;
 }
 
-.iranMarketGrid b {
-  color: var(--text-strong);
-}
-
-.iranMarketGrid span {
+.iranSummary span {
+  display: block;
   color: var(--muted);
   font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.iranSummary b {
+  color: var(--text-strong);
   line-height: 1.8;
 }
 
+.iranMainTable table {
+  min-width: 1180px;
+}
+
+.iranMainTable td:first-child {
+  min-width: 150px;
+}
+
+.iranMainTable small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.iranMarketGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.iranMiniTable h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.iranMiniTable table {
+  width: 100%;
+}
+
+.iranMiniTable th,
+.iranMiniTable td {
+  white-space: nowrap;
+}
+
+.positive {
+  color: var(--ok);
+}
+
+.negative {
+  color: var(--danger);
+}
+
+.badge.buy {
+  color: var(--ok);
+  border-color: rgba(46, 160, 67, 0.35);
+  background: rgba(46, 160, 67, 0.12);
+}
+
+.badge.sell {
+  color: var(--danger);
+  border-color: rgba(248, 81, 73, 0.35);
+  background: rgba(248, 81, 73, 0.12);
+}
+
+.badge.wait {
+  color: var(--warning);
+  border-color: rgba(210, 153, 34, 0.35);
+  background: rgba(210, 153, 34, 0.12);
+}
+
 @media (max-width: 900px) {
+  .iranMarketTools,
+  .iranSummary,
   .iranMarketGrid {
     grid-template-columns: 1fr;
   }
