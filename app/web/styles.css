@@ -3,6 +3,8 @@
   --surface: #111722;
   --surface-2: #151d2a;
   --surface-3: #1b2534;
+  --input-bg: #0d121b;
+  --chart-bg: #0a0f17;
   --line: #263244;
   --line-soft: #1c2736;
   --text: #d7e0ea;
@@ -10,6 +12,7 @@
   --muted: #7d8ba1;
   --brand: #2f81f7;
   --brand-dark: #1f6feb;
+  --brand-contrast: #fff;
   --danger: #f85149;
   --ok: #2ea043;
   --warning: #d29922;
@@ -133,7 +136,7 @@ select {
   height: 38px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  background: #0d121b;
+  background: var(--input-bg);
   color: var(--text-strong);
   padding: 0 11px;
   outline: none;
@@ -223,7 +226,7 @@ form {
   gap: 8px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  background: #0d121b;
+  background: var(--input-bg);
   padding: 0 10px;
 }
 
@@ -290,7 +293,7 @@ button:active {
 
 .primary {
   background: var(--brand);
-  color: #fff;
+  color: var(--brand-contrast);
   font-weight: 750;
 }
 
@@ -359,7 +362,7 @@ button:active {
   background:
     linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    #0d121b;
+    var(--input-bg);
   background-size: 28px 28px;
   color: var(--text);
   border: 1px solid var(--line-soft);
@@ -380,7 +383,7 @@ button:active {
 }
 
 .reportBox {
-  background: #0d121b;
+  background: var(--input-bg);
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 12px;
@@ -435,7 +438,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   min-width: 720px;
-  background: #0d121b;
+  background: var(--input-bg);
 }
 
 th,
@@ -450,7 +453,7 @@ th {
   position: sticky;
   top: 0;
   color: var(--muted);
-  background: #121a27;
+  background: var(--surface-2);
   font-weight: 750;
 }
 
