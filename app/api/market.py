@@ -10,6 +10,7 @@ from app.services.analyzer import analyze_market
 from app.services.commodity_data import analyze_commodity_symbol, is_commodity_symbol, normalize_commodity_symbol
 from app.services.live_price import attach_live_price, fetch_live_price
 from app.services.pair_data import analyze_pair_symbol, parse_pair
+from app.services.prediction_tracker import save_prediction_from_payload
 from app.services.signal_journal import record_signal
 from app.services.subscription import authorize_analysis
 
@@ -101,5 +102,15 @@ async def analyze_symbol(
     record = await record_signal(session=session, user=current_user, analysis=result)
     if record:
         result["signal_record_id"] = record.id
+    prediction = await save_prediction_from_payload(
+        session=session,
+        source_type="analysis",
+        payload=result,
+        user_id=current_user.id,
+        symbol=result.get("symbol") or symbol,
+        timeframe=timeframe,
+    )
+    if prediction:
+        result["performance_prediction_id"] = prediction.id
     result["subscription"] = usage
     return result

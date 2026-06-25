@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.auth import get_current_user, get_session
 from app.models.user import User
 from app.services.market_report import build_market_report, normalize_symbols
+from app.services.prediction_tracker import save_report_predictions
 from app.services.subscription import authorize_analysis
 
 router = APIRouter(prefix="/report", tags=["report"])
@@ -28,6 +29,11 @@ async def market_report(
         symbols=selected_symbols,
         timeframe=timeframe,
         limit=max(50, min(limit, 300)),
+    )
+    report["performance_prediction_ids"] = await save_report_predictions(
+        session=session,
+        report=report,
+        user_id=current_user.id,
     )
     report["subscription"] = usage
     return report

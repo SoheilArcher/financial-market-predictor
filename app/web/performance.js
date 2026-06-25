@@ -1,85 +1,97 @@
-let lastPerformanceData = null;
+let lastModelPerformance = null;
 
-const performanceText = {
+const modelPerformanceText = {
   fa: {
-    title: "ارزیابی عملکرد سیگنال‌ها",
-    hint: "سیستم بررسی می‌کند در چند روز اخیر چند تحلیل درست بوده و در ضرر چه باید کرد.",
-    load: "بررسی عملکرد",
-    days: "چند روز اخیر",
+    title: "Model Performance",
+    hint: "ارزیابی واقعی سیگنال‌های غیر WAIT بر اساس کندل‌های بعد از صدور تحلیل.",
+    evaluate: "Evaluate Pending",
+    refresh: "بروزرسانی",
+    symbol: "نماد",
     timeframe: "تایم‌فریم",
     all: "همه",
-    empty: "هنوز گزارشی گرفته نشده است.",
-    loading: "در حال ارزیابی سیگنال‌ها...",
     total: "کل سیگنال‌ها",
-    reviewed: "بررسی‌شده",
-    correct: "درست",
-    wrong: "غلط",
-    neutral: "خنثی",
-    pending: "در انتظار",
-    accuracy: "دقت",
-    range: "بازه",
-    symbol: "نماد",
-    signal: "سیگنال",
+    winRate: "Win Rate",
+    averagePnl: "میانگین PnL",
+    wins: "برد",
+    losses: "باخت",
+    expired: "منقضی",
+    noData: "بدون داده",
+    lastSignals: "آخرین سیگنال‌ها",
+    direction: "جهت",
+    confidence: "اعتماد",
+    entry: "ورود",
+    sl: "SL",
+    tp: "TP",
     result: "نتیجه",
-    percent: "درصد",
-    drawdown: "اگر رفت تو ضرر",
-    noData: "داده‌ای نیست",
+    pnl: "PnL",
+    reason: "دلیل",
+    empty: "هنوز سیگنال قابل ارزیابی ثبت نشده است.",
+    loading: "در حال دریافت عملکرد مدل...",
+    evaluating: "در حال ارزیابی سیگنال‌های معلق...",
   },
   en: {
-    title: "Signal Performance",
-    hint: "The system reviews recent analyses and shows what to do in drawdown.",
-    load: "Review Performance",
-    days: "Recent Days",
+    title: "Model Performance",
+    hint: "Real evaluation of non-WAIT signals using candles after each prediction.",
+    evaluate: "Evaluate Pending",
+    refresh: "Refresh",
+    symbol: "Symbol",
     timeframe: "Timeframe",
     all: "All",
-    empty: "No report loaded yet.",
-    loading: "Evaluating signals...",
-    total: "Total Signals",
-    reviewed: "Reviewed",
-    correct: "Correct",
-    wrong: "Wrong",
-    neutral: "Neutral",
-    pending: "Pending",
-    accuracy: "Accuracy",
-    range: "Range",
-    symbol: "Symbol",
-    signal: "Signal",
-    result: "Result",
-    percent: "Percent",
-    drawdown: "Drawdown Advice",
+    total: "Total signals",
+    winRate: "Win rate",
+    averagePnl: "Average PnL",
+    wins: "Wins",
+    losses: "Losses",
+    expired: "Expired",
     noData: "No data",
+    lastSignals: "Last signals",
+    direction: "Direction",
+    confidence: "Confidence",
+    entry: "Entry",
+    sl: "SL",
+    tp: "TP",
+    result: "Result",
+    pnl: "PnL",
+    reason: "Reason",
+    empty: "No evaluable signals have been recorded yet.",
+    loading: "Loading model performance...",
+    evaluating: "Evaluating pending signals...",
   },
 };
 
-function pt(key) {
+function mp(key) {
   const lang = typeof currentLanguage === "function" ? currentLanguage() : "fa";
-  return performanceText[lang]?.[key] || performanceText.fa[key] || key;
+  return modelPerformanceText[lang]?.[key] || modelPerformanceText.fa[key] || key;
 }
 
-function ensurePerformancePanel() {
+function ensureModelPerformancePanel() {
   if (document.getElementById("performancePanel")) return;
   const reportPanel = document.getElementById("reportForm")?.closest(".panel");
   if (!reportPanel) return;
   const panel = document.createElement("section");
   panel.id = "performancePanel";
-  panel.className = "panel";
+  panel.className = "panel dashboardBlock";
+  panel.dataset.blockId = "performance";
   panel.innerHTML = `
     <div class="panelHeader">
       <div>
-        <h2>ارزیابی عملکرد سیگنال‌ها</h2>
-        <p class="hint">سیستم بررسی می‌کند در چند روز اخیر چند تحلیل درست بوده و در ضرر چه باید کرد.</p>
+        <h2>${mp("title")}</h2>
+        <p class="hint">${mp("hint")}</p>
       </div>
-      <button id="loadPerformanceBtn" class="ghost" type="button">بررسی عملکرد</button>
+      <div class="performanceActions">
+        <button id="evaluatePendingBtn" class="ghost" type="button">${mp("evaluate")}</button>
+        <button id="loadPerformanceBtn" class="primary" type="button">${mp("refresh")}</button>
+      </div>
     </div>
     <div class="performanceTools">
       <label>
-        چند روز اخیر
-        <input id="performanceDays" type="number" min="1" max="90" value="7" />
+        <span>${mp("symbol")}</span>
+        <input id="performanceSymbol" placeholder="BTCUSDT" />
       </label>
       <label>
-        تایم‌فریم
+        <span>${mp("timeframe")}</span>
         <select id="performanceTimeframe">
-          <option value="">همه</option>
+          <option value="">${mp("all")}</option>
           <option>1m</option>
           <option>5m</option>
           <option>15m</option>
@@ -89,94 +101,119 @@ function ensurePerformancePanel() {
         </select>
       </label>
     </div>
-    <div id="performanceBox" class="empty">هنوز گزارشی گرفته نشده است.</div>
+    <div id="performanceBox" class="empty">${mp("empty")}</div>
   `;
   reportPanel.insertAdjacentElement("afterend", panel);
-  document.getElementById("loadPerformanceBtn").addEventListener("click", loadPerformance);
-  applyPerformanceLanguage();
+  document.getElementById("loadPerformanceBtn").addEventListener("click", loadModelPerformance);
+  document.getElementById("evaluatePendingBtn").addEventListener("click", evaluatePendingPerformance);
 }
 
-function applyPerformanceLanguage() {
+function applyModelPerformanceLanguage() {
   const panel = document.getElementById("performancePanel");
   if (!panel) return;
-  panel.querySelector(".panelHeader h2").textContent = pt("title");
-  panel.querySelector(".panelHeader .hint").textContent = pt("hint");
-  document.getElementById("loadPerformanceBtn").textContent = pt("load");
-  const daysLabel = panel.querySelector('label:has(#performanceDays)');
-  if (daysLabel?.firstChild) daysLabel.firstChild.textContent = `${pt("days")}\n`;
-  const timeframeLabel = panel.querySelector('label:has(#performanceTimeframe)');
-  if (timeframeLabel?.firstChild) timeframeLabel.firstChild.textContent = `${pt("timeframe")}\n`;
-  const firstOption = document.querySelector("#performanceTimeframe option[value='']");
-  if (firstOption) firstOption.textContent = pt("all");
-  const box = document.getElementById("performanceBox");
-  if (box && box.className === "empty" && !lastPerformanceData) box.textContent = pt("empty");
-  if (lastPerformanceData) renderPerformance(lastPerformanceData);
+  panel.querySelector(".panelHeader h2").textContent = mp("title");
+  panel.querySelector(".panelHeader .hint").textContent = mp("hint");
+  document.getElementById("evaluatePendingBtn").textContent = mp("evaluate");
+  document.getElementById("loadPerformanceBtn").textContent = mp("refresh");
+  panel.querySelector("label:nth-child(1) span").textContent = mp("symbol");
+  panel.querySelector("label:nth-child(2) span").textContent = mp("timeframe");
+  panel.querySelector("#performanceTimeframe option[value='']").textContent = mp("all");
+  if (lastModelPerformance) renderModelPerformance(lastModelPerformance);
 }
 
-function renderPerformance(data) {
-  lastPerformanceData = data;
-  const timeframeRows = Object.entries(data.by_timeframe || {}).map(([timeframe, item]) => `
-    <tr>
-      <td>${timeframe}</td>
-      <td>${item.total}</td>
-      <td>${item.correct}</td>
-      <td>${item.wrong}</td>
-      <td>${item.neutral}</td>
-      <td>${item.accuracy}%</td>
-    </tr>
-  `).join("");
-  const recentRows = (data.recent || []).slice(0, 20).map((item) => `
+function formatPercent(value) {
+  const number = Number(value || 0);
+  return `${number.toFixed(2)}%`;
+}
+
+function statCard(label, value, extraClass = "") {
+  return `<div class="performanceStat ${extraClass}"><span>${label}</span><b>${value}</b></div>`;
+}
+
+function renderModelPerformance(data) {
+  lastModelPerformance = data;
+  const rows = (data.last_90_signals || []).map((item) => `
     <tr>
       <td>${item.symbol}</td>
       <td>${item.timeframe}</td>
-      <td><span class="badge ${String(item.signal).toLowerCase()}">${item.signal}</span></td>
-      <td><span class="badge ${String(item.status).toLowerCase()}">${item.status}</span></td>
-      <td>${item.outcome_percent ?? "-"}</td>
-      <td>${(typeof currentLanguage === "function" && currentLanguage() === "en" ? item.advice_en : item.advice_fa) || "-"}</td>
+      <td><span class="badge ${String(item.direction).toLowerCase()}">${item.direction}</span></td>
+      <td>${item.confidence ?? 0}</td>
+      <td>${item.entry_price ?? "-"}</td>
+      <td>${item.stop_loss ?? "-"}</td>
+      <td>${item.take_profit ?? "-"}</td>
+      <td><span class="badge ${String(item.result).toLowerCase()}">${item.result}</span></td>
+      <td>${item.pnl_percent ?? "-"}</td>
+      <td>${item.reason_fa || "-"}</td>
     </tr>
   `).join("");
-  document.getElementById("performanceBox").className = "reportBox";
-  document.getElementById("performanceBox").innerHTML = `
-    <div class="summaryGrid">
-      <div><span>${pt("total")}</span><b>${data.total}</b></div>
-      <div><span>${pt("reviewed")}</span><b>${data.reviewed}</b></div>
-      <div><span>${pt("correct")}</span><b>${data.correct}</b></div>
-      <div><span>${pt("wrong")}</span><b>${data.wrong}</b></div>
-      <div><span>${pt("neutral")}</span><b>${data.neutral}</b></div>
-      <div><span>${pt("pending")}</span><b>${data.pending}</b></div>
-      <div><span>${pt("accuracy")}</span><b>${data.accuracy}%</b></div>
-      <div><span>${pt("range")}</span><b>${data.days}d</b></div>
+
+  const box = document.getElementById("performanceBox");
+  box.className = "reportBox";
+  box.innerHTML = `
+    <div class="performanceStats">
+      ${statCard(mp("total"), data.total_signals)}
+      ${statCard(mp("winRate"), formatPercent(data.win_rate), "win")}
+      ${statCard(mp("averagePnl"), formatPercent(data.average_pnl_percent))}
+      ${statCard(mp("wins"), data.win_count, "win")}
+      ${statCard(mp("losses"), data.loss_count, "loss")}
+      ${statCard(mp("expired"), data.expired_count, "expired")}
+      ${statCard(mp("noData"), data.no_data_count ?? 0, "nodata")}
     </div>
-    <div class="tableWrap">
-      <table>
-        <thead><tr><th>${pt("timeframe")}</th><th>${pt("total")}</th><th>${pt("correct")}</th><th>${pt("wrong")}</th><th>${pt("neutral")}</th><th>${pt("accuracy")}</th></tr></thead>
-        <tbody>${timeframeRows || `<tr><td colspan='6'>${pt("noData")}</td></tr>`}</tbody>
-      </table>
+    <div class="performanceBreakdowns">
+      <div><b>Best</b><span>${data.best_symbol || "-"}</span></div>
+      <div><b>Worst</b><span>${data.worst_symbol || "-"}</span></div>
+      <div><b>FA</b><span>${data.summary_fa || ""}</span></div>
     </div>
     <div class="tableWrap performanceRecent">
+      <h3>${mp("lastSignals")}</h3>
       <table>
-        <thead><tr><th>${pt("symbol")}</th><th>TF</th><th>${pt("signal")}</th><th>${pt("result")}</th><th>${pt("percent")}</th><th>${pt("drawdown")}</th></tr></thead>
-        <tbody>${recentRows || `<tr><td colspan='6'>${pt("noData")}</td></tr>`}</tbody>
+        <thead>
+          <tr>
+            <th>${mp("symbol")}</th><th>TF</th><th>${mp("direction")}</th><th>${mp("confidence")}</th>
+            <th>${mp("entry")}</th><th>${mp("sl")}</th><th>${mp("tp")}</th><th>${mp("result")}</th><th>${mp("pnl")}</th><th>${mp("reason")}</th>
+          </tr>
+        </thead>
+        <tbody>${rows || `<tr><td colspan="10">${mp("empty")}</td></tr>`}</tbody>
       </table>
     </div>
   `;
 }
 
-async function loadPerformance() {
+function performanceQuery() {
+  const query = new URLSearchParams();
+  const symbol = document.getElementById("performanceSymbol")?.value.trim();
+  const timeframe = document.getElementById("performanceTimeframe")?.value;
+  if (symbol) query.set("symbol", symbol.toUpperCase());
+  if (timeframe) query.set("timeframe", timeframe);
+  return query.toString();
+}
+
+async function loadModelPerformance() {
+  const box = document.getElementById("performanceBox");
   try {
-    const days = document.getElementById("performanceDays").value || 7;
-    const timeframe = document.getElementById("performanceTimeframe").value;
-    const query = new URLSearchParams({ days });
-    if (timeframe) query.set("timeframe", timeframe);
-    document.getElementById("performanceBox").className = "empty";
-    document.getElementById("performanceBox").textContent = pt("loading");
-    const data = await api(`/performance/signals?${query.toString()}`);
-    renderPerformance(data);
+    box.className = "empty";
+    box.textContent = mp("loading");
+    const query = performanceQuery();
+    const data = await api(`/performance/summary${query ? `?${query}` : ""}`);
+    renderModelPerformance(data);
   } catch (error) {
-    document.getElementById("performanceBox").className = "empty";
-    document.getElementById("performanceBox").textContent = error.message;
+    box.className = "empty";
+    box.textContent = error.message;
   }
 }
 
-ensurePerformancePanel();
-window.addEventListener("market-ai-language-change", applyPerformanceLanguage);
+async function evaluatePendingPerformance() {
+  const box = document.getElementById("performanceBox");
+  try {
+    box.className = "empty";
+    box.textContent = mp("evaluating");
+    await api("/performance/evaluate-pending", { method: "POST" });
+    await loadModelPerformance();
+  } catch (error) {
+    box.className = "empty";
+    box.textContent = error.message;
+  }
+}
+
+ensureModelPerformancePanel();
+window.addEventListener("market-ai-language-change", applyModelPerformanceLanguage);

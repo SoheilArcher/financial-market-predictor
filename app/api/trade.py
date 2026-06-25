@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, Query
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.auth import get_current_user
+from app.api.auth import get_current_user, get_session
 from app.models.user import User
 from app.services.exchange_standards import get_exchange_standard, list_exchange_standards
+from app.services.prediction_tracker import save_prediction_from_payload
 from app.services.trade_plan import build_trade_plan
 
 router = APIRouter(prefix="/trade", tags=["trade"])
@@ -19,8 +21,9 @@ async def trade_plan(
     entry_price: float | None = Query(None, gt=0),
     side: str | None = None,
     current_user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_session),
 ):
-    return await build_trade_plan(
+    result = await build_trade_plan(
         exchange=exchange,
         symbol=symbol,
         timeframe=timeframe,
@@ -30,6 +33,17 @@ async def trade_plan(
         entry_price=entry_price,
         side=side,
     )
+    prediction = await save_prediction_from_payload(
+        session=session,
+        source_type="trade_plan",
+        payload=result,
+        user_id=current_user.id,
+        symbol=result.get("symbol") or symbol,
+        timeframe=timeframe,
+    )
+    if prediction:
+        result["performance_prediction_id"] = prediction.id
+    return result
 
 
 @router.get("/exchanges")
