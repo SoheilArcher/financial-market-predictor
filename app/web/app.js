@@ -67,6 +67,7 @@ function renderSession() {
   if (isLoggedIn) {
     $("accountEmail").textContent = state.user.email;
     $("accountStatus").textContent = state.user.status;
+    $("accountCountry").textContent = state.user.country || "-";
     $("roleBadge").textContent = state.user.role;
     $("roleBadge").className = `badge ${state.user.role}`;
     $("email").value = "";
@@ -76,6 +77,7 @@ function renderSession() {
     $("meBox").textContent = "هنوز وارد نشده‌اید.";
     $("accountEmail").textContent = "-";
     $("accountStatus").textContent = "-";
+    $("accountCountry").textContent = "-";
     $("roleBadge").textContent = "";
     $("roleBadge").className = "badge";
   }
@@ -184,6 +186,7 @@ document.querySelectorAll("[data-auth-mode]").forEach((button) => {
       item.classList.toggle("active", item === button);
     });
     $("nameField").classList.toggle("hidden", state.authMode !== "register");
+    $("countryField").classList.toggle("hidden", state.authMode !== "register");
   });
 });
 
@@ -194,7 +197,10 @@ $("authForm").addEventListener("submit", async (event) => {
       email: $("email").value.trim(),
       password: $("password").value,
     };
-    if (state.authMode === "register") payload.full_name = $("fullName").value.trim() || null;
+    if (state.authMode === "register") {
+      payload.full_name = $("fullName").value.trim() || null;
+      payload.country = $("country").value || null;
+    }
     const data = await api(`/auth/${state.authMode}`, {
       method: "POST",
       body: JSON.stringify(payload),

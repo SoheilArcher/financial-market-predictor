@@ -22,6 +22,7 @@ def to_user_response(user: User) -> UserResponse:
         id=user.id,
         email=user.email,
         full_name=user.full_name,
+        country=user.country,
         role=user.role,
         status=user.status,
     )
@@ -63,6 +64,7 @@ async def register(payload: RegisterRequest, session: AsyncSession = Depends(get
         email=email,
         password_hash=hash_password(payload.password),
         full_name=payload.full_name,
+        country=payload.country,
         role="admin" if user_count == 0 else "user",
         status="active",
     )

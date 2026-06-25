@@ -5,6 +5,7 @@ class RegisterRequest(BaseModel):
     email: str = Field(min_length=5, max_length=255)
     password: str = Field(min_length=8, max_length=128)
     full_name: str | None = Field(default=None, max_length=120)
+    country: str | None = Field(default=None, max_length=80)
 
 
 class LoginRequest(BaseModel):
@@ -16,6 +17,7 @@ class UserResponse(BaseModel):
     id: int
     email: str
     full_name: str | None
+    country: str | None
     role: str
     status: str
 

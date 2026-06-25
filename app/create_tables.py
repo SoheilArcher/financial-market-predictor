@@ -1,6 +1,7 @@
 import asyncio
 
 from app.database import Base, engine
+from app.migrations import run_lightweight_migrations
 from app.models.comment import Comment
 from app.models.market import Exchange, Symbol, Candle
 from app.models.subscription import Plan, Subscription
@@ -58,6 +59,7 @@ async def main():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
+    await run_lightweight_migrations()
     await seed_default_plans()
     print("Tables created successfully")
 

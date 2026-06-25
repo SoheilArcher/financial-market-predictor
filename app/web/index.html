@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/static/styles.css" />
     <link rel="stylesheet" href="/static/chart.css" />
     <link rel="stylesheet" href="/static/feedback.css" />
+    <link rel="stylesheet" href="/static/iran-market.css" />
   </head>
   <body>
     <main class="shell">
@@ -39,6 +40,17 @@
             نام
             <input id="fullName" type="text" autocomplete="name" />
           </label>
+          <label id="countryField" class="hidden">
+            اهل کجایی؟
+            <select id="country" autocomplete="country">
+              <option value="IR">ایران</option>
+              <option value="US">United States</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="TR">Turkey</option>
+              <option value="DE">Germany</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </label>
           <button class="primary" type="submit">ادامه</button>
         </form>
 
@@ -49,6 +61,7 @@
           </div>
           <div class="empty">
             ایمیل: <b id="accountEmail">-</b><br />
+            کشور: <b id="accountCountry">-</b><br />
             وضعیت: <b id="accountStatus">-</b>
           </div>
         </section>
@@ -186,5 +199,6 @@
     <script src="/static/app.js"></script>
     <script src="/static/chart-app.js"></script>
     <script src="/static/feedback-i18n.js"></script>
+    <script src="/static/iran-market.js"></script>
   </body>
 </html>
