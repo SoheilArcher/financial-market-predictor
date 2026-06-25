@@ -9,6 +9,7 @@ from app.api.auth import router as auth_router
 from app.api.chart import router as chart_router
 from app.api.comments import router as comments_router
 from app.api.market import router as market_router
+from app.api.news import router as news_router
 from app.api.analysis import router as analysis_router
 from app.api.performance import router as performance_router
 from app.api.report import router as report_router
@@ -31,6 +32,7 @@ app.include_router(report_router)
 app.include_router(chart_router)
 app.include_router(comments_router)
 app.include_router(performance_router)
+app.include_router(news_router)
 
 
 @app.get("/")
