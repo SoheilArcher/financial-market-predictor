@@ -40,7 +40,12 @@ app.include_router(revenue_router)
 
 
 @app.get("/")
-async def root():
+async def landing():
+    return FileResponse(web_dir / "landing.html")
+
+
+@app.get("/health")
+async def health():
     return {
         "status": "ok",
         "project": "Market AI Platform",
