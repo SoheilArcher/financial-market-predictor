@@ -4,6 +4,7 @@ from app.database import Base, engine
 from app.migrations import run_lightweight_migrations
 from app.models.comment import Comment
 from app.models.market import Exchange, Symbol, Candle
+from app.models.revenue import RevenueContributor, RevenuePayout, RevenuePool, RevenueShareRule
 from app.models.signal import SignalRecord
 from app.models.social import AnalystFollow, AnalystProfile, PortfolioSetting, SharedAnalysis
 from app.models.subscription import Plan, Subscription

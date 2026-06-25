@@ -81,6 +81,9 @@ function renderSession() {
     $("roleBadge").textContent = "";
     $("roleBadge").className = "badge";
   }
+  if (typeof syncRevenueVisibility === "function") {
+    syncRevenueVisibility();
+  }
 }
 
 function renderJson(target, data) {
