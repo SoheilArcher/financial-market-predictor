@@ -154,6 +154,34 @@ def _summary_fa(impact: str, symbols: list[str]) -> str:
     return f"اثر خبر روی {target} هنوز واضح نیست و باید با رفتار قیمت مقایسه شود."
 
 
+def _summary_en(impact: str, symbols: list[str]) -> str:
+    target = ", ".join(symbols) if symbols else "the market"
+    if impact == "POSITIVE":
+        return f"This news may be positive for {target}, but price and volume confirmation are still needed."
+    if impact == "NEGATIVE":
+        return f"This news may add downside risk for {target}; risk management is important."
+    return f"The market impact on {target} is not clear yet and should be compared with price action."
+
+
+def _display_title_fa(item: dict[str, Any], impact: str, symbols: list[str]) -> str:
+    target = "، ".join(symbols) if symbols else "کل بازار"
+    source = item.get("source", "منبع خبری")
+    if impact == "POSITIVE":
+        return f"خبر مثبت احتمالی از {source} درباره {target}"
+    if impact == "NEGATIVE":
+        return f"خبر هشداردهنده از {source} درباره {target}"
+    return f"خبر قابل بررسی از {source} درباره {target}"
+
+
+def _description_fa(impact: str, triggers: list[str], original_title: str) -> str:
+    trigger_text = "، ".join(triggers) if triggers else "کلمات کلیدی مشخصی"
+    if impact == "POSITIVE":
+        return f"در متن خبر نشانه‌های مثبت مثل {trigger_text} دیده شده است. عنوان اصلی منبع: {original_title}"
+    if impact == "NEGATIVE":
+        return f"در متن خبر نشانه‌های ریسکی مثل {trigger_text} دیده شده است. عنوان اصلی منبع: {original_title}"
+    return f"اثر خبر هنوز قطعی نیست و باید با قیمت و حجم مقایسه شود. عنوان اصلی منبع: {original_title}"
+
+
 async def _fetch_source(client: httpx.AsyncClient, source: dict[str, Any]) -> list[dict[str, Any]]:
     response = await client.get(source["url"])
     response.raise_for_status()
@@ -218,6 +246,9 @@ async def build_news_report(symbols: str | None = None, limit: int = 20) -> dict
                 "confidence": round(confidence * item.pop("source_weight"), 1),
                 "triggers": triggers,
                 "summary_fa": _summary_fa(impact, related),
+                "summary_en": _summary_en(impact, related),
+                "title_fa": _display_title_fa(item, impact, related),
+                "description_fa": _description_fa(impact, triggers, item["title"]),
             }
         )
         items.append(item)
@@ -233,12 +264,15 @@ async def build_news_report(symbols: str | None = None, limit: int = 20) -> dict
     if impact_counts["positive"] > impact_counts["negative"]:
         mood = "NEWS_POSITIVE"
         summary = "اخبار اخیر کمی به نفع بازار است، اما باید با قیمت زنده و حجم تایید شود."
+        summary_en = "Recent news is slightly positive, but it still needs confirmation from live price and volume."
     elif impact_counts["negative"] > impact_counts["positive"]:
         mood = "NEWS_NEGATIVE"
         summary = "اخبار اخیر ریسک منفی بیشتری نشان می‌دهد؛ ورود بدون حد ضرر مناسب نیست."
+        summary_en = "Recent news shows more downside risk; entering without a stop loss is not appropriate."
     else:
         mood = "NEWS_MIXED"
         summary = "اخبار جهت یکدست ندارد؛ بهتر است هر نماد جداگانه با چارت بررسی شود."
+        summary_en = "News is mixed; each symbol should be checked against its own chart."
 
     return {
         "generated_at": datetime.now(timezone.utc),
@@ -247,6 +281,7 @@ async def build_news_report(symbols: str | None = None, limit: int = 20) -> dict
         "summary": {
             "mood": mood,
             "summary_fa": summary,
+            "summary_en": summary_en,
             **impact_counts,
         },
         "items": selected,

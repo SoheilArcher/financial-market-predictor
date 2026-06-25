@@ -1,3 +1,55 @@
+let lastNewsReport = null;
+
+const newsText = {
+  fa: {
+    title: "اخبار و اثر روی بازار",
+    hint: "خبرها از چند منبع خوانده می‌شوند و کنار تحلیل تکنیکال بررسی می‌شوند.",
+    load: "بررسی اخبار",
+    symbols: "نمادها",
+    limit: "تعداد خبر",
+    empty: "هنوز خبری بررسی نشده است.",
+    loading: "در حال خواندن و بررسی اخبار...",
+    mood: "حال‌وهوای خبر",
+    positive: "مثبت",
+    negative: "منفی",
+    neutral: "خنثی",
+    sources: "منابع",
+    count: "تعداد خبر",
+    confidence: "اعتماد",
+    verification: "اعتبار",
+    cross: "چند منبع",
+    single: "یک منبع",
+    sourceLink: "مشاهده منبع",
+    noData: "برای این نمادها خبر مرتبط پیدا نشد.",
+  },
+  en: {
+    title: "News and Market Impact",
+    hint: "News is checked from multiple sources and compared with technical analysis.",
+    load: "Check News",
+    symbols: "Symbols",
+    limit: "News Count",
+    empty: "No news report yet.",
+    loading: "Reading and analyzing news...",
+    mood: "News Mood",
+    positive: "Positive",
+    negative: "Negative",
+    neutral: "Neutral",
+    sources: "Sources",
+    count: "News Count",
+    confidence: "Confidence",
+    verification: "Verification",
+    cross: "Cross-source",
+    single: "Single source",
+    sourceLink: "Open Source",
+    noData: "No related news was found for these symbols.",
+  },
+};
+
+function nt(key) {
+  const lang = typeof currentLanguage === "function" ? currentLanguage() : "fa";
+  return newsText[lang]?.[key] || newsText.fa[key] || key;
+}
+
 function ensureNewsPanel() {
   if (document.getElementById("newsPanel")) return;
   const reportPanel = document.getElementById("reportForm")?.closest(".panel");
@@ -28,32 +80,52 @@ function ensureNewsPanel() {
   `;
   reportPanel.insertAdjacentElement("afterend", panel);
   document.getElementById("loadNewsBtn").addEventListener("click", loadNewsReport);
+  applyNewsLanguage();
+}
+
+function applyNewsLanguage() {
+  const panel = document.getElementById("newsPanel");
+  if (!panel) return;
+  panel.querySelector(".panelHeader h2").textContent = nt("title");
+  panel.querySelector(".panelHeader .hint").textContent = nt("hint");
+  document.getElementById("loadNewsBtn").textContent = nt("load");
+  const symbolLabel = panel.querySelector('label:has(#newsSymbols)');
+  if (symbolLabel?.firstChild) symbolLabel.firstChild.textContent = `${nt("symbols")}\n`;
+  const limitLabel = panel.querySelector('label:has(#newsLimit)');
+  if (limitLabel?.firstChild) limitLabel.firstChild.textContent = `${nt("limit")}\n`;
+  const box = document.getElementById("newsBox");
+  if (box && box.className === "empty" && !lastNewsReport) box.textContent = nt("empty");
+  if (lastNewsReport) renderNewsReport(lastNewsReport);
 }
 
 function renderNewsReport(report) {
+  lastNewsReport = report;
   const summary = report.summary || {};
+  const isFa = typeof currentLanguage !== "function" || currentLanguage() === "fa";
   const rows = (report.items || []).map((item) => {
     const locale = typeof currentLanguage === "function" && currentLanguage() === "en" ? "en-US" : "fa-IR";
     const published = item.published_at
       ? new Date(item.published_at).toLocaleString(locale)
       : "-";
-    const verificationText = item.verification === "cross_source" ? "چند منبع" : "یک منبع";
+    const verificationText = item.verification === "cross_source" ? nt("cross") : nt("single");
+    const title = isFa ? (item.title_fa || item.summary_fa || item.title) : item.title;
+    const description = isFa ? (item.description_fa || item.summary_fa || item.description) : (item.description || item.summary_fa || "");
     return `
       <article class="newsItem">
         <div class="newsItemTop">
           <span class="badge ${String(item.impact || "neutral").toLowerCase()}">${item.impact || "NEUTRAL"}</span>
-          <b>${item.title}</b>
+          <b>${title}</b>
         </div>
-        <p>${item.description || item.summary_fa || ""}</p>
+        <p>${description}</p>
         <div class="newsMeta">
           <span>${item.source}</span>
           <span>${published}</span>
           <span>${(item.symbols || []).join(", ") || "MARKET"}</span>
-          <span>اعتماد: ${item.confidence ?? 0}%</span>
-          <span>اعتبار: ${verificationText}</span>
+          <span>${nt("confidence")}: ${item.confidence ?? 0}%</span>
+          <span>${nt("verification")}: ${verificationText}</span>
         </div>
         <div class="newsAdvice">${item.summary_fa || ""}</div>
-        ${item.url ? `<a href="${item.url}" target="_blank" rel="noreferrer">مشاهده منبع</a>` : ""}
+        ${item.url ? `<a href="${item.url}" target="_blank" rel="noreferrer">${nt("sourceLink")}</a>` : ""}
       </article>
     `;
   }).join("");
@@ -61,15 +133,15 @@ function renderNewsReport(report) {
   document.getElementById("newsBox").className = "reportBox";
   document.getElementById("newsBox").innerHTML = `
     <div class="summaryGrid">
-      <div><span>حال‌وهوای خبر</span><b>${summary.mood || "-"}</b></div>
-      <div><span>مثبت</span><b>${summary.positive ?? 0}</b></div>
-      <div><span>منفی</span><b>${summary.negative ?? 0}</b></div>
-      <div><span>خنثی</span><b>${summary.neutral ?? 0}</b></div>
-      <div><span>منابع</span><b>${(report.sources || []).length}</b></div>
-      <div><span>تعداد خبر</span><b>${(report.items || []).length}</b></div>
+      <div><span>${nt("mood")}</span><b>${summary.mood || "-"}</b></div>
+      <div><span>${nt("positive")}</span><b>${summary.positive ?? 0}</b></div>
+      <div><span>${nt("negative")}</span><b>${summary.negative ?? 0}</b></div>
+      <div><span>${nt("neutral")}</span><b>${summary.neutral ?? 0}</b></div>
+      <div><span>${nt("sources")}</span><b>${(report.sources || []).length}</b></div>
+      <div><span>${nt("count")}</span><b>${(report.items || []).length}</b></div>
     </div>
-    <p class="reportSummary">${summary.summary_fa || ""}</p>
-    <div class="newsList">${rows || "<div class='empty'>برای این نمادها خبر مرتبط پیدا نشد.</div>"}</div>
+    <p class="reportSummary">${isFa ? (summary.summary_fa || "") : (summary.summary_en || summary.summary_fa || "")}</p>
+    <div class="newsList">${rows || `<div class='empty'>${nt("noData")}</div>`}</div>
   `;
 }
 
@@ -79,7 +151,7 @@ async function loadNewsReport() {
     const limit = document.getElementById("newsLimit").value || 20;
     const query = new URLSearchParams({ symbols, limit }).toString();
     document.getElementById("newsBox").className = "empty";
-    document.getElementById("newsBox").textContent = "در حال خواندن و بررسی اخبار...";
+    document.getElementById("newsBox").textContent = nt("loading");
     const report = await api(`/news/market?${query}`);
     renderNewsReport(report);
   } catch (error) {
@@ -89,3 +161,4 @@ async function loadNewsReport() {
 }
 
 ensureNewsPanel();
+window.addEventListener("market-ai-language-change", applyNewsLanguage);

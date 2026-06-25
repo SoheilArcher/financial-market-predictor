@@ -1,6 +1,94 @@
 let lastAnalysisForSizing = null;
 let lastConsensusForSizing = null;
 
+const socialText = {
+  fa: {
+    title: "تحلیل‌گران، دنبال‌کننده‌ها و مدیریت سرمایه",
+    hint: "تحلیل خودت را منتشر کن، اعتبار تحلیل‌گران را ببین و حجم ورود را با سرمایه خودت بسنج.",
+    refresh: "بروزرسانی",
+    profile: "پروفایل تحلیل‌گر",
+    displayName: "نام نمایشی",
+    focus: "حوزه بازار",
+    bio: "بیوگرافی",
+    saveProfile: "ذخیره پروفایل",
+    noInfo: "هنوز اطلاعاتی دریافت نشده است.",
+    capitalRisk: "سرمایه و ریسک",
+    marketType: "نوع بازار",
+    capital: "سرمایه",
+    currency: "ارز",
+    risk: "ریسک هر معامله ٪",
+    maxPosition: "حداکثر حجم پوزیشن ٪",
+    saveCapital: "ذخیره سرمایه",
+    publish: "انتشار آخرین تحلیل من",
+    consensus: "نظر تحلیل‌گران روی نماد",
+    sizing: "پیشنهاد حجم ورود",
+    top: "تحلیل‌گران برتر",
+    consensusTitle: "اجماع و پیشنهاد ورود",
+    consensusEmpty: "برای دیدن اجماع، نماد را از تحلیل تک‌نماد انتخاب کن.",
+    publicId: "ID عمومی",
+    followers: "دنبال‌کننده",
+    accuracy: "دقت",
+    score: "امتیاز",
+    savedProfile: "پروفایل تحلیل‌گر ذخیره شد.",
+    savedPortfolio: "سرمایه و ریسک ذخیره شد.",
+    published: "تحلیل منتشر شد",
+    noAnalyst: "هنوز تحلیل‌گر عمومی وجود ندارد.",
+    majority: "نظر غالب",
+    publicAnalysis: "تحلیل عمومی",
+    topAnalysts: "برترها",
+    topCount: "تعداد برتر",
+    entryAdvice: "پیشنهاد ورود",
+    positionValue: "حجم پوزیشن",
+    units: "تعداد واحد",
+    tradeRisk: "ریسک معامله",
+  },
+  en: {
+    title: "Analysts, Followers, and Capital Management",
+    hint: "Publish your analysis, review analyst credibility, and size entries from your own capital.",
+    refresh: "Refresh",
+    profile: "Analyst Profile",
+    displayName: "Display Name",
+    focus: "Market Focus",
+    bio: "Bio",
+    saveProfile: "Save Profile",
+    noInfo: "No data loaded yet.",
+    capitalRisk: "Capital and Risk",
+    marketType: "Market Type",
+    capital: "Capital",
+    currency: "Currency",
+    risk: "Risk per Trade %",
+    maxPosition: "Max Position %",
+    saveCapital: "Save Capital",
+    publish: "Publish My Latest Analysis",
+    consensus: "Analyst Consensus",
+    sizing: "Entry Size Suggestion",
+    top: "Top Analysts",
+    consensusTitle: "Consensus and Entry Suggestion",
+    consensusEmpty: "Select a symbol from single-symbol analysis to see consensus.",
+    publicId: "Public ID",
+    followers: "Followers",
+    accuracy: "Accuracy",
+    score: "Score",
+    savedProfile: "Analyst profile saved.",
+    savedPortfolio: "Capital and risk saved.",
+    published: "Analysis published",
+    noAnalyst: "No public analyst exists yet.",
+    majority: "Majority",
+    publicAnalysis: "Public Analyses",
+    topAnalysts: "Top Analysts",
+    topCount: "Top Count",
+    entryAdvice: "Entry Suggestion",
+    positionValue: "Position Value",
+    units: "Units",
+    tradeRisk: "Trade Risk",
+  },
+};
+
+function st(key) {
+  const lang = typeof currentLanguage === "function" ? currentLanguage() : "fa";
+  return socialText[lang]?.[key] || socialText.fa[key] || key;
+}
+
 function ensureSocialPanel() {
   if (document.getElementById("socialPanel")) return;
   const analysisPanel = document.getElementById("analysisForm")?.closest(".panel");
@@ -71,6 +159,44 @@ function ensureSocialPanel() {
   document.getElementById("publishLastAnalysisBtn").addEventListener("click", publishLastAnalysis);
   document.getElementById("loadConsensusBtn").addEventListener("click", loadConsensus);
   document.getElementById("calculateSizingBtn").addEventListener("click", calculatePositionSize);
+  applySocialLanguage();
+}
+
+function applySocialLanguage() {
+  const panel = document.getElementById("socialPanel");
+  if (!panel) return;
+  panel.querySelector(".panelHeader h2").textContent = st("title");
+  panel.querySelector(".panelHeader .hint").textContent = st("hint");
+  document.getElementById("loadSocialBtn").textContent = st("refresh");
+  const cards = panel.querySelectorAll(".socialCard");
+  if (cards[0]) cards[0].querySelector("h2").textContent = st("profile");
+  if (cards[1]) cards[1].querySelector("h2").textContent = st("capitalRisk");
+  const labels = [
+    ["analystName", "displayName"],
+    ["marketFocus", "focus"],
+    ["analystBio", "bio"],
+    ["portfolioMarket", "marketType"],
+    ["portfolioCapital", "capital"],
+    ["portfolioCurrency", "currency"],
+    ["portfolioRisk", "risk"],
+    ["portfolioMax", "maxPosition"],
+  ];
+  labels.forEach(([id, key]) => {
+    const label = panel.querySelector(`label:has(#${id})`);
+    if (label?.firstChild) label.firstChild.textContent = `${st(key)}\n`;
+  });
+  document.querySelector("#profileForm button").textContent = st("saveProfile");
+  document.querySelector("#portfolioForm button").textContent = st("saveCapital");
+  document.getElementById("publishLastAnalysisBtn").textContent = st("publish");
+  document.getElementById("loadConsensusBtn").textContent = st("consensus");
+  document.getElementById("calculateSizingBtn").textContent = st("sizing");
+  const headings = panel.querySelectorAll(".socialGrid .socialCard h2");
+  if (headings[2]) headings[2].textContent = st("top");
+  if (headings[3]) headings[3].textContent = st("consensusTitle");
+  const consensusBox = document.getElementById("consensusBox");
+  if (consensusBox?.className === "empty") consensusBox.textContent = st("consensusEmpty");
+  const topBox = document.getElementById("topAnalystsBox");
+  if (topBox?.className === "empty") topBox.textContent = st("noInfo");
 }
 
 function patchAnalysisForSocial() {
@@ -113,10 +239,10 @@ function renderMySocial(data) {
   document.getElementById("portfolioMax").value = portfolio.max_position_percent ?? 20;
   document.getElementById("myAnalystBox").className = "socialStats";
   document.getElementById("myAnalystBox").innerHTML = `
-    <span>ID عمومی: <b>${profile.public_id}</b></span>
-    <span>دنبال‌کننده: <b>${stats.followers}</b></span>
-    <span>دقت: <b>${stats.accuracy}%</b></span>
-    <span>امتیاز: <b>${stats.score}</b></span>
+    <span>${st("publicId")}: <b>${profile.public_id}</b></span>
+    <span>${st("followers")}: <b>${stats.followers}</b></span>
+    <span>${st("accuracy")}: <b>${stats.accuracy}%</b></span>
+    <span>${st("score")}: <b>${stats.score}</b></span>
   `;
 }
 
@@ -132,7 +258,7 @@ async function saveAnalystProfile(event) {
         is_public: true,
       }),
     });
-    toast("پروفایل تحلیل‌گر ذخیره شد.");
+    toast(st("savedProfile"));
     await loadSocialDashboard();
   } catch (error) {
     toast(error.message);
@@ -152,7 +278,7 @@ async function savePortfolio(event) {
         max_position_percent: Number(document.getElementById("portfolioMax").value || 20),
       }),
     });
-    toast("سرمایه و ریسک ذخیره شد.");
+    toast(st("savedPortfolio"));
     await loadSocialDashboard();
   } catch (error) {
     toast(error.message);
@@ -170,7 +296,7 @@ async function publishLastAnalysis() {
       method: "POST",
       body: JSON.stringify(payload),
     });
-    toast(`تحلیل منتشر شد: #${data.shared_analysis.id}`);
+    toast(`${st("published")}: #${data.shared_analysis.id}`);
     await loadConsensus();
   } catch (error) {
     toast(error.message);
@@ -186,14 +312,14 @@ async function loadTopAnalysts() {
         <span>${item.profile.public_id}</span>
       </div>
       <div class="socialStats compact">
-        <span>دنبال‌کننده ${item.stats.followers}</span>
-        <span>دقت ${item.stats.accuracy}%</span>
-        <span>امتیاز ${item.stats.score}</span>
+        <span>${st("followers")} ${item.stats.followers}</span>
+        <span>${st("accuracy")} ${item.stats.accuracy}%</span>
+        <span>${st("score")} ${item.stats.score}</span>
       </div>
     </div>
   `).join("");
   document.getElementById("topAnalystsBox").className = "analystList";
-  document.getElementById("topAnalystsBox").innerHTML = rows || "<div class='empty'>هنوز تحلیل‌گر عمومی وجود ندارد.</div>";
+  document.getElementById("topAnalystsBox").innerHTML = rows || `<div class='empty'>${st("noAnalyst")}</div>`;
 }
 
 async function loadConsensus() {
@@ -205,10 +331,10 @@ async function loadConsensus() {
     document.getElementById("consensusBox").className = "reportBox";
     document.getElementById("consensusBox").innerHTML = `
       <div class="summaryGrid">
-        <div><span>نظر غالب</span><b>${data.majority_signal}</b></div>
-        <div><span>تحلیل عمومی</span><b>${data.total_public_analyses}</b></div>
-        <div><span>برترها</span><b>${data.top_analyst_majority}</b></div>
-        <div><span>تعداد برتر</span><b>${data.top_analyst_count}</b></div>
+        <div><span>${st("majority")}</span><b>${data.majority_signal}</b></div>
+        <div><span>${st("publicAnalysis")}</span><b>${data.total_public_analyses}</b></div>
+        <div><span>${st("topAnalysts")}</span><b>${data.top_analyst_majority}</b></div>
+        <div><span>${st("topCount")}</span><b>${data.top_analyst_count}</b></div>
       </div>
       <p class="reportSummary">${data.summary_fa}</p>
     `;
@@ -231,10 +357,10 @@ async function calculatePositionSize() {
     document.getElementById("consensusBox").className = "reportBox";
     document.getElementById("consensusBox").innerHTML += `
       <div class="positionAdvice">
-        <b>پیشنهاد ورود: ${data.action}</b>
-        <span>حجم پوزیشن: ${data.position_value ?? "-"} ${data.currency || ""}</span>
-        <span>تعداد واحد: ${data.units ?? "-"}</span>
-        <span>ریسک معامله: ${data.risk_amount ?? "-"} ${data.currency || ""}</span>
+        <b>${st("entryAdvice")}: ${data.action}</b>
+        <span>${st("positionValue")}: ${data.position_value ?? "-"} ${data.currency || ""}</span>
+        <span>${st("units")}: ${data.units ?? "-"}</span>
+        <span>${st("tradeRisk")}: ${data.risk_amount ?? "-"} ${data.currency || ""}</span>
         <p>${data.reason_fa}</p>
       </div>
     `;
@@ -245,3 +371,4 @@ async function calculatePositionSize() {
 
 ensureSocialPanel();
 patchAnalysisForSocial();
+window.addEventListener("market-ai-language-change", applySocialLanguage);

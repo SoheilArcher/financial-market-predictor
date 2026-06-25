@@ -12,15 +12,16 @@ async function loadChart() {
   const last = data.last;
   const live = data.live_price || {};
   const liveLocale = typeof currentLanguage === "function" && currentLanguage() === "en" ? "en-US" : "fa-IR";
+  const label = (fa, en) => (typeof currentLanguage === "function" && currentLanguage() === "en" ? en : fa);
   const liveTime = live.fetched_at
     ? new Date(live.fetched_at).toLocaleTimeString(liveLocale)
     : "-";
   chartMeta.innerHTML = `
     <b>${data.symbol}</b>
     <span>${data.timeframe}</span>
-    <span>Live: ${live.price ?? "-"} ${live.quote_asset || ""}</span>
-    <span>Close: ${last ? last.close : "-"}</span>
-    <span>Updated: ${liveTime}</span>
+    <span>${label("قیمت زنده", "Live")}: ${live.price ?? "-"} ${live.quote_asset || ""}</span>
+    <span>${label("کلوز", "Close")}: ${last ? last.close : "-"}</span>
+    <span>${label("بروزرسانی", "Updated")}: ${liveTime}</span>
     <span>EMA20 / EMA50 / RSI آنلاین</span>
   `;
   await refreshMe();

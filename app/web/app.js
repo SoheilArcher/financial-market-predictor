@@ -133,6 +133,7 @@ function renderUsers(users) {
 
 function renderMarketReport(report) {
   const summary = report.summary;
+  const label = (fa, en) => (typeof currentLanguage === "function" && currentLanguage() === "en" ? en : fa);
   const rows = report.items.map((item) => `
     <tr>
       <td>${item.symbol}</td>
@@ -148,26 +149,26 @@ function renderMarketReport(report) {
   $("marketReportBox").className = "reportBox";
   $("marketReportBox").innerHTML = `
     <div class="summaryGrid">
-      <div><span>جهت کلی</span><b>${summary.market_bias}</b></div>
+      <div><span>${label("جهت کلی", "Market Bias")}</span><b>${summary.market_bias}</b></div>
       <div><span>LONG</span><b>${summary.long_count}</b></div>
       <div><span>SHORT</span><b>${summary.short_count}</b></div>
       <div><span>WAIT</span><b>${summary.wait_count}</b></div>
-      <div><span>میانگین تغییر</span><b>${summary.average_change_percent}%</b></div>
-      <div><span>مصرف امروز</span><b>${report.subscription.daily_used}/${report.subscription.daily_limit}</b></div>
+      <div><span>${label("میانگین تغییر", "Average Change")}</span><b>${summary.average_change_percent}%</b></div>
+      <div><span>${label("مصرف امروز", "Today Usage")}</span><b>${report.subscription.daily_used}/${report.subscription.daily_limit}</b></div>
     </div>
     <p class="reportSummary">${summary.summary_fa}</p>
     <div class="tableWrap">
       <table>
         <thead>
           <tr>
-            <th>نماد</th>
-            <th>قیمت زنده</th>
-            <th>سیگنال</th>
-            <th>اعتماد</th>
-            <th>تغییر</th>
+            <th>${label("نماد", "Symbol")}</th>
+            <th>${label("قیمت زنده", "Live Price")}</th>
+            <th>${label("سیگنال", "Signal")}</th>
+            <th>${label("اعتماد", "Confidence")}</th>
+            <th>${label("تغییر", "Change")}</th>
             <th>RSI</th>
-            <th>روند</th>
-            <th>ریسک</th>
+            <th>${label("روند", "Trend")}</th>
+            <th>${label("ریسک", "Risk")}</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
