@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Market AI Platform</title>
     <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="/static/chart.css" />
+    <link rel="stylesheet" href="/static/feedback.css" />
   </head>
   <body>
     <main class="shell">
@@ -58,6 +60,42 @@
           </div>
           <div id="meBox" class="empty">هنوز وارد نشده‌اید.</div>
         </section>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>چارت زنده</h2>
+          <span class="hint">کندل‌ها همراه با EMA20، EMA50 و RSI</span>
+        </div>
+        <form id="chartForm" class="chartTools">
+          <label>
+            نماد
+            <input id="chartSymbol" value="BTCUSDT" />
+          </label>
+          <label>
+            تایم‌فریم
+            <select id="chartTimeframe">
+              <option>1m</option>
+              <option selected>5m</option>
+              <option>15m</option>
+              <option>1h</option>
+              <option>4h</option>
+              <option>1d</option>
+            </select>
+          </label>
+          <button class="primary" type="submit">نمایش چارت</button>
+        </form>
+        <div class="chartShell">
+          <div id="chartMeta" class="chartMeta">برای دریافت چارت وارد حساب شوید و اشتراک فعال داشته باشید.</div>
+          <canvas id="priceCanvas" class="priceCanvas"></canvas>
+          <canvas id="rsiCanvas" class="rsiCanvas"></canvas>
+          <div class="legend">
+            <span class="legendCandle">Candle</span>
+            <span class="legendEma20">EMA20</span>
+            <span class="legendEma50">EMA50</span>
+            <span class="legendRsi">RSI14</span>
+          </div>
+        </div>
       </section>
 
       <section class="panel">
@@ -144,6 +182,9 @@
       </section>
     </main>
     <div id="toast" class="toast hidden"></div>
+    <script src="/static/chart.js"></script>
     <script src="/static/app.js"></script>
+    <script src="/static/chart-app.js"></script>
+    <script src="/static/feedback-i18n.js"></script>
   </body>
 </html>

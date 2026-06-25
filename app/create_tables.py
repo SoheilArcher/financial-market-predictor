@@ -1,6 +1,7 @@
 import asyncio
 
 from app.database import Base, engine
+from app.models.comment import Comment
 from app.models.market import Exchange, Symbol, Candle
 from app.models.subscription import Plan, Subscription
 from app.models.usage import AnalysisUsage
@@ -63,4 +64,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-

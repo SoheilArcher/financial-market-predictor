@@ -1,0 +1,88 @@
+.chartTools {
+  display: grid;
+  grid-template-columns: 1fr 150px 140px;
+  gap: 10px;
+  align-items: end;
+}
+
+.chartShell {
+  background: #0d121b;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.chartMeta {
+  min-height: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.chartMeta b {
+  color: var(--text-strong);
+  font-size: 14px;
+}
+
+.priceCanvas,
+.rsiCanvas {
+  display: block;
+  width: 100%;
+  background: #0a0f17;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+}
+
+.priceCanvas {
+  height: 420px;
+}
+
+.rsiCanvas {
+  height: 130px;
+  margin-top: 10px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.legend span::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 3px;
+  margin-left: 6px;
+  vertical-align: middle;
+  border-radius: 99px;
+}
+
+.legendCandle::before {
+  background: linear-gradient(90deg, var(--ok), var(--danger));
+}
+
+.legendEma20::before {
+  background: var(--warning);
+}
+
+.legendEma50::before {
+  background: #58a6ff;
+}
+
+.legendRsi::before {
+  background: #a371f7;
+}
+
+@media (max-width: 900px) {
+  .chartTools {
+    grid-template-columns: 1fr;
+  }
+}
