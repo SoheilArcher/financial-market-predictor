@@ -25,6 +25,7 @@
 
   .topbar > div,
   .languageBox,
+  .customizeTools > *,
   .topbar button {
     width: 100%;
   }
@@ -53,6 +54,7 @@
   .adminTools,
   .reportTools,
   .chartTools,
+  .customizeTools,
   .newsTools,
   .performanceTools,
   .socialGrid,
@@ -140,10 +142,16 @@
   .chartAnalysisHeader,
   .reasonHeadline,
   .newsItemTop,
+  .layoutItem,
   .analystRow {
     display: grid;
     grid-template-columns: 1fr;
     align-items: stretch;
+  }
+
+  .layoutItem div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   .toast {

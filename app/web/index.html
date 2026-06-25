@@ -23,7 +23,7 @@
         <button id="logoutBtn" class="ghost hidden" type="button">خروج</button>
       </header>
 
-      <section class="grid two">
+      <section class="grid two dashboardBlock" data-block-id="account">
         <form id="authForm" class="panel">
           <div class="panelHeader">
             <h2>ورود / ثبت‌نام</h2>
@@ -80,7 +80,7 @@
         </section>
       </section>
 
-      <section class="panel">
+      <section class="panel dashboardBlock" data-block-id="chart">
         <div class="panelHeader">
           <h2>چارت زنده</h2>
           <span class="hint">کندل‌ها همراه با EMA20، EMA50 و RSI</span>
@@ -117,7 +117,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel dashboardBlock" data-block-id="report">
         <div class="panelHeader">
           <h2>گزارش کلی بازار</h2>
           <span class="hint">اسکن چند نماد اصلی، خلاصه جهت بازار و رتبه‌بندی سیگنال‌ها</span>
@@ -143,7 +143,7 @@
         <div id="marketReportBox" class="empty">گزارش کلی بازار اینجا نمایش داده می‌شود.</div>
       </section>
 
-      <section class="panel">
+      <section class="panel dashboardBlock" data-block-id="analysis">
         <div class="panelHeader">
           <h2>تحلیل تک‌نماد</h2>
           <span class="hint">بررسی جزئی‌تر یک نماد با RSI و EMA</span>
@@ -173,7 +173,7 @@
         <pre id="analysisResult" class="result">خروجی تحلیل اینجا نمایش داده می‌شود.</pre>
       </section>
 
-      <section id="adminPanel" class="panel hidden">
+      <section id="adminPanel" class="panel hidden dashboardBlock" data-block-id="admin">
         <div class="panelHeader">
           <h2>مدیریت کاربران</h2>
           <button id="loadAdminBtn" class="ghost" type="button">دریافت اطلاعات</button>
@@ -202,6 +202,7 @@
     </main>
     <div id="toast" class="toast hidden"></div>
     <script src="/static/chart.js"></script>
+    <script src="/static/customize.js"></script>
     <script src="/static/app.js"></script>
     <script src="/static/chart-app.js"></script>
     <script src="/static/feedback-i18n.js"></script>

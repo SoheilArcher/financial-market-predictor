@@ -186,6 +186,96 @@ form {
   background: rgba(255, 255, 255, 0.025);
 }
 
+.customizePanel {
+  box-shadow: none;
+}
+
+.customizeBody {
+  display: grid;
+  gap: 12px;
+}
+
+.themeSwatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.themeSwatches button {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--swatch);
+}
+
+.customizeTools {
+  display: grid;
+  grid-template-columns: 180px 150px 140px 140px;
+  gap: 10px;
+  align-items: end;
+}
+
+.customizeCheck {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #0d121b;
+  padding: 0 10px;
+}
+
+.customizeCheck input {
+  width: 16px;
+  height: 16px;
+}
+
+.layoutList {
+  display: grid;
+  gap: 8px;
+}
+
+.layoutItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.025);
+  padding: 8px;
+}
+
+.layoutItem span {
+  color: var(--text-strong);
+  font-size: 13px;
+}
+
+.layoutItem div {
+  display: flex;
+  gap: 6px;
+}
+
+.layoutItem button {
+  width: 38px;
+  padding: 0;
+}
+
+.compactMode .panel {
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.compactMode .panelHeader {
+  margin-bottom: 8px;
+}
+
+.compactMode .summaryGrid div {
+  min-height: 52px;
+}
+
 button {
   height: 38px;
   border: 0;
