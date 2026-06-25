@@ -84,7 +84,8 @@
   .legend,
   .newsMeta,
   .socialActions,
-  .reasonMetrics {
+  .reasonMetrics,
+  .tradeGrid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 7px;
@@ -102,7 +103,8 @@
   .chartAnalysisMetrics,
   .livePriceStrip,
   .socialStats,
-  .positionAdvice {
+  .positionAdvice,
+  .tradeTools {
     grid-template-columns: 1fr !important;
   }
 
@@ -131,8 +133,9 @@
   .empty,
   .reportBox,
   .reasonBox,
-  .chartAnalysisBox,
-  .newsItem,
+    .chartAnalysisBox,
+    .tradePlanBox,
+    .newsItem,
   .socialCard,
   .revenueCard {
     padding: 10px;

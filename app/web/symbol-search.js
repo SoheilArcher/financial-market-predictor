@@ -75,7 +75,7 @@
       aliases: ["HG", "COPPERUSD", "مس"],
     },
   ];
-  const inputIds = ["chartSymbol", "symbol", "reportSymbols", "newsSymbols"];
+  const inputIds = ["chartSymbol", "symbol", "reportSymbols", "newsSymbols", "tradeSymbol"];
   const multiValueInputs = new Set(["reportSymbols", "newsSymbols"]);
   const box = document.createElement("div");
   const boundInputs = new WeakSet();
