@@ -13,11 +13,16 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class ResendVerificationRequest(BaseModel):
+    email: str
+
+
 class UserResponse(BaseModel):
     id: int
     email: str
     full_name: str | None
     country: str | None
+    email_verified: bool
     role: str
     status: str
 

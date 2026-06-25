@@ -211,9 +211,31 @@ $("authForm").addEventListener("submit", async (event) => {
       method: "POST",
       body: JSON.stringify(payload),
     });
+    if (state.authMode === "register" && data.user?.status === "pending_email") {
+      $("resendVerificationBtn").classList.remove("hidden");
+      toast("ثبت‌نام انجام شد. لینک تایید ایمیل را باز کنید.");
+      return;
+    }
     setSession(data.access_token, data.user);
     await refreshMe();
     toast("ورود موفق بود.");
+  } catch (error) {
+    toast(error.message);
+  }
+});
+
+$("resendVerificationBtn").addEventListener("click", async () => {
+  try {
+    const email = $("email").value.trim();
+    if (!email) {
+      toast("ایمیل را وارد کنید.");
+      return;
+    }
+    await api("/auth/resend-verification", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    });
+    toast("اگر ایمیل درست باشد، لینک تایید ارسال شد.");
   } catch (error) {
     toast(error.message);
   }
