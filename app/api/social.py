@@ -10,9 +10,11 @@ from app.services.social_trading import (
     analyst_consensus,
     evaluate_analyst,
     follow_analyst,
+    followed_analyst_ids,
     get_or_create_profile,
     get_portfolio,
     list_top_analysts,
+    list_following,
     position_sizing,
     profile_to_dict,
     publish_latest_signal,
@@ -59,9 +61,11 @@ async def my_social_profile(
     profile = await get_or_create_profile(session, current_user)
     stats = await evaluate_analyst(session, current_user.id)
     portfolio = await get_portfolio(session, current_user)
+    following = await list_following(session, current_user)
     return {
         "profile": profile_to_dict(profile),
         "stats": stats,
+        "following": following,
         "portfolio": {
             "market_type": portfolio.market_type,
             "capital": portfolio.capital,
@@ -113,9 +117,22 @@ async def top_analysts(
     days: int = 30,
     limit: int = 10,
     session: AsyncSession = Depends(get_session),
-    _: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_user),
 ):
-    return {"items": await list_top_analysts(session, days=days, limit=limit)}
+    following = await followed_analyst_ids(session, current_user.id)
+    items = await list_top_analysts(session, days=days, limit=limit)
+    for item in items:
+        item["following"] = item["profile"]["user_id"] in following
+        item["is_me"] = item["profile"]["user_id"] == current_user.id
+    return {"items": items}
+
+
+@router.get("/following")
+async def my_following(
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    return {"items": await list_following(session, current_user)}
 
 
 @router.post("/analysts/{analyst_user_id}/follow")

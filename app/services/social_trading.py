@@ -159,6 +159,37 @@ async def list_top_analysts(session: AsyncSession, days: int = 30, limit: int = 
     return rows[: max(1, min(limit, 25))]
 
 
+async def followed_analyst_ids(session: AsyncSession, user_id: int) -> set[int]:
+    rows = (
+        await session.scalars(
+            select(AnalystFollow.analyst_user_id).where(AnalystFollow.follower_user_id == user_id)
+        )
+    ).all()
+    return set(rows)
+
+
+async def list_following(session: AsyncSession, user: User) -> list[dict[str, Any]]:
+    follows = (
+        await session.scalars(
+            select(AnalystFollow)
+            .where(AnalystFollow.follower_user_id == user.id)
+            .order_by(AnalystFollow.created_at.desc())
+        )
+    ).all()
+    items = []
+    for follow in follows:
+        profile = await session.scalar(select(AnalystProfile).where(AnalystProfile.user_id == follow.analyst_user_id))
+        if profile:
+            items.append(
+                {
+                    "profile": profile_to_dict(profile),
+                    "stats": await evaluate_analyst(session, profile.user_id),
+                    "followed_at": follow.created_at,
+                }
+            )
+    return items
+
+
 async def follow_analyst(session: AsyncSession, follower: User, analyst_user_id: int) -> dict[str, Any]:
     if follower.id == analyst_user_id:
         raise ValueError("You cannot follow yourself")

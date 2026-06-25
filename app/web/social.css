@@ -24,6 +24,54 @@
   outline: none;
 }
 
+.editorView {
+  display: grid;
+  gap: 10px;
+}
+
+.formActions,
+.savedHeader {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.savedView {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: var(--input-bg);
+}
+
+.savedView p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.savedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.savedGrid span {
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.savedGrid b,
+.savedHeader b {
+  color: var(--text-strong);
+}
+
 .socialActions {
   display: flex;
   flex-wrap: wrap;
@@ -64,7 +112,7 @@
 
 .analystRow {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   gap: 10px;
   align-items: center;
   padding: 10px;
@@ -105,6 +153,10 @@
   }
 
   .analystRow {
+    grid-template-columns: 1fr;
+  }
+
+  .savedGrid {
     grid-template-columns: 1fr;
   }
 

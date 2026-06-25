@@ -41,6 +41,13 @@ const socialText = {
     positionValue: "حجم پوزیشن",
     units: "تعداد واحد",
     tradeRisk: "ریسک معامله",
+    saved: "ذخیره‌شده",
+    edit: "ویرایش",
+    cancel: "انصراف",
+    followingList: "دنبال‌شده‌ها",
+    follow: "دنبال کردن",
+    unfollow: "لغو دنبال",
+    noFollowing: "هنوز تحلیل‌گری را دنبال نمی‌کنی.",
   },
   en: {
     title: "Analysts, Followers, and Capital Management",
@@ -81,6 +88,13 @@ const socialText = {
     positionValue: "Position Value",
     units: "Units",
     tradeRisk: "Trade Risk",
+    saved: "Saved",
+    edit: "Edit",
+    cancel: "Cancel",
+    followingList: "Following",
+    follow: "Follow",
+    unfollow: "Unfollow",
+    noFollowing: "You are not following any analysts yet.",
   },
 };
 
@@ -107,33 +121,45 @@ function ensureSocialPanel() {
     <div class="socialGrid">
       <form id="profileForm" class="socialCard">
         <h2>پروفایل تحلیل‌گر</h2>
-        <label>نام نمایشی<input id="analystName" /></label>
-        <label>حوزه بازار
-          <select id="marketFocus">
-            <option value="crypto">Crypto</option>
-            <option value="iran">بورس ایران</option>
-            <option value="forex">Forex</option>
-            <option value="stocks">Stocks</option>
-          </select>
-        </label>
-        <label>بیوگرافی<textarea id="analystBio" rows="3"></textarea></label>
-        <button class="primary" type="submit">ذخیره پروفایل</button>
+        <div id="profileSavedView" class="savedView hidden"></div>
+        <div id="profileEditor" class="editorView">
+          <label>نام نمایشی<input id="analystName" /></label>
+          <label>حوزه بازار
+            <select id="marketFocus">
+              <option value="crypto">Crypto</option>
+              <option value="iran">بورس ایران</option>
+              <option value="forex">Forex</option>
+              <option value="stocks">Stocks</option>
+            </select>
+          </label>
+          <label>بیوگرافی<textarea id="analystBio" rows="3"></textarea></label>
+          <div class="formActions">
+            <button class="primary" type="submit">ذخیره پروفایل</button>
+            <button id="cancelProfileEditBtn" class="ghost hidden" type="button">انصراف</button>
+          </div>
+        </div>
         <div id="myAnalystBox" class="empty">هنوز اطلاعاتی دریافت نشده است.</div>
       </form>
       <form id="portfolioForm" class="socialCard">
         <h2>سرمایه و ریسک</h2>
-        <label>نوع بازار
-          <select id="portfolioMarket">
-            <option value="crypto">صرافی رمزارز</option>
-            <option value="broker">بروکر / فارکس</option>
-            <option value="iran">بورس ایران</option>
-          </select>
-        </label>
-        <label>سرمایه<input id="portfolioCapital" type="number" min="0" value="1000" /></label>
-        <label>ارز<input id="portfolioCurrency" value="USDT" /></label>
-        <label>ریسک هر معامله ٪<input id="portfolioRisk" type="number" min="0.1" max="10" step="0.1" value="1" /></label>
-        <label>حداکثر حجم پوزیشن ٪<input id="portfolioMax" type="number" min="1" max="100" step="1" value="20" /></label>
-        <button class="primary" type="submit">ذخیره سرمایه</button>
+        <div id="portfolioSavedView" class="savedView hidden"></div>
+        <div id="portfolioEditor" class="editorView">
+          <label>نوع بازار
+            <select id="portfolioMarket">
+              <option value="crypto">صرافی رمزارز</option>
+              <option value="broker">بروکر / فارکس</option>
+              <option value="iran">بورس ایران</option>
+            </select>
+          </label>
+          <label>سرمایه<input id="portfolioCapital" type="number" min="0" value="1000" /></label>
+          <label>ارز<input id="portfolioCurrency" value="USDT" /></label>
+          <label>ریسک هر معامله ٪<input id="portfolioRisk" type="number" min="0.1" max="10" step="0.1" value="1" /></label>
+          <label>حداکثر حجم پوزیشن ٪<input id="portfolioMax" type="number" min="1" max="100" step="1" value="20" /></label>
+          <div class="formActions">
+            <button class="primary" type="submit">ذخیره سرمایه</button>
+            <button id="cancelPortfolioEditBtn" class="ghost hidden" type="button">انصراف</button>
+          </div>
+        </div>
       </form>
     </div>
     <div class="socialActions">
@@ -150,16 +176,26 @@ function ensureSocialPanel() {
         <h2>اجماع و پیشنهاد ورود</h2>
         <div id="consensusBox" class="empty">برای دیدن اجماع، نماد را از تحلیل تک‌نماد انتخاب کن.</div>
       </div>
+      <div class="socialCard">
+        <h2 id="followingTitle">دنبال‌شده‌ها</h2>
+        <div id="followingBox" class="empty">هنوز تحلیل‌گری را دنبال نمی‌کنی.</div>
+      </div>
     </div>
   `;
   analysisPanel.insertAdjacentElement("afterend", panel);
   document.getElementById("loadSocialBtn").addEventListener("click", loadSocialDashboard);
   document.getElementById("profileForm").addEventListener("submit", saveAnalystProfile);
   document.getElementById("portfolioForm").addEventListener("submit", savePortfolio);
+  document.getElementById("cancelProfileEditBtn").addEventListener("click", () => setProfileEditing(false));
+  document.getElementById("cancelPortfolioEditBtn").addEventListener("click", () => setPortfolioEditing(false));
+  panel.addEventListener("click", handleSocialClick);
   document.getElementById("publishLastAnalysisBtn").addEventListener("click", publishLastAnalysis);
   document.getElementById("loadConsensusBtn").addEventListener("click", loadConsensus);
   document.getElementById("calculateSizingBtn").addEventListener("click", calculatePositionSize);
   applySocialLanguage();
+  if (window.state?.token || localStorage.getItem("market_ai_token")) {
+    loadSocialDashboard();
+  }
 }
 
 function applySocialLanguage() {
@@ -193,10 +229,15 @@ function applySocialLanguage() {
   const headings = panel.querySelectorAll(".socialGrid .socialCard h2");
   if (headings[2]) headings[2].textContent = st("top");
   if (headings[3]) headings[3].textContent = st("consensusTitle");
+  if (headings[4]) headings[4].textContent = st("followingList");
   const consensusBox = document.getElementById("consensusBox");
   if (consensusBox?.className === "empty") consensusBox.textContent = st("consensusEmpty");
   const topBox = document.getElementById("topAnalystsBox");
   if (topBox?.className === "empty") topBox.textContent = st("noInfo");
+  const followingBox = document.getElementById("followingBox");
+  if (followingBox?.className === "empty") followingBox.textContent = st("noFollowing");
+  document.getElementById("cancelProfileEditBtn").textContent = st("cancel");
+  document.getElementById("cancelPortfolioEditBtn").textContent = st("cancel");
 }
 
 function patchAnalysisForSocial() {
@@ -237,6 +278,11 @@ function renderMySocial(data) {
   document.getElementById("portfolioCurrency").value = portfolio.currency || "USDT";
   document.getElementById("portfolioRisk").value = portfolio.risk_percent ?? 1;
   document.getElementById("portfolioMax").value = portfolio.max_position_percent ?? 20;
+  renderSavedProfile(profile);
+  renderSavedPortfolio(portfolio);
+  renderFollowing(data.following || []);
+  setProfileEditing(false);
+  setPortfolioEditing(false);
   document.getElementById("myAnalystBox").className = "socialStats";
   document.getElementById("myAnalystBox").innerHTML = `
     <span>${st("publicId")}: <b>${profile.public_id}</b></span>
@@ -244,6 +290,81 @@ function renderMySocial(data) {
     <span>${st("accuracy")}: <b>${stats.accuracy}%</b></span>
     <span>${st("score")}: <b>${stats.score}</b></span>
   `;
+}
+
+function setProfileEditing(isEditing) {
+  document.getElementById("profileEditor").classList.toggle("hidden", !isEditing);
+  document.getElementById("profileSavedView").classList.toggle("hidden", isEditing);
+  document.getElementById("cancelProfileEditBtn").classList.toggle("hidden", !isEditing);
+}
+
+function setPortfolioEditing(isEditing) {
+  document.getElementById("portfolioEditor").classList.toggle("hidden", !isEditing);
+  document.getElementById("portfolioSavedView").classList.toggle("hidden", isEditing);
+  document.getElementById("cancelPortfolioEditBtn").classList.toggle("hidden", !isEditing);
+}
+
+function renderSavedProfile(profile) {
+  const box = document.getElementById("profileSavedView");
+  box.innerHTML = `
+    <div class="savedHeader"><b>${st("saved")}</b><button class="ghost" type="button" data-social-edit="profile">${st("edit")}</button></div>
+    <div class="savedGrid">
+      <span>${st("displayName")}: <b>${profile.display_name || "-"}</b></span>
+      <span>${st("focus")}: <b>${profile.market_focus || "-"}</b></span>
+      <span>${st("publicId")}: <b>${profile.public_id || "-"}</b></span>
+    </div>
+    <p>${profile.bio || "-"}</p>
+  `;
+}
+
+function renderSavedPortfolio(portfolio) {
+  const box = document.getElementById("portfolioSavedView");
+  box.innerHTML = `
+    <div class="savedHeader"><b>${st("saved")}</b><button class="ghost" type="button" data-social-edit="portfolio">${st("edit")}</button></div>
+    <div class="savedGrid">
+      <span>${st("marketType")}: <b>${portfolio.market_type || "-"}</b></span>
+      <span>${st("capital")}: <b>${portfolio.capital ?? "-"} ${portfolio.currency || ""}</b></span>
+      <span>${st("risk")}: <b>${portfolio.risk_percent ?? "-"}%</b></span>
+      <span>${st("maxPosition")}: <b>${portfolio.max_position_percent ?? "-"}%</b></span>
+    </div>
+  `;
+}
+
+function renderFollowing(items) {
+  const box = document.getElementById("followingBox");
+  box.className = "analystList";
+  box.innerHTML = (items || []).map((item) => `
+    <div class="analystRow">
+      <div>
+        <b>${item.profile.display_name}</b>
+        <span>${item.profile.public_id}</span>
+      </div>
+      <div class="socialStats compact">
+        <span>${st("followers")} ${item.stats.followers}</span>
+        <span>${st("accuracy")} ${item.stats.accuracy}%</span>
+      </div>
+    </div>
+  `).join("") || `<div class='empty'>${st("noFollowing")}</div>`;
+}
+
+async function handleSocialClick(event) {
+  const editButton = event.target.closest("[data-social-edit]");
+  if (editButton?.dataset.socialEdit === "profile") setProfileEditing(true);
+  if (editButton?.dataset.socialEdit === "portfolio") setPortfolioEditing(true);
+
+  const followButton = event.target.closest("[data-follow-analyst]");
+  if (!followButton) return;
+  const userId = followButton.dataset.followAnalyst;
+  const following = followButton.dataset.following === "true";
+  try {
+    followButton.disabled = true;
+    await api(`/social/analysts/${userId}/follow`, { method: following ? "DELETE" : "POST" });
+    await loadSocialDashboard();
+  } catch (error) {
+    toast(error.message);
+  } finally {
+    followButton.disabled = false;
+  }
 }
 
 async function saveAnalystProfile(event) {
@@ -316,6 +437,7 @@ async function loadTopAnalysts() {
         <span>${st("accuracy")} ${item.stats.accuracy}%</span>
         <span>${st("score")} ${item.stats.score}</span>
       </div>
+      ${item.is_me ? "" : `<button class="ghost" type="button" data-follow-analyst="${item.profile.user_id}" data-following="${item.following ? "true" : "false"}">${item.following ? st("unfollow") : st("follow")}</button>`}
     </div>
   `).join("");
   document.getElementById("topAnalystsBox").className = "analystList";
