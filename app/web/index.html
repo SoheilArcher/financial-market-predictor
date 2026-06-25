@@ -225,7 +225,34 @@
           </label>
           <button id="assignPlanBtn" class="primary" type="button">اختصاص اشتراک</button>
         </div>
+        <div class="adminTools">
+          <label>
+            فیلتر درخواست
+            <select id="adminRequestStatus">
+              <option value="">همه</option>
+              <option value="pending_review">pending_review</option>
+              <option value="approved">approved</option>
+              <option value="active">active</option>
+              <option value="rejected">rejected</option>
+              <option value="settled">settled</option>
+            </select>
+          </label>
+          <label>
+            فیلتر پرداخت
+            <select id="adminInvoiceStatus">
+              <option value="">همه</option>
+              <option value="pending_payment">pending_payment</option>
+              <option value="pending_review">pending_review</option>
+              <option value="confirmed">confirmed</option>
+              <option value="rejected">rejected</option>
+              <option value="refunded">refunded</option>
+            </select>
+          </label>
+          <button id="loadManagedAdminBtn" class="ghost" type="button">درخواست‌های ایران</button>
+          <button id="loadInvoicesAdminBtn" class="ghost" type="button">پرداخت‌های کریپتو</button>
+        </div>
         <div id="adminBox" class="tableWrap"></div>
+        <div id="adminFinanceBox" class="tableWrap"></div>
       </section>
     </main>
     <div id="toast" class="toast hidden"></div>

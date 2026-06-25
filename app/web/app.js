@@ -134,6 +134,65 @@ function renderUsers(users) {
   `;
 }
 
+function renderAdminManagedRequests(data) {
+  const rows = (data.items || []).map((item) => `
+    <tr>
+      <td>${item.id}</td>
+      <td>${item.user_id}</td>
+      <td>${item.capital_amount} ${item.capital_currency}</td>
+      <td>${item.preferred_market}</td>
+      <td><span class="badge ${item.status}">${item.status}</span></td>
+      <td>${item.latest_report?.net_yearly_profit ?? "-"}</td>
+      <td>${item.latest_report?.net_return_percent ?? "-"}%</td>
+      <td>${item.notes || "-"}</td>
+      <td>
+        <div class="reportActions">
+          <button class="ghost" data-managed-status="approved" data-id="${item.id}" type="button">Approve</button>
+          <button class="ghost" data-managed-status="active" data-id="${item.id}" type="button">Active</button>
+          <button class="ghost" data-managed-status="rejected" data-id="${item.id}" type="button">Reject</button>
+          <button class="ghost" data-managed-status="settled" data-id="${item.id}" type="button">Settle</button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+  $("adminFinanceBox").innerHTML = `
+    <h3>درخواست‌های درآمد ثابت ایران</h3>
+    <table>
+      <thead><tr><th>ID</th><th>User</th><th>سرمایه</th><th>بازار</th><th>وضعیت</th><th>سود خالص</th><th>بازده</th><th>یادداشت</th><th>اقدام</th></tr></thead>
+      <tbody>${rows || "<tr><td colspan='9'>درخواستی نیست.</td></tr>"}</tbody>
+    </table>
+  `;
+}
+
+function renderAdminInvoices(data) {
+  const rows = (data.items || []).map((item) => `
+    <tr>
+      <td>${item.id}</td>
+      <td>${item.user_id}</td>
+      <td>${item.managed_request_id || "-"}</td>
+      <td>${item.amount} ${item.currency}</td>
+      <td>${item.network}</td>
+      <td><span class="badge ${item.status}">${item.status}</span></td>
+      <td><code>${item.tx_hash || "-"}</code></td>
+      <td>${item.payer_wallet || "-"}</td>
+      <td>
+        <div class="reportActions">
+          <button class="ghost" data-invoice-status="confirmed" data-id="${item.id}" type="button">Confirm</button>
+          <button class="ghost" data-invoice-status="rejected" data-id="${item.id}" type="button">Reject</button>
+          <button class="ghost" data-invoice-status="refunded" data-id="${item.id}" type="button">Refund</button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+  $("adminFinanceBox").innerHTML = `
+    <h3>پرداخت‌های کریپتو</h3>
+    <table>
+      <thead><tr><th>ID</th><th>User</th><th>Req</th><th>مبلغ</th><th>شبکه</th><th>وضعیت</th><th>Tx</th><th>Wallet</th><th>اقدام</th></tr></thead>
+      <tbody>${rows || "<tr><td colspan='9'>پرداختی نیست.</td></tr>"}</tbody>
+    </table>
+  `;
+}
+
 function renderMarketReport(report) {
   const summary = report.summary;
   const label = (fa, en) => (typeof currentLanguage === "function" && currentLanguage() === "en" ? en : fa);
@@ -218,6 +277,36 @@ async function loadAdmin() {
   renderUsers(users);
 }
 
+async function loadManagedAdmin() {
+  const status = $("adminRequestStatus").value;
+  const query = status ? `?status_filter=${encodeURIComponent(status)}` : "";
+  renderAdminManagedRequests(await api(`/admin/managed-requests${query}`));
+}
+
+async function loadInvoicesAdmin() {
+  const status = $("adminInvoiceStatus").value;
+  const query = status ? `?status_filter=${encodeURIComponent(status)}` : "";
+  renderAdminInvoices(await api(`/admin/crypto-invoices${query}`));
+}
+
+async function updateManagedStatus(id, status) {
+  await api(`/admin/managed-requests/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+  await loadManagedAdmin();
+  toast("وضعیت درخواست بروزرسانی شد.");
+}
+
+async function updateInvoiceStatus(id, status) {
+  await api(`/admin/crypto-invoices/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+  await loadInvoicesAdmin();
+  toast("وضعیت پرداخت بروزرسانی شد.");
+}
+
 $("marketReportBox").addEventListener("click", async (event) => {
   const button = event.target.closest("[data-report-action]");
   if (!button) return;
@@ -228,6 +317,26 @@ $("marketReportBox").addEventListener("click", async (event) => {
     toast(error.message);
   } finally {
     button.disabled = false;
+  }
+});
+
+$("adminFinanceBox").addEventListener("click", async (event) => {
+  const managedButton = event.target.closest("[data-managed-status]");
+  const invoiceButton = event.target.closest("[data-invoice-status]");
+  try {
+    if (managedButton) {
+      managedButton.disabled = true;
+      await updateManagedStatus(managedButton.dataset.id, managedButton.dataset.managedStatus);
+    }
+    if (invoiceButton) {
+      invoiceButton.disabled = true;
+      await updateInvoiceStatus(invoiceButton.dataset.id, invoiceButton.dataset.invoiceStatus);
+    }
+  } catch (error) {
+    toast(error.message);
+  } finally {
+    if (managedButton) managedButton.disabled = false;
+    if (invoiceButton) invoiceButton.disabled = false;
   }
 });
 
@@ -338,6 +447,8 @@ $("assignPlanBtn").addEventListener("click", async () => {
 $("logoutBtn").addEventListener("click", clearSession);
 $("refreshMeBtn").addEventListener("click", () => refreshMe().catch((error) => toast(error.message)));
 $("loadAdminBtn").addEventListener("click", () => loadAdmin().catch((error) => toast(error.message)));
+$("loadManagedAdminBtn").addEventListener("click", () => loadManagedAdmin().catch((error) => toast(error.message)));
+$("loadInvoicesAdminBtn").addEventListener("click", () => loadInvoicesAdmin().catch((error) => toast(error.message)));
 
 renderSession();
 if (state.token) refreshMe().catch(() => clearSession());

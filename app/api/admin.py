@@ -1,12 +1,14 @@
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.api.auth import get_current_user, get_session, to_user_response
 from app.models.subscription import Plan, Subscription
+from app.models.crypto_payment import CryptoPaymentInvoice
+from app.models.managed_portfolio import ManagedPortfolioRequest
 from app.models.user import User
 from app.schemas.admin import (
     AssignSubscriptionRequest,
@@ -50,6 +52,49 @@ def subscription_response(subscription: Subscription) -> SubscriptionResponse:
         starts_at=subscription.starts_at,
         ends_at=subscription.ends_at,
     )
+
+
+def managed_request_response(item: ManagedPortfolioRequest) -> dict:
+    return {
+        "id": item.id,
+        "user_id": item.user_id,
+        "country": item.country,
+        "capital_amount": item.capital_amount,
+        "capital_currency": item.capital_currency,
+        "preferred_market": item.preferred_market,
+        "risk_level": item.risk_level,
+        "payout_currency": item.payout_currency,
+        "fee_percent": item.fee_percent,
+        "tax_percent": item.tax_percent,
+        "status": item.status,
+        "notes": item.notes,
+        "compliance_note": item.compliance_note,
+        "latest_report": item.latest_report,
+        "created_at": item.created_at.isoformat() if item.created_at else None,
+        "updated_at": item.updated_at.isoformat() if item.updated_at else None,
+    }
+
+
+def crypto_invoice_response(item: CryptoPaymentInvoice) -> dict:
+    return {
+        "id": item.id,
+        "user_id": item.user_id,
+        "managed_request_id": item.managed_request_id,
+        "purpose": item.purpose,
+        "amount": item.amount,
+        "currency": item.currency,
+        "network": item.network,
+        "deposit_address": item.deposit_address,
+        "memo": item.memo,
+        "status": item.status,
+        "tx_hash": item.tx_hash,
+        "payer_wallet": item.payer_wallet,
+        "note": item.note,
+        "created_at": item.created_at.isoformat() if item.created_at else None,
+        "expires_at": item.expires_at.isoformat() if item.expires_at else None,
+        "paid_at": item.paid_at.isoformat() if item.paid_at else None,
+        "reviewed_at": item.reviewed_at.isoformat() if item.reviewed_at else None,
+    }
 
 
 async def get_active_subscription(session: AsyncSession, user_id: int) -> Subscription | None:
@@ -194,3 +239,80 @@ async def assign_subscription(
     await session.refresh(subscription, attribute_names=["plan"])
     return subscription_response(subscription)
 
+
+@router.get("/managed-requests")
+async def admin_managed_requests(
+    status_filter: str | None = None,
+    limit: int = 100,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_admin),
+):
+    stmt = select(ManagedPortfolioRequest).order_by(desc(ManagedPortfolioRequest.created_at)).limit(min(max(limit, 1), 500))
+    if status_filter:
+        stmt = stmt.where(ManagedPortfolioRequest.status == status_filter)
+    items = (await session.scalars(stmt)).all()
+    return {"items": [managed_request_response(item) for item in items], "count": len(items)}
+
+
+@router.patch("/managed-requests/{request_id}")
+async def admin_update_managed_request(
+    request_id: int,
+    payload: dict,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_admin),
+):
+    item = await session.get(ManagedPortfolioRequest, request_id)
+    if item is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Managed request not found")
+    allowed = {"pending_review", "approved", "active", "rejected", "settled", "cancelled"}
+    if "status" in payload:
+        next_status = str(payload["status"])
+        if next_status not in allowed:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid status")
+        item.status = next_status
+    if "notes" in payload:
+        item.notes = payload["notes"]
+    if "compliance_note" in payload:
+        item.compliance_note = payload["compliance_note"]
+    await session.commit()
+    await session.refresh(item)
+    return managed_request_response(item)
+
+
+@router.get("/crypto-invoices")
+async def admin_crypto_invoices(
+    status_filter: str | None = None,
+    limit: int = 100,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_admin),
+):
+    stmt = select(CryptoPaymentInvoice).order_by(desc(CryptoPaymentInvoice.created_at)).limit(min(max(limit, 1), 500))
+    if status_filter:
+        stmt = stmt.where(CryptoPaymentInvoice.status == status_filter)
+    items = (await session.scalars(stmt)).all()
+    return {"items": [crypto_invoice_response(item) for item in items], "count": len(items)}
+
+
+@router.patch("/crypto-invoices/{invoice_id}")
+async def admin_update_crypto_invoice(
+    invoice_id: int,
+    payload: dict,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_admin),
+):
+    item = await session.get(CryptoPaymentInvoice, invoice_id)
+    if item is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invoice not found")
+    allowed = {"pending_payment", "pending_review", "confirmed", "rejected", "expired", "refunded"}
+    if "status" in payload:
+        next_status = str(payload["status"])
+        if next_status not in allowed:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid status")
+        item.status = next_status
+        if next_status in {"confirmed", "rejected", "refunded"}:
+            item.reviewed_at = datetime.now(timezone.utc)
+    if "note" in payload:
+        item.note = payload["note"]
+    await session.commit()
+    await session.refresh(item)
+    return crypto_invoice_response(item)
