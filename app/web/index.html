@@ -90,6 +90,32 @@
         <pre id="analysisResult" class="result">خروجی تحلیل اینجا نمایش داده می‌شود.</pre>
       </section>
 
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>گزارش کلی بازار</h2>
+          <span class="hint">چند نماد اصلی بازار را همزمان بررسی می‌کند</span>
+        </div>
+        <form id="reportForm" class="reportTools">
+          <label>
+            نمادها
+            <input id="reportSymbols" value="BTCUSDT,ETHUSDT,BNBUSDT,SOLUSDT,XRPUSDT,ADAUSDT,DOGEUSDT,LINKUSDT,AVAXUSDT,TONUSDT" />
+          </label>
+          <label>
+            تایم‌فریم
+            <select id="reportTimeframe">
+              <option>1m</option>
+              <option selected>5m</option>
+              <option>15m</option>
+              <option>1h</option>
+              <option>4h</option>
+              <option>1d</option>
+            </select>
+          </label>
+          <button class="primary" type="submit">ساخت گزارش</button>
+        </form>
+        <div id="marketReportBox" class="empty">گزارش کلی بازار اینجا نمایش داده می‌شود.</div>
+      </section>
+
       <section id="adminPanel" class="panel hidden">
         <div class="panelHeader">
           <h2>مدیریت کاربران</h2>

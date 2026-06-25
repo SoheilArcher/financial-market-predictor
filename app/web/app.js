@@ -49,6 +49,8 @@ function clearSession() {
   localStorage.removeItem("market_ai_token");
   localStorage.removeItem("market_ai_user");
   $("analysisResult").textContent = "خروجی تحلیل اینجا نمایش داده می‌شود.";
+  $("marketReportBox").textContent = "گزارش کلی بازار اینجا نمایش داده می‌شود.";
+  $("marketReportBox").className = "empty";
   renderSession();
 }
 
@@ -59,7 +61,7 @@ function renderSession() {
   $("accountPanel").classList.toggle("hidden", !isLoggedIn);
   $("adminPanel").classList.toggle("hidden", !isLoggedIn || state.user?.role !== "admin");
   $("sessionText").textContent = isLoggedIn
-    ? "وارد حساب شدید. حالا می‌توانید اشتراک و تحلیل‌ها را مدیریت کنید."
+    ? "وارد حساب شدید. حالا می‌توانید اشتراک، تحلیل‌ها و گزارش بازار را مدیریت کنید."
     : "برای تست محصول وارد حساب شوید یا ثبت‌نام کنید.";
 
   if (isLoggedIn) {
@@ -127,6 +129,49 @@ function renderUsers(users) {
   `;
 }
 
+function renderMarketReport(report) {
+  const summary = report.summary;
+  const rows = report.items.map((item) => `
+    <tr>
+      <td>${item.symbol}</td>
+      <td><span class="badge ${item.signal.toLowerCase()}">${item.signal}</span></td>
+      <td>${item.confidence ?? 0}</td>
+      <td>${item.change_percent ?? 0}%</td>
+      <td>${item.indicators ? item.indicators.rsi : "-"}</td>
+      <td>${item.indicators ? item.indicators.trend : "-"}</td>
+      <td>${item.risk || "-"}</td>
+    </tr>
+  `).join("");
+  $("marketReportBox").className = "reportBox";
+  $("marketReportBox").innerHTML = `
+    <div class="summaryGrid">
+      <div><span>جهت کلی</span><b>${summary.market_bias}</b></div>
+      <div><span>LONG</span><b>${summary.long_count}</b></div>
+      <div><span>SHORT</span><b>${summary.short_count}</b></div>
+      <div><span>WAIT</span><b>${summary.wait_count}</b></div>
+      <div><span>میانگین تغییر</span><b>${summary.average_change_percent}%</b></div>
+      <div><span>مصرف امروز</span><b>${report.subscription.daily_used}/${report.subscription.daily_limit}</b></div>
+    </div>
+    <p class="reportSummary">${summary.summary_fa}</p>
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>نماد</th>
+            <th>سیگنال</th>
+            <th>اعتماد</th>
+            <th>تغییر</th>
+            <th>RSI</th>
+            <th>روند</th>
+            <th>ریسک</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
 async function loadAdmin() {
   const users = await api("/admin/users");
   renderUsers(users);
@@ -173,6 +218,22 @@ $("analysisForm").addEventListener("submit", async (event) => {
     await refreshMe();
   } catch (error) {
     $("analysisResult").textContent = error.message;
+  }
+});
+
+$("reportForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  try {
+    $("marketReportBox").className = "empty";
+    $("marketReportBox").textContent = "در حال ساخت گزارش بازار...";
+    const symbols = encodeURIComponent($("reportSymbols").value.trim());
+    const timeframe = encodeURIComponent($("reportTimeframe").value);
+    const report = await api(`/report/market?symbols=${symbols}&timeframe=${timeframe}&limit=100`);
+    renderMarketReport(report);
+    await refreshMe();
+  } catch (error) {
+    $("marketReportBox").className = "empty";
+    $("marketReportBox").textContent = error.message;
   }
 });
 

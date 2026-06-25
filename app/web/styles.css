@@ -126,6 +126,13 @@ form {
   margin-bottom: 14px;
 }
 
+.reportTools {
+  display: grid;
+  grid-template-columns: 1fr 160px 150px;
+  gap: 12px;
+  align-items: end;
+}
+
 button {
   height: 42px;
   border: 0;
@@ -190,6 +197,47 @@ button {
   color: var(--muted);
 }
 
+.reportBox {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.summaryGrid div {
+  background: var(--surface-soft);
+  border-radius: 6px;
+  padding: 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.summaryGrid span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.summaryGrid b {
+  direction: ltr;
+  text-align: left;
+}
+
+.reportSummary {
+  background: #f8fafb;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px;
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
 .tableWrap {
   overflow-x: auto;
 }
@@ -223,8 +271,19 @@ th {
 }
 
 .badge.admin,
-.badge.active {
+.badge.active,
+.badge.long {
   color: var(--ok);
+}
+
+.badge.short,
+.badge.error {
+  color: var(--danger);
+}
+
+.badge.wait,
+.badge.no_data {
+  color: var(--muted);
 }
 
 .toast {
@@ -257,7 +316,9 @@ th {
 
   .two,
   .tools,
-  .adminTools {
+  .adminTools,
+  .reportTools,
+  .summaryGrid {
     grid-template-columns: 1fr;
   }
 }
