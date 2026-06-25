@@ -1,0 +1,173 @@
+@media (max-width: 720px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  .shell {
+    width: 100%;
+    padding: 8px 8px 24px;
+  }
+
+  .topbar {
+    position: static;
+    padding: 10px 0;
+    gap: 10px;
+  }
+
+  .topbar h1 {
+    font-size: 18px;
+  }
+
+  .topbar > div,
+  .languageBox,
+  .topbar button {
+    width: 100%;
+  }
+
+  .panel {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .panelHeader {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .panelHeader > *,
+  .panelHeader button,
+  .panelHeader .badge {
+    width: 100%;
+  }
+
+  .grid,
+  .two,
+  .tools,
+  .adminTools,
+  .reportTools,
+  .chartTools,
+  .newsTools,
+  .performanceTools,
+  .socialGrid,
+  .revenueGrid,
+  .iranMarketGrid {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 8px;
+  }
+
+  input,
+  select,
+  button {
+    min-height: 42px;
+  }
+
+  .segmented {
+    width: 100%;
+  }
+
+  .chartShell {
+    padding: 8px;
+    margin-left: -2px;
+    margin-right: -2px;
+  }
+
+  .chartMeta,
+  .legend,
+  .newsMeta,
+  .socialActions,
+  .reasonMetrics {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .priceCanvas {
+    height: 300px;
+  }
+
+  .rsiCanvas {
+    height: 100px;
+  }
+
+  .summaryGrid,
+  .chartAnalysisMetrics,
+  .livePriceStrip,
+  .socialStats,
+  .positionAdvice {
+    grid-template-columns: 1fr !important;
+  }
+
+  .summaryGrid div {
+    min-height: auto;
+    padding: 9px;
+  }
+
+  .tableWrap {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 640px;
+  }
+
+  th,
+  td {
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  .result,
+  .empty,
+  .reportBox,
+  .reasonBox,
+  .chartAnalysisBox,
+  .newsItem,
+  .socialCard,
+  .revenueCard {
+    padding: 10px;
+  }
+
+  .chartAnalysisHeader,
+  .reasonHeadline,
+  .newsItemTop,
+  .analystRow {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .toast {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    max-width: none;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1100px) {
+  .summaryGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tools,
+  .adminTools,
+  .reportTools,
+  .chartTools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .revenueGrid,
+  .iranMarketGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
