@@ -5,6 +5,17 @@ from typing import Any
 from app.services.market_report import DEFAULT_MARKET_SYMBOLS, build_market_report
 
 
+ASSISTANT_DEFAULT_SYMBOLS = [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "BNBUSDT",
+    "XAUUSD",
+    "WTIUSD",
+    "XAGUSD",
+    "XRPUSDT",
+]
+
 SYMBOL_ALIASES = {
     "طلا": "XAUUSD",
     "gold": "XAUUSD",
@@ -75,6 +86,17 @@ def extract_timeframe(question: str, default: str = "5m") -> str:
 
 def extract_top_n(question: str, default: int = 3) -> int:
     normalized = normalize_query_text(question)
+    single_trade_phrases = [
+        "چه چیزی معامله کنم",
+        "چی معامله کنم",
+        "چی بخرم",
+        "چی بفروشم",
+        "کدام را معامله کنم",
+        "بهترین معامله",
+        "بهترین موقعیت",
+    ]
+    if any(phrase in normalized for phrase in single_trade_phrases):
+        return 1
     if "دو معامله" in normalized or "۲ معامله" in normalized or "2 معامله" in normalized:
         return 2
     if "یک معامله" in normalized or "۱ معامله" in normalized or "1 معامله" in normalized:
@@ -99,7 +121,7 @@ def extract_symbols(question: str) -> list[str]:
         if symbol not in symbols:
             symbols.append(symbol)
 
-    return symbols[:8] or DEFAULT_MARKET_SYMBOLS[:8]
+    return symbols[:8] or ASSISTANT_DEFAULT_SYMBOLS
 
 
 def risk_label_fa(risk: str) -> str:
@@ -166,13 +188,18 @@ def build_answer(question: str, ranked: list[dict[str, Any]], top_n: int, timefr
         if not best:
             return "فعلاً داده کافی برای پاسخ وجود ندارد."
         return (
-            f"در تایم‌فریم {timeframe} فعلاً ورود قوی پیشنهاد نمی‌شود. "
-            f"بهترین گزینه نسبی {best['symbol']} است، اما امتیاز آن {best['score']} است و بهتر است صبر کنید."
+            f"الان جواب من «معامله نکن» است. در تایم‌فریم {timeframe} هیچ گزینه‌ای امتیاز کافی برای ورود ندارد. "
+            f"بهترین گزینه نسبی {best['symbol']} است، اما امتیاز آن فقط {best['score']} است؛ پس بهتر است صبر کنی یا تایم‌فریم بالاتر را چک کنی."
         )
 
     pick_text = "، ".join(f"{item['symbol']} ({item['signal']}، امتیاز {item['score']})" for item in picks)
     if top_n == 1:
-        return f"در تایم‌فریم {timeframe} بهترین گزینه فعلی {pick_text} است. قبل از ورود، حد ضرر و حجم معامله را محدود نگه دارید."
+        item = picks[0]
+        return (
+            f"اگر مجبور باشم فقط یک گزینه بدهم: {pick_text}. "
+            f"دلیل اصلی: {'؛ '.join(item['reasons'])}. "
+            "با حجم کم شروع کن و بدون حد ضرر وارد نشو."
+        )
     return f"در تایم‌فریم {timeframe} اگر فقط {top_n} معامله بخواهید، اولویت فعلی من این‌هاست: {pick_text}."
 
 
