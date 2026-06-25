@@ -46,7 +46,13 @@ function ensureManagedPortfolioPanel() {
           <option>USDT</option>
           <option>BTC</option>
           <option>ETH</option>
-          <option>IRR</option>
+        </select>
+      </label>
+      <label>شبکه پرداخت
+        <select id="managedNetwork">
+          <option>TRC20</option>
+          <option>ERC20</option>
+          <option>BEP20</option>
         </select>
       </label>
       <label class="wide">توضیحات <input id="managedNotes" placeholder="مثلاً فقط معاملات کم‌ریسک یا فقط بیت‌کوین" /></label>
@@ -103,6 +109,36 @@ function renderManagedRequests(items) {
   `;
 }
 
+function renderCryptoInvoice(invoice) {
+  document.getElementById("managedPortfolioBox").className = "reportBox";
+  document.getElementById("managedPortfolioBox").innerHTML = `
+    <div class="managedNotice">فقط با ${invoice.currency} روی شبکه ${invoice.network} پرداخت کنید. پرداخت روی شبکه اشتباه ممکن است قابل بازیابی نباشد.</div>
+    <div class="cryptoInvoice">
+      <div><span>مبلغ</span><b>${invoice.amount} ${invoice.currency}</b></div>
+      <div><span>شبکه</span><b>${invoice.network}</b></div>
+      <div class="wide"><span>آدرس پرداخت</span><code>${invoice.deposit_address}</code></div>
+      <div><span>Memo</span><b>${invoice.memo || "-"}</b></div>
+      <div><span>وضعیت</span><b>${invoice.status}</b></div>
+    </div>
+    <form id="cryptoProofForm" class="managedPortfolioGrid">
+      <label class="wide">Tx Hash <input id="cryptoTxHash" required placeholder="هش تراکنش را بعد از پرداخت وارد کنید" /></label>
+      <label class="wide">کیف پول فرستنده <input id="cryptoPayerWallet" placeholder="اختیاری" /></label>
+      <button class="primary" type="submit">ثبت رسید پرداخت</button>
+    </form>
+  `;
+  document.getElementById("cryptoProofForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const updated = await api(`/crypto-payments/invoices/${invoice.id}/proof`, {
+      method: "POST",
+      body: JSON.stringify({
+        tx_hash: document.getElementById("cryptoTxHash").value.trim(),
+        payer_wallet: document.getElementById("cryptoPayerWallet").value.trim(),
+      }),
+    });
+    renderCryptoInvoice(updated);
+  });
+}
+
 async function submitManagedPortfolio(event) {
   event.preventDefault();
   const box = document.getElementById("managedPortfolioBox");
@@ -113,7 +149,17 @@ async function submitManagedPortfolio(event) {
       method: "POST",
       body: JSON.stringify(managedPayload()),
     });
-    renderManagedRequests([item]);
+    const invoice = await api("/crypto-payments/invoices", {
+      method: "POST",
+      body: JSON.stringify({
+        amount: item.capital_amount,
+        currency: item.payout_currency,
+        network: document.getElementById("managedNetwork").value,
+        purpose: "managed_portfolio",
+        managed_request_id: item.id,
+      }),
+    });
+    renderCryptoInvoice(invoice);
   } catch (error) {
     box.className = "empty";
     box.textContent = error.message;

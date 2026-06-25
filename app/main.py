@@ -9,6 +9,7 @@ from app.api.assistant import router as assistant_router
 from app.api.auth import router as auth_router
 from app.api.chart import router as chart_router
 from app.api.comments import router as comments_router
+from app.api.crypto_payments import router as crypto_payments_router
 from app.api.iran_market import router as iran_market_router
 from app.api.managed_portfolio import router as managed_portfolio_router
 from app.api.market import router as market_router
@@ -39,6 +40,7 @@ app.include_router(analysis_router)
 app.include_router(report_router)
 app.include_router(chart_router)
 app.include_router(comments_router)
+app.include_router(crypto_payments_router)
 app.include_router(iran_market_router)
 app.include_router(managed_portfolio_router)
 app.include_router(performance_router)
