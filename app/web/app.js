@@ -136,6 +136,7 @@ function renderMarketReport(report) {
   const rows = report.items.map((item) => `
     <tr>
       <td>${item.symbol}</td>
+      <td>${item.live_price?.price ?? item.price ?? "-"}</td>
       <td><span class="badge ${item.signal.toLowerCase()}">${item.signal}</span></td>
       <td>${item.confidence ?? 0}</td>
       <td>${item.change_percent ?? 0}%</td>
@@ -160,6 +161,7 @@ function renderMarketReport(report) {
         <thead>
           <tr>
             <th>نماد</th>
+            <th>قیمت زنده</th>
             <th>سیگنال</th>
             <th>اعتماد</th>
             <th>تغییر</th>

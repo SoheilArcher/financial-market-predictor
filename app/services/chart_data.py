@@ -3,6 +3,7 @@ from typing import Any
 
 from app.collectors.binance import fetch_binance_klines, save_binance_candles
 from app.services.analyzer import calculate_ema, calculate_rsi
+from app.services.live_price import fetch_live_price
 
 
 def ema_series(values: list[float], period: int) -> list[float | None]:
@@ -46,6 +47,15 @@ async def build_chart_data(symbol: str, timeframe: str = "5m", limit: int = 150)
     rsi14 = rsi_series(closes, 14)
 
     await save_binance_candles(symbol=symbol, interval=timeframe, limit=limit)
+    try:
+        live_price = await fetch_live_price(symbol=symbol, exchange="Binance")
+    except Exception as exc:
+        live_price = {
+            "exchange": "Binance",
+            "symbol": symbol,
+            "status": "unavailable",
+            "message": str(exc),
+        }
 
     return {
         "exchange": "Binance",
@@ -58,5 +68,6 @@ async def build_chart_data(symbol: str, timeframe: str = "5m", limit: int = 150)
             "rsi14": rsi14,
         },
         "last": candles[-1] if candles else None,
+        "live_price": live_price,
         "disclaimer": "Chart data is for analysis only, not financial advice.",
     }

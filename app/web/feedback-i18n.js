@@ -136,11 +136,21 @@ function renderReasonsFromAnalysis(analysis) {
   const reasons = analysis?.reasons || [];
   const levels = analysis?.levels || {};
   const indicators = analysis?.indicators || {};
+  const live = analysis?.live_price || {};
+  const liveTime = live.fetched_at
+    ? new Date(live.fetched_at).toLocaleTimeString(currentLanguage() === "fa" ? "fa-IR" : "en-US")
+    : "-";
   reasonsBox.dataset.empty = "0";
   reasonsBox.innerHTML = `
     <div class="reasonHeadline">
       <span class="badge ${(analysis.signal || "wait").toLowerCase()}">${analysis.signal || "-"}</span>
       <b>${analysis.summary_fa || analysis.message || ""}</b>
+    </div>
+    <div class="livePriceStrip">
+      <span>Live: <b>${live.price ?? "-"}</b> ${live.quote_asset || ""}</span>
+      <span>Source: ${live.source || live.exchange || "-"}</span>
+      <span>Updated: ${liveTime}</span>
+      <span>Δ candle: ${live.delta_from_candle_percent ?? 0}%</span>
     </div>
     <ul>${reasons.map((reason) => `<li>${reason}</li>`).join("")}</ul>
     <div class="reasonMetrics">

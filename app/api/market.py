@@ -7,6 +7,7 @@ from app.database import AsyncSessionLocal
 from app.models.market import Exchange, Symbol, Candle
 from app.models.user import User
 from app.services.analyzer import analyze_market
+from app.services.live_price import attach_live_price, fetch_live_price
 from app.services.signal_journal import record_signal
 from app.services.subscription import authorize_analysis
 
@@ -75,6 +76,16 @@ async def analyze_symbol(
         symbol=symbol.upper(),
         timeframe=timeframe,
     )
+    try:
+        live_price = await fetch_live_price(symbol=symbol, exchange=exchange_name)
+        attach_live_price(result, live_price)
+    except Exception as exc:
+        result["live_price"] = {
+            "exchange": exchange_name,
+            "symbol": symbol.upper(),
+            "status": "unavailable",
+            "message": str(exc),
+        }
     record = await record_signal(session=session, user=current_user, analysis=result)
     if record:
         result["signal_record_id"] = record.id

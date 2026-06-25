@@ -4,6 +4,7 @@ from typing import Any
 
 from app.collectors.binance import fetch_binance_klines, save_binance_candles
 from app.services.analyzer import analyze_market
+from app.services.live_price import attach_live_price, fetch_live_price
 
 
 DEFAULT_MARKET_SYMBOLS = [
@@ -115,6 +116,16 @@ async def analyze_symbol_live(symbol: str, timeframe: str, limit: int) -> dict[s
         klines = await fetch_binance_klines(symbol=symbol, interval=timeframe, limit=limit)
         candles = [kline_to_candle(kline) for kline in klines]
         result = analyze_market(candles=candles, symbol=symbol, timeframe=timeframe)
+        try:
+            live_price = await fetch_live_price(symbol=symbol, exchange="Binance")
+            attach_live_price(result, live_price)
+        except Exception as exc:
+            result["live_price"] = {
+                "exchange": "Binance",
+                "symbol": symbol,
+                "status": "unavailable",
+                "message": str(exc),
+            }
         result["change_percent"] = price_change_percent(candles)
         result["source"] = "Binance"
         result["last_candle_at"] = candles[-1]["timestamp"] if candles else None

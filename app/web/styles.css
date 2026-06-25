@@ -204,6 +204,28 @@ button:active {
   color: var(--text-strong);
 }
 
+.livePriceStrip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.livePriceStrip span {
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  background: rgba(47, 129, 247, 0.08);
+  color: var(--muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.livePriceStrip b {
+  color: var(--text-strong);
+}
+
 .segmented {
   display: grid;
   grid-template-columns: 1fr 1fr;
