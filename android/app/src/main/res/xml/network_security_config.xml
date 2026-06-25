@@ -2,4 +2,7 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">51.83.160.143</domain>
     </domain-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">nextrade.ir</domain>
+    </domain-config>
 </network-security-config>

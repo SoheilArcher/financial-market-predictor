@@ -11,7 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
-    private static final String DASHBOARD_URL = "http://51.83.160.143:8000/app";
+    private static final String DASHBOARD_URL = "https://nextrade.ir/app";
     private WebView webView;
 
     @SuppressLint("SetJavaScriptEnabled")

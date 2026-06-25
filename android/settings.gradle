@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MarketAI"
+rootProject.name = "NexTrade"
 include ":app"

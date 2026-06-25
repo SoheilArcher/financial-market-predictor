@@ -1,11 +1,11 @@
-# Market AI Android
+# NexTrade Android
 
-This is a lightweight native Android WebView wrapper for the Market AI dashboard.
+This is a lightweight native Android WebView wrapper for the NexTrade dashboard.
 
 Dashboard URL:
 
 ```text
-http://51.83.160.143:8000/app
+https://nextrade.ir/app
 ```
 
 Build with Android Studio:

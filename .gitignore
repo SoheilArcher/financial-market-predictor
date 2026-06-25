@@ -11,3 +11,7 @@ logs/
 *.sqlite3
 *.db
 
+
+app/api/*.save
+app/web/index-patch-note.txt
+app/web/assets/*.png

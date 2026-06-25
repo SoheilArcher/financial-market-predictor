@@ -3,144 +3,183 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Market AI Platform</title>
+    <title>NexTrade | تحلیل هوشمند بازارهای مالی</title>
+    <meta
+      name="description"
+      content="NexTrade سامانه تحلیل هوشمند بازارهای مالی، ارز دیجیتال، جفت ارز، طلا، نفت، اخبار، چارت زنده، مدیریت ریسک و گزارش سیگنال است."
+    />
+    <meta
+      name="keywords"
+      content="NexTrade, nextrade.ir, نکس ترید, تحلیل بازار مالی, تحلیل ارز دیجیتال, سیگنال ترید, چارت زنده, مدیریت ریسک, بورس ایران, تحلیل اخبار بازار"
+    />
+    <meta name="author" content="سهیل سعیدی" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://nextrade.ir/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NexTrade | تحلیل هوشمند بازارهای مالی" />
+    <meta
+      property="og:description"
+      content="داشبورد تحلیل بازار با چارت زنده، اندیکاتورها، اخبار، مدیریت سرمایه، ارزیابی تحلیل‌گران و گزارش چندبازاری."
+    />
+    <meta property="og:url" content="https://nextrade.ir/" />
+    <meta property="og:image" content="https://nextrade.ir/static/assets/nextrade-hero.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NexTrade" />
+    <meta
+      name="twitter:description"
+      content="سامانه هوشمند گزارش بازارهای مالی، تحلیل تکنیکال، اخبار، ریسک و چارت زنده."
+    />
+    <meta name="theme-color" content="#08111f" />
     <link rel="stylesheet" href="/static/landing.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "NexTrade",
+        "creator": {
+          "@type": "Person",
+          "name": "سهیل سعیدی"
+        },
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web, Android",
+        "description": "سامانه تحلیل هوشمند بازارهای مالی با چارت زنده، اندیکاتور، اخبار، مدیریت ریسک و گزارش سیگنال.",
+        "url": "https://nextrade.ir/",
+        "telephone": "+989126343638",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
   </head>
   <body>
-    <header class="top">
-      <a class="brand" href="/">Market AI</a>
-      <nav>
+    <header class="siteHeader">
+      <a class="brand" href="/" aria-label="NexTrade">
+        <span class="brandMark"></span>
+        <span>NexTrade</span>
+      </a>
+      <nav class="navLinks" aria-label="صفحه اصلی">
         <a href="#features">امکانات</a>
+        <a href="#markets">بازارها</a>
         <a href="#workflow">روش کار</a>
-        <a href="#analysts">تحلیل‌گران</a>
+        <a href="#contact">تماس</a>
       </nav>
-      <a class="ghost" href="/app">ورود به داشبورد</a>
+      <a class="headerAction" href="/app">ورود به داشبورد</a>
     </header>
 
     <main>
       <section class="hero">
-        <div class="heroCopy">
-          <span class="eyebrow">پلتفرم تحلیل بازارهای مالی</span>
-          <h1>تحلیل تکنیکال، خبر، قیمت زنده و عملکرد تحلیل‌گران در یک سیستم</h1>
-          <p>
-            Market AI برای بررسی رمزارز، جفت‌ارز، اخبار بازار، سیگنال‌ها، مدیریت ریسک،
-            دنبال‌کردن تحلیل‌گران و تقسیم درآمد مشارکت‌کننده‌ها ساخته شده است.
+        <img class="heroImage" src="/static/assets/nextrade-hero.jpg" alt="نمای داشبورد تحلیل هوشمند بازارهای مالی" />
+        <div class="heroOverlay"></div>
+        <div class="heroContent">
+          <p class="eyebrow">تحلیل هوشمند بازارهای مالی</p>
+          <h1>گزارش بازار، چارت زنده و مدیریت ریسک در یک پلتفرم</h1>
+          <p class="heroText">
+            NexTrade برای تحلیل ارز دیجیتال، جفت ارزها، طلا، نفت، بورس ایران، اخبار و عملکرد تحلیل‌گران طراحی شده است؛
+            هدف این است که کاربر فقط سیگنال نبیند، دلیل، ریسک و سناریوی بعدی را هم بفهمد.
           </p>
-          <div class="actions">
-            <a class="primary" href="/app">شروع تست محصول</a>
-            <a class="secondary" href="#features">دیدن امکانات</a>
-          </div>
-        </div>
-
-        <div class="productPreview" aria-label="نمای محصول">
-          <div class="previewBar">
-            <span></span><span></span><span></span>
-            <b>BTC/ETH · 5m</b>
-          </div>
-          <div class="marketGrid">
-            <div>
-              <span>Signal</span>
-              <b>WAIT</b>
-            </div>
-            <div>
-              <span>Live Price</span>
-              <b>37.52 ETH</b>
-            </div>
-            <div>
-              <span>RSI</span>
-              <b>54.8</b>
-            </div>
-          </div>
-          <div class="chartVisual">
-            <i style="height:38%"></i>
-            <i style="height:68%"></i>
-            <i style="height:48%"></i>
-            <i style="height:76%"></i>
-            <i style="height:42%"></i>
-            <i style="height:61%"></i>
-            <i style="height:55%"></i>
-            <i style="height:82%"></i>
-            <i style="height:47%"></i>
-            <i style="height:70%"></i>
-          </div>
-          <div class="analysisStrip">
-            <b>چرا این تحلیل؟</b>
-            <p>روند هنوز تایید کامل ندارد؛ ورود نیاز به شکست مقاومت و مدیریت حد ضرر دارد.</p>
+          <p class="ownerLine">ارائه و توسعه: سهیل سعیدی</p>
+          <div class="heroActions">
+            <a class="primaryAction" href="/app">شروع تحلیل</a>
+            <a class="secondaryAction" href="tel:+989126343638">تماس: +98 912 634 3638</a>
+            <a class="secondaryAction whatsappAction" href="https://wa.me/989126343638" target="_blank" rel="noopener">واتس‌اپ</a>
           </div>
         </div>
       </section>
 
       <section id="features" class="section">
-        <h2>سیستم چه کارهایی انجام می‌دهد؟</h2>
-        <div class="cards">
+        <div class="sectionLead">
+          <p class="eyebrow">قابلیت‌ها</p>
+          <h2>از چارت تا خبر، از سیگنال تا ارزیابی نتیجه</h2>
+        </div>
+        <div class="featureGrid">
           <article>
-            <b>چارت و اندیکاتور</b>
-            <p>کندل، EMA20، EMA50، RSI و تحلیل روی نمادهایی مثل BTCUSDT و جفت‌هایی مثل BTC/ETH.</p>
+            <h3>چارت زنده و اندیکاتورها</h3>
+            <p>نمایش کندل، EMA20، EMA50، RSI و خلاصه تحلیل روی همان چارت برای فهم سریع‌تر دلیل خرید، فروش یا صبر.</p>
           </article>
           <article>
-            <b>اخبار بازار</b>
-            <p>بررسی خبرها، تشخیص اثر مثبت/منفی/خنثی و نمایش فارسی یا انگلیسی بر اساس زبان کاربر.</p>
+            <h3>گزارش چندبازاری</h3>
+            <p>بررسی ارز دیجیتال، جفت ارز، طلا، نفت، نقره و در ادامه بورس ایران برای ساخت یک تصویر کامل از وضعیت بازار.</p>
           </article>
           <article>
-            <b>اعتبارسنجی سیگنال</b>
-            <p>سیستم بررسی می‌کند در چند روز گذشته چند تحلیل درست، غلط یا در انتظار بوده‌اند.</p>
+            <h3>مدیریت ریسک و معامله</h3>
+            <p>پیشنهاد نقطه ورود، خروج، حد ضرر، حد سود و سناریوی واکنش در صورت حرکت بازار خلاف تحلیل.</p>
           </article>
           <article>
-            <b>مدیریت سرمایه</b>
-            <p>پیشنهاد حجم ورود بر اساس سرمایه، ریسک هر معامله، حد ضرر و اجماع تحلیل‌گران.</p>
+            <h3>اخبار و زبان کاربر</h3>
+            <p>نمایش و تحلیل خبرها متناسب با زبان کاربر؛ فارسی برای کاربران فارسی‌زبان و انگلیسی برای کاربران بین‌المللی.</p>
           </article>
           <article>
-            <b>تحلیل‌گران و دنبال‌کننده‌ها</b>
-            <p>هر کاربر ID عمومی، پروفایل تحلیل‌گری، عملکرد و امکان جذب دنبال‌کننده دارد.</p>
+            <h3>تحلیل‌گران و دنبال‌کننده‌ها</h3>
+            <p>امکان ارائه تحلیل توسط کاربران، جمع‌آوری دنبال‌کننده و مقایسه عملکرد تحلیل‌گران بر اساس نتیجه واقعی.</p>
           </article>
           <article>
-            <b>تقسیم درآمد</b>
-            <p>ادمین می‌تواند درآمد خالص را بین مالک و کاربران منتخب بر اساس فعالیت و عملکرد تقسیم کند.</p>
+            <h3>اشتراک و مشارکت درآمد</h3>
+            <p>زیرساختی برای مدیریت کاربران، پلن‌ها، مشارکت‌کننده‌های فعال و تقسیم سود بر اساس نقش و عملکرد.</p>
           </article>
         </div>
       </section>
 
-      <section id="workflow" class="section split">
+      <section id="markets" class="section split">
         <div>
-          <h2>روش کار پلتفرم</h2>
-          <ol>
-            <li>کاربر ثبت‌نام می‌کند و ایمیل خود را تایید می‌کند.</li>
-            <li>نماد یا جفت‌ارز را انتخاب می‌کند و چارت زنده می‌گیرد.</li>
-            <li>سیستم قیمت، اندیکاتورها، خبرها و سیگنال را کنار هم بررسی می‌کند.</li>
-            <li>عملکرد تحلیل‌ها ذخیره و بعداً سنجیده می‌شود.</li>
-            <li>تحلیل‌گران فعال می‌توانند دنبال‌کننده و سهم درآمد بگیرند.</li>
-          </ol>
+          <p class="eyebrow">بازارهای هدف</p>
+          <h2>یک نگاه برای کل بازار مالی</h2>
+          <p>
+            این پروژه قرار است فقط یک ابزار سیگنال‌دهی ساده نباشد؛ مسیر محصول، ساخت یک مرکز تصمیم‌گیری مالی است که قیمت لحظه‌ای،
+            اخبار، تحلیل تکنیکال، رفتار تحلیل‌گران و مدیریت سرمایه را کنار هم قرار می‌دهد.
+          </p>
         </div>
-        <div class="statusPanel">
-          <div><span>Market Report</span><b>Mixed</b></div>
-          <div><span>News Mood</span><b>NEWS_MIXED</b></div>
-          <div><span>Performance</span><b>Tracked</b></div>
-          <div><span>Risk</span><b>Managed</b></div>
+        <div class="marketList" aria-label="بازارهای پشتیبانی‌شده">
+          <span>Crypto</span>
+          <span>BTC/ETH</span>
+          <span>Forex</span>
+          <span>Gold</span>
+          <span>Oil</span>
+          <span>Silver</span>
+          <span>Iran Stock Market</span>
+          <span>News Sentiment</span>
         </div>
       </section>
 
-      <section id="analysts" class="section">
-        <h2>برای کاربران، تحلیل‌گران و مدیر سیستم</h2>
-        <div class="roles">
-          <div>
-            <b>کاربر عادی</b>
-            <p>تحلیل می‌گیرد، اخبار را می‌بیند، سرمایه و ریسک خودش را وارد می‌کند.</p>
-          </div>
-          <div>
-            <b>تحلیل‌گر</b>
-            <p>تحلیل منتشر می‌کند، دنبال‌کننده می‌گیرد و عملکردش با داده واقعی سنجیده می‌شود.</p>
-          </div>
-          <div>
-            <b>مدیر پلتفرم</b>
-            <p>اشتراک، کاربران، درآمد، مشارکت‌کننده‌ها و سهم پرداختی را مدیریت می‌کند.</p>
-          </div>
+      <section id="workflow" class="section process">
+        <div class="sectionLead">
+          <p class="eyebrow">روش کار</p>
+          <h2>گزارش قابل فهم، نه فقط عدد خام</h2>
+        </div>
+        <div class="steps">
+          <div><b>1</b><span>دریافت قیمت و کندل از بازار</span></div>
+          <div><b>2</b><span>تحلیل تکنیکال، خبر و چند تایم‌فریم</span></div>
+          <div><b>3</b><span>نمایش دلیل سیگنال، ریسک، SL و TP</span></div>
+          <div><b>4</b><span>ثبت نتیجه و ارزیابی صحت تحلیل‌ها</span></div>
+        </div>
+      </section>
+
+      <section id="contact" class="section contact">
+        <div>
+          <p class="eyebrow">تماس و همکاری</p>
+          <h2>برای تست، همکاری یا توسعه محصول تماس بگیرید</h2>
+          <p>اگر می‌خواهید به عنوان کاربر، تحلیل‌گر یا مشارکت‌کننده وارد سیستم شوید، با سهیل سعیدی از طریق شماره یا واتس‌اپ زیر در ارتباط باشید.</p>
+        </div>
+        <div class="contactCards">
+          <a class="phoneBox" href="tel:+989126343638">
+            <span>شماره تماس</span>
+            <strong dir="ltr">+98 912 634 3638</strong>
+          </a>
+          <a class="phoneBox whatsappBox" href="https://wa.me/989126343638" target="_blank" rel="noopener">
+            <span>واتس‌اپ</span>
+            <strong dir="ltr">wa.me/989126343638</strong>
+          </a>
         </div>
       </section>
     </main>
 
-    <footer>
-      <span>Market AI Platform</span>
-      <a href="/app">ورود به داشبورد</a>
+    <footer class="footer">
+      <span>NexTrade</span>
+      <span>سهیل سعیدی</span>
+      <span>تحلیل هوشمند بازارهای مالی</span>
+      <a href="tel:+989126343638" dir="ltr">+98 912 634 3638</a>
+      <a href="https://wa.me/989126343638" target="_blank" rel="noopener">واتس‌اپ</a>
     </footer>
   </body>
 </html>

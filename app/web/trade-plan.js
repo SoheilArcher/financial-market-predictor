@@ -155,13 +155,11 @@
     lastMonitorAction = key;
     const message = monitor.message_fa;
     if ("Notification" in window && Notification.permission === "granted") {
-      new Notification("Market AI", { body: message });
+      new Notification("NexTrade", { body: message });
     } else if (typeof toast === "function") {
       toast(message);
     }
   }
 
-  window.ensureTradePanel = ensureTradePanel;
-  window.loadTradePlan = loadTradePlan;
   window.addEventListener("DOMContentLoaded", ensureTradePanel);
 })();

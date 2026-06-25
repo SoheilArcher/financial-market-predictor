@@ -20,7 +20,7 @@ from app.api.symbols import router as symbols_router
 from app.api.trade import router as trade_router
 
 app = FastAPI(
-    title="Market AI Platform",
+    title="NexTrade",
     version="0.1",
 )
 
@@ -48,11 +48,21 @@ async def landing():
     return FileResponse(web_dir / "landing.html")
 
 
+@app.get("/robots.txt", include_in_schema=False)
+async def robots_txt():
+    return FileResponse(web_dir / "robots.txt", media_type="text/plain")
+
+
+@app.get("/sitemap.xml", include_in_schema=False)
+async def sitemap_xml():
+    return FileResponse(web_dir / "sitemap.xml", media_type="application/xml")
+
+
 @app.get("/health")
 async def health():
     return {
         "status": "ok",
-        "project": "Market AI Platform",
+        "project": "NexTrade",
         "dashboard": "/app",
     }
 
