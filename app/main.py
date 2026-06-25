@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api.admin import router as admin_router
+from app.api.assistant import router as assistant_router
 from app.api.auth import router as auth_router
 from app.api.chart import router as chart_router
 from app.api.comments import router as comments_router
@@ -30,6 +31,7 @@ app.mount("/static", StaticFiles(directory=web_dir), name="static")
 app.include_router(auth_router)
 app.include_router(subscription_router)
 app.include_router(admin_router)
+app.include_router(assistant_router)
 app.include_router(market_router)
 app.include_router(analysis_router)
 app.include_router(report_router)

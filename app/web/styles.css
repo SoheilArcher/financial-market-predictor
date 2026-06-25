@@ -173,6 +173,13 @@ form {
   align-items: end;
 }
 
+.assistantTools {
+  display: grid;
+  grid-template-columns: 1fr 150px 120px;
+  gap: 10px;
+  align-items: end;
+}
+
 .revenueGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -385,15 +392,28 @@ button:active {
   color: var(--text);
 }
 
-.reportActions {
-  display: flex;
-  gap: 6px;
-  min-width: 118px;
+.assistantResultBox {
+  display: grid;
+  gap: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
 }
 
-.reportActions button {
-  height: 30px;
-  padding: 0 9px;
+.assistantAnswer {
+  padding: 12px;
+  border: 1px solid rgba(46, 160, 67, 0.28);
+  border-radius: 8px;
+  background: rgba(46, 160, 67, 0.1);
+  color: var(--text-strong);
+  font-weight: 750;
+  line-height: 1.9;
+}
+
+.assistantDisclaimer {
+  margin: 0;
+  color: var(--muted);
   font-size: 11px;
 }
 
@@ -640,6 +660,7 @@ tr:hover td {
   .tools,
   .adminTools,
   .reportTools,
+  .assistantTools,
   .summaryGrid {
     grid-template-columns: 1fr;
   }

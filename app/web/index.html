@@ -143,6 +143,33 @@
         <div id="marketReportBox" class="empty">گزارش کلی بازار اینجا نمایش داده می‌شود.</div>
       </section>
 
+      <section class="panel dashboardBlock" data-block-id="assistant">
+        <div class="panelHeader">
+          <h2>دستیار معامله‌گر</h2>
+          <span class="hint">سؤال طبیعی بپرسید؛ سیستم فرصت‌ها را اولویت‌بندی می‌کند</span>
+        </div>
+        <form id="assistantForm" class="assistantTools">
+          <label>
+            سؤال شما
+            <input id="assistantQuestion" value="الان بین طلا، بیت‌کوین و نفت کدام موقعیت بهتری دارد؟" />
+          </label>
+          <label>
+            تایم‌فریم
+            <select id="assistantTimeframe">
+              <option value="">تشخیص خودکار</option>
+              <option>1m</option>
+              <option selected>5m</option>
+              <option>15m</option>
+              <option>1h</option>
+              <option>4h</option>
+              <option>1d</option>
+            </select>
+          </label>
+          <button class="primary" type="submit">پرسیدن</button>
+        </form>
+        <div id="assistantResult" class="empty">مثلاً بپرسید: «اگر فقط دو معامله امروز انجام بدهم، کدام‌ها بیشترین امید ریاضی را دارند؟»</div>
+      </section>
+
       <section class="panel dashboardBlock" data-block-id="analysis">
         <div class="panelHeader">
           <h2>تحلیل تک‌نماد</h2>
@@ -206,6 +233,7 @@
     <script src="/static/app.js"></script>
     <script src="/static/symbol-search.js"></script>
     <script src="/static/chart-app.js"></script>
+    <script src="/static/assistant.js"></script>
     <script src="/static/trade-plan.js"></script>
     <script src="/static/feedback-i18n.js"></script>
     <script src="/static/iran-market.js"></script>
