@@ -385,6 +385,18 @@ button:active {
   color: var(--text);
 }
 
+.reportActions {
+  display: flex;
+  gap: 6px;
+  min-width: 118px;
+}
+
+.reportActions button {
+  height: 30px;
+  padding: 0 9px;
+  font-size: 11px;
+}
+
 .tradeTools {
   display: grid;
   grid-template-columns: 140px 1fr 120px 120px 110px 130px 120px 120px;

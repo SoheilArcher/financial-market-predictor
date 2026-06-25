@@ -147,6 +147,12 @@ function renderMarketReport(report) {
       <td>${item.indicators ? item.indicators.rsi : "-"}</td>
       <td>${item.indicators ? item.indicators.trend : "-"}</td>
       <td>${item.risk || "-"}</td>
+      <td>
+        <div class="reportActions">
+          <button class="ghost" type="button" data-report-action="chart" data-symbol="${item.symbol}">${label("چارت", "Chart")}</button>
+          <button class="ghost" type="button" data-report-action="plan" data-symbol="${item.symbol}">${label("پلن", "Plan")}</button>
+        </div>
+      </td>
     </tr>
   `).join("");
   $("marketReportBox").className = "reportBox";
@@ -172,6 +178,7 @@ function renderMarketReport(report) {
             <th>RSI</th>
             <th>${label("روند", "Trend")}</th>
             <th>${label("ریسک", "Risk")}</th>
+            <th>${label("اقدام سریع", "Quick Action")}</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>
@@ -180,10 +187,49 @@ function renderMarketReport(report) {
   `;
 }
 
+async function openReportSymbol(symbol, action) {
+  const timeframe = $("reportTimeframe").value;
+  if (action === "chart") {
+    $("chartSymbol").value = symbol;
+    $("chartTimeframe").value = timeframe;
+    document.querySelector('[data-block-id="chart"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof loadChart === "function") {
+      await loadChart();
+    }
+    return;
+  }
+  if (action === "plan") {
+    if (typeof window.ensureTradePanel === "function") {
+      window.ensureTradePanel();
+    }
+    $("tradeSymbol").value = symbol;
+    $("tradeTimeframe").value = timeframe;
+    $("tradeEntryPrice").value = "";
+    $("tradeSide").value = "";
+    document.getElementById("tradePlanPanel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof window.loadTradePlan === "function") {
+      await window.loadTradePlan();
+    }
+  }
+}
+
 async function loadAdmin() {
   const users = await api("/admin/users");
   renderUsers(users);
 }
+
+$("marketReportBox").addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-report-action]");
+  if (!button) return;
+  try {
+    button.disabled = true;
+    await openReportSymbol(button.dataset.symbol, button.dataset.reportAction);
+  } catch (error) {
+    toast(error.message);
+  } finally {
+    button.disabled = false;
+  }
+});
 
 document.querySelectorAll("[data-auth-mode]").forEach((button) => {
   button.addEventListener("click", () => {

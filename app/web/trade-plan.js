@@ -161,5 +161,7 @@
     }
   }
 
+  window.ensureTradePanel = ensureTradePanel;
+  window.loadTradePlan = loadTradePlan;
   window.addEventListener("DOMContentLoaded", ensureTradePanel);
 })();

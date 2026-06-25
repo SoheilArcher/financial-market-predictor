@@ -84,6 +84,7 @@
   .legend,
   .newsMeta,
   .socialActions,
+  .reportActions,
   .reasonMetrics,
   .tradeGrid {
     display: grid;
