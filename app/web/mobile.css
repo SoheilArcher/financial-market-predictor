@@ -25,7 +25,6 @@
 
   .topbar > div,
   .languageBox,
-  .customizeTools > *,
   .topbar button {
     width: 100%;
   }

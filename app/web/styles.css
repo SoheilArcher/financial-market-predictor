@@ -198,41 +198,11 @@ form {
   gap: 12px;
 }
 
-.themeSwatches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.themeSwatches button {
-  width: 34px;
-  height: 34px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--swatch);
-}
-
 .customizeTools {
   display: grid;
-  grid-template-columns: 180px 150px 140px 140px;
+  grid-template-columns: 160px;
   gap: 10px;
   align-items: end;
-}
-
-.customizeCheck {
-  height: 38px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: var(--input-bg);
-  padding: 0 10px;
-}
-
-.customizeCheck input {
-  width: 16px;
-  height: 16px;
 }
 
 .layoutList {
@@ -264,19 +234,6 @@ form {
 .layoutItem button {
   width: 38px;
   padding: 0;
-}
-
-.compactMode .panel {
-  padding: 10px;
-  margin-bottom: 8px;
-}
-
-.compactMode .panelHeader {
-  margin-bottom: 8px;
-}
-
-.compactMode .summaryGrid div {
-  min-height: 52px;
 }
 
 button {
