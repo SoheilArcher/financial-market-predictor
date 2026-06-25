@@ -51,6 +51,24 @@
   text-align: left;
 }
 
+.cryptoWalletBox {
+  border-top: 1px solid var(--line-soft);
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.cryptoWalletBox h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.cryptoWalletBox code {
+  overflow-wrap: anywhere;
+  direction: ltr;
+  text-align: left;
+  display: inline-block;
+}
+
 @media (max-width: 900px) {
   .managedPortfolioGrid {
     grid-template-columns: 1fr;

@@ -59,10 +59,36 @@ function ensureManagedPortfolioPanel() {
       <button class="primary" type="submit">ثبت درخواست</button>
     </form>
     <div id="managedPortfolioBox" class="empty">بعد از ثبت درخواست، گزارش خالص و وضعیت بررسی اینجا نمایش داده می‌شود.</div>
+    <div class="cryptoWalletBox">
+      <h3>کیف پول کریپتو برای تسویه</h3>
+      <form id="cryptoWalletForm" class="managedPortfolioGrid">
+        <label>برچسب <input id="cryptoWalletLabel" value="Main wallet" /></label>
+        <label>ارز
+          <select id="cryptoWalletCurrency">
+            <option>USDT</option>
+            <option>BTC</option>
+            <option>ETH</option>
+          </select>
+        </label>
+        <label>شبکه
+          <select id="cryptoWalletNetwork">
+            <option>TRC20</option>
+            <option>ERC20</option>
+            <option>BEP20</option>
+            <option>BTC</option>
+          </select>
+        </label>
+        <label class="wide">آدرس کیف پول غیرامانی <input id="cryptoWalletAddress" placeholder="آدرس کیف پول خودتان" /></label>
+        <button class="ghost" type="submit">ثبت کیف پول</button>
+      </form>
+      <div id="cryptoWalletList" class="empty">کیف پولی ثبت نشده است.</div>
+    </div>
   `;
   assistantPanel.insertAdjacentElement("afterend", panel);
   document.getElementById("managedPortfolioForm").addEventListener("submit", submitManagedPortfolio);
   document.getElementById("loadManagedRequestsBtn").addEventListener("click", loadManagedRequests);
+  document.getElementById("cryptoWalletForm").addEventListener("submit", submitCryptoWallet);
+  loadCryptoWallets();
 }
 
 function managedPayload() {
@@ -179,11 +205,67 @@ async function loadManagedRequests() {
   }
 }
 
+function renderCryptoWallets(items) {
+  const rows = (items || []).map((item) => `
+    <tr>
+      <td>${item.label}</td>
+      <td>${item.currency}</td>
+      <td>${item.network}</td>
+      <td><code>${item.wallet_address}</code></td>
+      <td>${item.wallet_type}</td>
+      <td>${item.status}</td>
+    </tr>
+  `).join("");
+  document.getElementById("cryptoWalletList").className = "tableWrap";
+  document.getElementById("cryptoWalletList").innerHTML = `
+    <table>
+      <thead><tr><th>عنوان</th><th>ارز</th><th>شبکه</th><th>آدرس</th><th>نوع</th><th>وضعیت</th></tr></thead>
+      <tbody>${rows || "<tr><td colspan='6'>کیف پولی ثبت نشده است.</td></tr>"}</tbody>
+    </table>
+  `;
+}
+
+async function loadCryptoWallets() {
+  if (!state.token) return;
+  try {
+    const data = await api("/crypto-wallets");
+    renderCryptoWallets(data.items || []);
+  } catch {
+    document.getElementById("cryptoWalletList").className = "empty";
+    document.getElementById("cryptoWalletList").textContent = "کیف پول‌ها فعلاً قابل دریافت نیستند.";
+  }
+}
+
+async function submitCryptoWallet(event) {
+  event.preventDefault();
+  const box = document.getElementById("cryptoWalletList");
+  try {
+    box.className = "empty";
+    box.textContent = "در حال ثبت کیف پول...";
+    await api("/crypto-wallets", {
+      method: "POST",
+      body: JSON.stringify({
+        label: document.getElementById("cryptoWalletLabel").value.trim(),
+        currency: document.getElementById("cryptoWalletCurrency").value,
+        network: document.getElementById("cryptoWalletNetwork").value,
+        wallet_address: document.getElementById("cryptoWalletAddress").value.trim(),
+        wallet_type: "self_custody",
+      }),
+    });
+    document.getElementById("cryptoWalletAddress").value = "";
+    await loadCryptoWallets();
+  } catch (error) {
+    box.className = "empty";
+    box.textContent = error.message;
+  }
+}
+
 function renderManagedAccess() {
   ensureManagedPortfolioPanel();
   const panel = document.getElementById("managedPortfolioPanel");
   if (!panel) return;
   panel.classList.toggle("hidden", !state.token || !state.user);
+  if (state.token && state.user) loadCryptoWallets();
 }
 
 const originalRenderSessionForManaged = renderSession;

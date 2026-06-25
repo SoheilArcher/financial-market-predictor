@@ -4,6 +4,7 @@ from app.database import Base, engine
 from app.migrations import run_lightweight_migrations
 from app.models.comment import Comment
 from app.models.crypto_payment import CryptoPaymentInvoice
+from app.models.crypto_wallet import UserCryptoWallet
 from app.models.managed_portfolio import ManagedPortfolioRequest
 from app.models.market import Exchange, Symbol, Candle
 from app.models.prediction import PerformancePrediction
