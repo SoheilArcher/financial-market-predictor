@@ -13,6 +13,7 @@ from app.api.news import router as news_router
 from app.api.analysis import router as analysis_router
 from app.api.performance import router as performance_router
 from app.api.report import router as report_router
+from app.api.social import router as social_router
 from app.api.subscription import router as subscription_router
 
 app = FastAPI(
@@ -33,6 +34,7 @@ app.include_router(chart_router)
 app.include_router(comments_router)
 app.include_router(performance_router)
 app.include_router(news_router)
+app.include_router(social_router)
 
 
 @app.get("/")

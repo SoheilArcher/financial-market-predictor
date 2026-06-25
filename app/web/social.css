@@ -1,0 +1,115 @@
+.socialGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.socialCard {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.socialCard textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #0d121b;
+  color: var(--text-strong);
+  padding: 10px 11px;
+  outline: none;
+}
+
+.socialActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.socialStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+.socialStats span,
+.positionAdvice span {
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.socialStats b,
+.positionAdvice b {
+  color: var(--text-strong);
+}
+
+.socialStats.compact {
+  grid-template-columns: repeat(3, auto);
+  justify-content: end;
+}
+
+.analystList {
+  display: grid;
+  gap: 8px;
+}
+
+.analystRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+}
+
+.analystRow b {
+  display: block;
+  color: var(--text-strong);
+}
+
+.analystRow span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.positionAdvice {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.positionAdvice b,
+.positionAdvice p {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+  .socialGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .socialStats,
+  .positionAdvice {
+    grid-template-columns: 1fr;
+  }
+
+  .analystRow {
+    grid-template-columns: 1fr;
+  }
+
+  .socialStats.compact {
+    justify-content: stretch;
+    grid-template-columns: 1fr;
+  }
+}
