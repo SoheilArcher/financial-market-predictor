@@ -221,7 +221,7 @@ $("analysisForm").addEventListener("submit", async (event) => {
     const exchange = $("exchange").value.trim();
     const symbol = $("symbol").value.trim().toUpperCase();
     const timeframe = $("timeframe").value;
-    const data = await api(`/market/analyze/${exchange}/${symbol}?timeframe=${encodeURIComponent(timeframe)}`);
+    const data = await api(`/market/analyze/${encodeURIComponent(exchange)}/${encodeURIComponent(symbol)}?timeframe=${encodeURIComponent(timeframe)}`);
     renderJson($("analysisResult"), data);
     await refreshMe();
   } catch (error) {

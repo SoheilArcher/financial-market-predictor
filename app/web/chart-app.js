@@ -4,7 +4,7 @@ async function loadChart() {
   const chartMeta = document.getElementById("chartMeta");
   chartMeta.textContent = "در حال دریافت داده و رسم چارت...";
 
-  const data = await api(`/chart/${symbol}?timeframe=${encodeURIComponent(timeframe)}&limit=150`);
+  const data = await api(`/chart/${encodeURIComponent(symbol)}?timeframe=${encodeURIComponent(timeframe)}&limit=150`);
   chartMeta.dataset.lastChart = JSON.stringify(data);
   renderPriceChart(data);
   renderRsiChart(data);

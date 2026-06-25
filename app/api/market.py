@@ -8,6 +8,7 @@ from app.models.market import Exchange, Symbol, Candle
 from app.models.user import User
 from app.services.analyzer import analyze_market
 from app.services.live_price import attach_live_price, fetch_live_price
+from app.services.pair_data import analyze_pair_symbol, parse_pair
 from app.services.signal_journal import record_signal
 from app.services.subscription import authorize_analysis
 
@@ -55,7 +56,7 @@ async def get_candles(
     return await fetch_candles(exchange_name, symbol, timeframe, limit)
 
 
-@router.get("/analyze/{exchange_name}/{symbol}")
+@router.get("/analyze/{exchange_name}/{symbol:path}")
 async def analyze_symbol(
     exchange_name: str,
     symbol: str,
@@ -64,28 +65,32 @@ async def analyze_symbol(
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
+    pair = parse_pair(symbol)
     usage = await authorize_analysis(
         session=session,
         user=current_user,
         symbol=symbol.upper(),
         timeframe=timeframe,
     )
-    candles = await fetch_candles(exchange_name, symbol, timeframe, limit)
-    result = analyze_market(
-        candles=candles,
-        symbol=symbol.upper(),
-        timeframe=timeframe,
-    )
-    try:
-        live_price = await fetch_live_price(symbol=symbol, exchange=exchange_name)
-        attach_live_price(result, live_price)
-    except Exception as exc:
-        result["live_price"] = {
-            "exchange": exchange_name,
-            "symbol": symbol.upper(),
-            "status": "unavailable",
-            "message": str(exc),
-        }
+    if pair:
+        result = await analyze_pair_symbol(symbol=symbol, timeframe=timeframe, limit=limit)
+    else:
+        candles = await fetch_candles(exchange_name, symbol, timeframe, limit)
+        result = analyze_market(
+            candles=candles,
+            symbol=symbol.upper(),
+            timeframe=timeframe,
+        )
+        try:
+            live_price = await fetch_live_price(symbol=symbol, exchange=exchange_name)
+            attach_live_price(result, live_price)
+        except Exception as exc:
+            result["live_price"] = {
+                "exchange": exchange_name,
+                "symbol": symbol.upper(),
+                "status": "unavailable",
+                "message": str(exc),
+            }
     record = await record_signal(session=session, user=current_user, analysis=result)
     if record:
         result["signal_record_id"] = record.id
