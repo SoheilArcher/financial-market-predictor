@@ -34,6 +34,10 @@ SYMBOL_KEYWORDS = {
     "LINKUSDT": ["link", "chainlink"],
     "AVAXUSDT": ["avax", "avalanche"],
     "TONUSDT": ["ton", "toncoin"],
+    "XAUUSD": ["gold", "xau", "bullion"],
+    "XAGUSD": ["silver", "xag"],
+    "WTIUSD": ["oil", "crude", "wti"],
+    "BRENTUSD": ["brent", "oil", "crude"],
 }
 
 POSITIVE_WORDS = [
@@ -182,6 +186,89 @@ def _description_fa(impact: str, triggers: list[str], original_title: str) -> st
     return f"اثر خبر هنوز قطعی نیست و باید با قیمت و حجم مقایسه شود. عنوان اصلی منبع: {original_title}"
 
 
+TOPIC_FA = [
+    (["etf", "fund"], "موضوع خبر درباره صندوق‌های قابل معامله و ورود سرمایه نهادی است."),
+    (["fed", "rate", "inflation"], "موضوع خبر به نرخ بهره، تورم یا سیاست پولی آمریکا مربوط است."),
+    (["hack", "exploit", "fraud"], "خبر به رخداد امنیتی، هک یا ریسک اعتماد در بازار اشاره دارد."),
+    (["lawsuit", "sec", "regulation", "ban", "crackdown"], "خبر به فشار حقوقی یا قانون‌گذاری مربوط است."),
+    (["liquidation", "leverage"], "خبر درباره لیکویید شدن موقعیت‌ها و ریسک معاملات اهرمی است."),
+    (["rally", "surge", "gain", "record"], "خبر از رشد قیمت یا افزایش تقاضا صحبت می‌کند."),
+    (["drop", "fall", "decline", "slump"], "خبر از افت قیمت یا فشار فروش صحبت می‌کند."),
+    (["gold", "bullion"], "خبر به بازار طلا و تقاضای دارایی امن مربوط است."),
+    (["silver"], "خبر به بازار نقره و فلزات گران‌بها مربوط است."),
+    (["oil", "crude", "brent", "wti"], "خبر به نفت، انرژی و انتظارات عرضه و تقاضا مربوط است."),
+]
+
+TRIGGER_FA = {
+    "approve": "تایید",
+    "approved": "تایید",
+    "approval": "تایید",
+    "adoption": "پذیرش",
+    "bull": "روند صعودی",
+    "bullish": "روند صعودی",
+    "buy": "خرید",
+    "gain": "رشد",
+    "gains": "رشد",
+    "growth": "رشد",
+    "institutional": "ورود سرمایه نهادی",
+    "launch": "راه‌اندازی",
+    "rally": "رالی صعودی",
+    "record": "رکورد جدید",
+    "rise": "افزایش",
+    "surge": "جهش قیمت",
+    "ban": "ممنوعیت",
+    "bear": "روند نزولی",
+    "bearish": "روند نزولی",
+    "crackdown": "برخورد نظارتی",
+    "crash": "ریزش",
+    "decline": "افت",
+    "drop": "افت",
+    "exploit": "رخداد امنیتی",
+    "fall": "ریزش",
+    "fraud": "تقلب",
+    "hack": "هک",
+    "lawsuit": "پرونده حقوقی",
+    "limit": "محدودیت",
+    "limits": "محدودیت",
+    "liquidation": "لیکویید شدن",
+    "regulation": "قانون‌گذاری",
+    "restrictions": "محدودیت",
+    "restrict": "محدودسازی",
+    "restricted": "محدود شده",
+    "risk": "ریسک",
+    "sell": "فروش",
+    "slump": "افت شدید",
+}
+
+
+def _topic_fa(text: str) -> str:
+    lowered = text.lower()
+    for keywords, topic in TOPIC_FA:
+        if any(keyword in lowered for keyword in keywords):
+            return topic
+    return "خبر درباره یکی از عوامل اثرگذار روی بازار است، اما موضوع آن نیاز به بررسی کنار چارت دارد."
+
+
+def _plain_news_fa(item: dict[str, Any], impact: str, symbols: list[str], triggers: list[str]) -> str:
+    source = item.get("source", "منبع خبری")
+    target = "، ".join(symbols) if symbols else "بازار"
+    source_text = f"{item.get('title', '')}. {item.get('description', '')}"
+    topic = _topic_fa(source_text)
+    trigger_text = "، ".join(TRIGGER_FA.get(trigger, trigger) for trigger in triggers) if triggers else "نشانه قطعی مثبت یا منفی"
+    if impact == "POSITIVE":
+        effect = "برداشت اولیه سیستم این است که خبر می‌تواند کمی به نفع خریداران باشد."
+    elif impact == "NEGATIVE":
+        effect = "برداشت اولیه سیستم این است که خبر می‌تواند فشار فروش یا ریسک احتیاط ایجاد کند."
+    else:
+        effect = "برداشت اولیه سیستم خنثی است و هنوز جهت مشخصی از متن خبر دیده نمی‌شود."
+    return f"{source} خبری منتشر کرده که به {target} مربوط است. {topic} {effect} دلیل تشخیص: {trigger_text}."
+
+
+def _original_excerpt(item: dict[str, Any]) -> str:
+    text = _strip_html(f"{item.get('title', '')}. {item.get('description', '')}")
+    return text[:420]
+
+
 async def _fetch_source(client: httpx.AsyncClient, source: dict[str, Any]) -> list[dict[str, Any]]:
     response = await client.get(source["url"])
     response.raise_for_status()
@@ -249,6 +336,8 @@ async def build_news_report(symbols: str | None = None, limit: int = 20) -> dict
                 "summary_en": _summary_en(impact, related),
                 "title_fa": _display_title_fa(item, impact, related),
                 "description_fa": _description_fa(impact, triggers, item["title"]),
+                "news_text_fa": _plain_news_fa(item, impact, related, triggers),
+                "original_excerpt": _original_excerpt(item),
             }
         )
         items.append(item)

@@ -21,6 +21,9 @@ const newsText = {
     single: "یک منبع",
     sourceLink: "مشاهده منبع",
     noData: "برای این نمادها خبر مرتبط پیدا نشد.",
+    newsText: "متن خبر به فارسی",
+    marketImpact: "اثر احتمالی روی بازار",
+    original: "متن کوتاه اصلی",
   },
   en: {
     title: "News and Market Impact",
@@ -42,6 +45,9 @@ const newsText = {
     single: "Single source",
     sourceLink: "Open Source",
     noData: "No related news was found for these symbols.",
+    newsText: "News Text",
+    marketImpact: "Potential Market Impact",
+    original: "Short Original Text",
   },
 };
 
@@ -109,14 +115,23 @@ function renderNewsReport(report) {
       : "-";
     const verificationText = item.verification === "cross_source" ? nt("cross") : nt("single");
     const title = isFa ? (item.title_fa || item.summary_fa || item.title) : item.title;
-    const description = isFa ? (item.description_fa || item.summary_fa || item.description) : (item.description || item.summary_fa || "");
+    const newsText = isFa ? (item.news_text_fa || item.description_fa || item.summary_fa || item.description) : (item.description || item.original_excerpt || item.summary_en || "");
+    const impactText = isFa ? (item.description_fa || item.summary_fa || "") : (item.summary_en || item.summary_fa || "");
     return `
       <article class="newsItem">
         <div class="newsItemTop">
           <span class="badge ${String(item.impact || "neutral").toLowerCase()}">${item.impact || "NEUTRAL"}</span>
           <b>${title}</b>
         </div>
-        <p>${description}</p>
+        <div class="newsReadable">
+          <b>${nt("newsText")}</b>
+          <p>${newsText}</p>
+        </div>
+        <div class="newsAdvice">
+          <b>${nt("marketImpact")}</b>
+          <p>${impactText}</p>
+        </div>
+        ${item.original_excerpt ? `<details class="newsOriginal"><summary>${nt("original")}</summary><p>${item.original_excerpt}</p></details>` : ""}
         <div class="newsMeta">
           <span>${item.source}</span>
           <span>${published}</span>
@@ -124,7 +139,6 @@ function renderNewsReport(report) {
           <span>${nt("confidence")}: ${item.confidence ?? 0}%</span>
           <span>${nt("verification")}: ${verificationText}</span>
         </div>
-        <div class="newsAdvice">${item.summary_fa || ""}</div>
         ${item.url ? `<a href="${item.url}" target="_blank" rel="noreferrer">${nt("sourceLink")}</a>` : ""}
       </article>
     `;
