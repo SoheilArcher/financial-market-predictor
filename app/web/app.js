@@ -48,17 +48,35 @@ function clearSession() {
   state.user = null;
   localStorage.removeItem("market_ai_token");
   localStorage.removeItem("market_ai_user");
+  $("analysisResult").textContent = "خروجی تحلیل اینجا نمایش داده می‌شود.";
   renderSession();
 }
 
 function renderSession() {
   const isLoggedIn = Boolean(state.token && state.user);
   $("logoutBtn").classList.toggle("hidden", !isLoggedIn);
+  $("authForm").classList.toggle("hidden", isLoggedIn);
+  $("accountPanel").classList.toggle("hidden", !isLoggedIn);
   $("adminPanel").classList.toggle("hidden", !isLoggedIn || state.user?.role !== "admin");
   $("sessionText").textContent = isLoggedIn
-    ? `${state.user.email} | نقش: ${state.user.role}`
+    ? "وارد حساب شدید. حالا می‌توانید اشتراک و تحلیل‌ها را مدیریت کنید."
     : "برای تست محصول وارد حساب شوید یا ثبت‌نام کنید.";
-  if (!isLoggedIn) $("meBox").textContent = "هنوز وارد نشده‌اید.";
+
+  if (isLoggedIn) {
+    $("accountEmail").textContent = state.user.email;
+    $("accountStatus").textContent = state.user.status;
+    $("roleBadge").textContent = state.user.role;
+    $("roleBadge").className = `badge ${state.user.role}`;
+    $("email").value = "";
+    $("password").value = "";
+    $("fullName").value = "";
+  } else {
+    $("meBox").textContent = "هنوز وارد نشده‌اید.";
+    $("accountEmail").textContent = "-";
+    $("accountStatus").textContent = "-";
+    $("roleBadge").textContent = "";
+    $("roleBadge").className = "badge";
+  }
 }
 
 function renderJson(target, data) {
