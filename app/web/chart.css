@@ -81,8 +81,63 @@
   background: #a371f7;
 }
 
+.chartAnalysisBox {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.chartAnalysisHeader {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.chartAnalysisHeader b {
+  color: var(--text-strong);
+}
+
+.chartAnalysisHeader p {
+  margin-top: 3px;
+}
+
+.chartAnalysisMetrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.chartAnalysisMetrics span {
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid var(--line-soft);
+  border-radius: 6px;
+  background: #0d121b;
+  overflow-wrap: anywhere;
+}
+
+.chartAnalysisMetrics b {
+  color: var(--text-strong);
+}
+
+.chartAnalysisBox ul {
+  margin: 0 18px 0 0;
+  padding: 0;
+}
+
 @media (max-width: 900px) {
   .chartTools {
+    grid-template-columns: 1fr;
+  }
+
+  .chartAnalysisMetrics {
     grid-template-columns: 1fr;
   }
 }
