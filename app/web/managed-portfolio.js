@@ -1,7 +1,7 @@
 function ensureManagedPortfolioPanel() {
   if (document.getElementById("managedPortfolioPanel")) return;
-  const assistantPanel = document.getElementById("assistantForm")?.closest(".panel");
-  if (!assistantPanel) return;
+  const accountSection = document.querySelector('[data-block-id="account"]');
+  if (!accountSection) return;
   const panel = document.createElement("section");
   panel.id = "managedPortfolioPanel";
   panel.className = "panel hidden dashboardBlock";
@@ -9,8 +9,8 @@ function ensureManagedPortfolioPanel() {
   panel.innerHTML = `
     <div class="panelHeader">
       <div>
-        <h2>درخواست مدیریت / کپی‌پرتفو</h2>
-        <p class="hint">ثبت درخواست، محاسبه کارمزد/هزینه و گزارش خالص؛ بدون دریافت وجه یا اجرای معامله داخل سیستم.</p>
+        <h2>درآمد ثابت بورس ایران</h2>
+        <p class="hint">محاسبه و ثبت درخواست محصول مستقل بازار سرمایه ایران؛ جدا از کریپتو، بازار جهانی و ترید پرریسک.</p>
       </div>
       <button id="loadManagedRequestsBtn" class="ghost" type="button">درخواست‌های من</button>
     </div>
@@ -23,31 +23,12 @@ function ensureManagedPortfolioPanel() {
           <option>IRR</option>
         </select>
       </label>
-      <label>بازار
-        <select id="managedMarket">
-          <option value="iran_fixed_income" selected>درآمد ثابت بورس ایران</option>
-          <option value="crypto">کریپتو</option>
-          <option value="global">بازار جهانی</option>
-          <option value="iran">بورس ایران</option>
-          <option value="mixed">ترکیبی</option>
-        </select>
-      </label>
-      <label>ریسک
-        <select id="managedRisk">
-          <option value="low">کم</option>
-          <option value="medium" selected>متوسط</option>
-          <option value="high">زیاد</option>
-        </select>
-      </label>
-      <label>درصد سود/زیان گزارش <input id="managedGrossProfit" type="number" step="0.1" value="0" /></label>
       <label>بازده هدف سالانه % <input id="iranYieldAnnual" type="number" step="0.1" value="35" /></label>
       <label>کارمزد شما % <input id="managedFee" type="number" min="0" max="50" step="0.1" value="5" /></label>
       <label>مالیات/هزینه % <input id="managedTax" type="number" min="0" max="50" step="0.1" value="0" /></label>
-      <label>تسویه
+      <label>پرداخت / تسویه
         <select id="managedPayout">
           <option>USDT</option>
-          <option>BTC</option>
-          <option>ETH</option>
         </select>
       </label>
       <label>شبکه پرداخت
@@ -57,20 +38,18 @@ function ensureManagedPortfolioPanel() {
           <option>BEP20</option>
         </select>
       </label>
-      <label class="wide">توضیحات <input id="managedNotes" placeholder="مثلاً فقط معاملات کم‌ریسک یا فقط بیت‌کوین" /></label>
+      <label class="wide">توضیحات <input id="managedNotes" placeholder="مثلاً سرمایه‌گذاری یک‌ساله یا برداشت سود ماهانه" /></label>
       <button class="primary" type="submit">ثبت درخواست</button>
       <button id="iranYieldQuoteBtn" class="ghost" type="button">محاسبه پلن ایران</button>
     </form>
-    <div id="managedPortfolioBox" class="empty">بعد از ثبت درخواست، گزارش خالص و وضعیت بررسی اینجا نمایش داده می‌شود.</div>
+    <div id="managedPortfolioBox" class="empty">اول «محاسبه پلن ایران» را بزنید تا سود ناخالص، کارمزد و سود خالص نمایش داده شود.</div>
     <div class="cryptoWalletBox">
-      <h3>کیف پول کریپتو برای تسویه</h3>
+      <h3>آدرس تسویه USDT</h3>
       <form id="cryptoWalletForm" class="managedPortfolioGrid">
         <label>برچسب <input id="cryptoWalletLabel" value="Main wallet" /></label>
         <label>ارز
           <select id="cryptoWalletCurrency">
             <option>USDT</option>
-            <option>BTC</option>
-            <option>ETH</option>
           </select>
         </label>
         <label>شبکه
@@ -78,16 +57,15 @@ function ensureManagedPortfolioPanel() {
             <option>TRC20</option>
             <option>ERC20</option>
             <option>BEP20</option>
-            <option>BTC</option>
           </select>
         </label>
-        <label class="wide">آدرس کیف پول غیرامانی <input id="cryptoWalletAddress" placeholder="آدرس کیف پول خودتان" /></label>
-        <button class="ghost" type="submit">ثبت کیف پول</button>
+        <label class="wide">آدرس دریافت USDT <input id="cryptoWalletAddress" placeholder="آدرس دریافت سود/تسویه" /></label>
+        <button class="ghost" type="submit">ثبت آدرس تسویه</button>
       </form>
-      <div id="cryptoWalletList" class="empty">کیف پولی ثبت نشده است.</div>
+      <div id="cryptoWalletList" class="empty">آدرس تسویه‌ای ثبت نشده است.</div>
     </div>
   `;
-  assistantPanel.insertAdjacentElement("afterend", panel);
+  accountSection.insertAdjacentElement("afterend", panel);
   document.getElementById("managedPortfolioForm").addEventListener("submit", submitManagedPortfolio);
   document.getElementById("iranYieldQuoteBtn").addEventListener("click", loadIranYieldQuote);
   document.getElementById("loadManagedRequestsBtn").addEventListener("click", loadManagedRequests);
@@ -137,19 +115,15 @@ function managedPayload() {
   const payload = {
     capital_amount: Number(document.getElementById("managedCapital").value || 0),
     capital_currency: document.getElementById("managedCurrency").value,
-    preferred_market: document.getElementById("managedMarket").value,
-    risk_level: document.getElementById("managedRisk").value,
-    gross_profit_percent: Number(document.getElementById("managedGrossProfit").value || 0),
+    preferred_market: "iran_fixed_income",
+    risk_level: "low",
+    gross_profit_percent: Number(document.getElementById("iranYieldAnnual").value || 35),
     fee_percent: Number(document.getElementById("managedFee").value || 0),
     tax_percent: Number(document.getElementById("managedTax").value || 0),
     payout_currency: document.getElementById("managedPayout").value,
     notes: document.getElementById("managedNotes").value.trim(),
     country: state.user?.country || "",
   };
-  if (payload.preferred_market === "iran_fixed_income") {
-    payload.gross_profit_percent = Number(document.getElementById("iranYieldAnnual").value || 35);
-    payload.risk_level = "low";
-  }
   return payload;
 }
 
@@ -172,7 +146,7 @@ function renderManagedRequests(items) {
   }).join("");
   document.getElementById("managedPortfolioBox").className = "reportBox";
   document.getElementById("managedPortfolioBox").innerHTML = `
-    <div class="managedNotice">این بخش فعلاً اجرای واقعی معامله، دریافت وجه یا پرداخت رمزارز انجام نمی‌دهد؛ درخواست‌ها برای بررسی و قرارداد ثبت می‌شوند.</div>
+    <div class="managedNotice">این محصول مخصوص درآمد ثابت بورس ایران است و با بازار کریپتو یا بازار جهانی ترکیب نشده است. درخواست‌ها برای بررسی و قرارداد ثبت می‌شوند.</div>
     <div class="tableWrap">
       <table>
         <thead><tr><th>ID</th><th>سرمایه</th><th>بازار</th><th>ریسک</th><th>وضعیت</th><th>بازده</th><th>کارمزد</th><th>هزینه</th><th>سود خالص</th></tr></thead>
@@ -185,7 +159,7 @@ function renderManagedRequests(items) {
 function renderCryptoInvoice(invoice) {
   document.getElementById("managedPortfolioBox").className = "reportBox";
   document.getElementById("managedPortfolioBox").innerHTML = `
-    <div class="managedNotice">فقط با ${invoice.currency} روی شبکه ${invoice.network} پرداخت کنید. پرداخت روی شبکه اشتباه ممکن است قابل بازیابی نباشد.</div>
+    <div class="managedNotice">برای ورود به پلن درآمد ثابت ایران، فقط با ${invoice.currency} روی شبکه ${invoice.network} پرداخت کنید. پرداخت روی شبکه اشتباه ممکن است قابل بازیابی نباشد.</div>
     <div class="cryptoInvoice">
       <div><span>مبلغ</span><b>${invoice.amount} ${invoice.currency}</b></div>
       <div><span>شبکه</span><b>${invoice.network}</b></div>
@@ -259,15 +233,15 @@ function renderCryptoWallets(items) {
       <td>${item.currency}</td>
       <td>${item.network}</td>
       <td><code>${item.wallet_address}</code></td>
-      <td>${item.wallet_type}</td>
+      <td>تسویه</td>
       <td>${item.status}</td>
     </tr>
   `).join("");
   document.getElementById("cryptoWalletList").className = "tableWrap";
   document.getElementById("cryptoWalletList").innerHTML = `
     <table>
-      <thead><tr><th>عنوان</th><th>ارز</th><th>شبکه</th><th>آدرس</th><th>نوع</th><th>وضعیت</th></tr></thead>
-      <tbody>${rows || "<tr><td colspan='6'>کیف پولی ثبت نشده است.</td></tr>"}</tbody>
+      <thead><tr><th>عنوان</th><th>ارز</th><th>شبکه</th><th>آدرس</th><th>کاربرد</th><th>وضعیت</th></tr></thead>
+      <tbody>${rows || "<tr><td colspan='6'>آدرس تسویه‌ای ثبت نشده است.</td></tr>"}</tbody>
     </table>
   `;
 }

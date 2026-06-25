@@ -60,6 +60,11 @@ async def landing():
     return FileResponse(web_dir / "landing.html")
 
 
+@app.get("/iran-income", include_in_schema=False)
+async def iran_income():
+    return FileResponse(web_dir / "iran-income.html")
+
+
 @app.get("/robots.txt", include_in_schema=False)
 async def robots_txt():
     return FileResponse(web_dir / "robots.txt", media_type="text/plain")
