@@ -1,0 +1,30 @@
+.managedPortfolioGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.managedPortfolioGrid .wide {
+  grid-column: span 3;
+}
+
+.managedNotice {
+  border: 1px solid var(--warning);
+  color: var(--warning);
+  background: rgba(210, 153, 34, 0.12);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  line-height: 1.8;
+}
+
+@media (max-width: 900px) {
+  .managedPortfolioGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .managedPortfolioGrid .wide {
+    grid-column: auto;
+  }
+}
