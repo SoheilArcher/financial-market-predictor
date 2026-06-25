@@ -24,6 +24,9 @@
         <button id="logoutBtn" class="ghost hidden" type="button">خروج</button>
       </header>
 
+      <nav id="dashboardTabs" class="dashboardTabs" aria-label="بخش‌های داشبورد"></nav>
+
+      <div id="dashboardContent" class="dashboardContent">
       <section class="grid two dashboardBlock" data-block-id="account">
         <form id="authForm" class="panel">
           <div class="panelHeader">
@@ -317,6 +320,7 @@
         <div id="adminBox" class="tableWrap"></div>
         <div id="adminFinanceBox" class="tableWrap"></div>
       </section>
+      </div>
     </main>
     <div id="toast" class="toast hidden"></div>
     <script src="/static/chart.js"></script>
@@ -333,5 +337,6 @@
     <script src="/static/news.js"></script>
     <script src="/static/social.js"></script>
     <script src="/static/revenue.js"></script>
+    <script src="/static/dashboard-tabs.js"></script>
   </body>
 </html>

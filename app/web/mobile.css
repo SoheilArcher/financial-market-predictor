@@ -11,12 +11,47 @@
   .shell {
     width: 100%;
     padding: 8px 8px 24px;
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 8px;
   }
 
   .topbar {
     position: static;
+    grid-column: 1;
+    grid-row: 1;
     padding: 10px 0;
     gap: 10px;
+  }
+
+  html[dir="rtl"] .dashboardTabs,
+  html[dir="ltr"] .dashboardTabs {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  html[dir="rtl"] .dashboardContent,
+  html[dir="ltr"] .dashboardContent {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .dashboardTabs {
+    position: sticky;
+    top: 0;
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 8px;
+    scrollbar-width: thin;
+  }
+
+  .dashboardTabs button {
+    width: auto;
+    min-width: max-content;
+    min-height: 38px;
+    padding: 0 12px;
+    white-space: nowrap;
   }
 
   .topbar h1 {

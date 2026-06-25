@@ -63,7 +63,8 @@ function ensureNewsPanel() {
 
   const panel = document.createElement("section");
   panel.id = "newsPanel";
-  panel.className = "panel";
+  panel.className = "panel dashboardBlock";
+  panel.dataset.blockId = "news";
   panel.innerHTML = `
     <div class="panelHeader">
       <div>

@@ -109,7 +109,8 @@ function ensureSocialPanel() {
   if (!analysisPanel) return;
   const panel = document.createElement("section");
   panel.id = "socialPanel";
-  panel.className = "panel";
+  panel.className = "panel dashboardBlock";
+  panel.dataset.blockId = "social";
   panel.innerHTML = `
     <div class="panelHeader">
       <div>

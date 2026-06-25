@@ -36,12 +36,12 @@ function registerDynamicBlocks() {
 function applyBlockOrder() {
   const order = customizationState.order || [];
   if (!order.length) return;
-  const shell = document.querySelector(".shell");
+  const container = document.getElementById("dashboardContent") || document.querySelector(".shell");
   const blocks = dashboardBlocks();
   const byId = new Map(blocks.map((block) => [block.dataset.blockId, block]));
   order.forEach((id) => {
     const block = byId.get(id);
-    if (block) shell.appendChild(block);
+    if (block) container.appendChild(block);
   });
 }
 
@@ -70,12 +70,12 @@ function resetLayout() {
 
 function ensureCustomizePanel() {
   if (document.getElementById("customizePanel")) return;
-  const shell = document.querySelector(".shell");
-  const topbar = document.querySelector(".topbar");
-  if (!shell || !topbar) return;
+  const container = document.getElementById("dashboardContent") || document.querySelector(".shell");
+  if (!container) return;
   const panel = document.createElement("section");
   panel.id = "customizePanel";
-  panel.className = "panel customizePanel";
+  panel.className = "panel customizePanel dashboardBlock";
+  panel.dataset.blockId = "customize";
   panel.innerHTML = `
     <div class="panelHeader">
       <div>
@@ -91,7 +91,7 @@ function ensureCustomizePanel() {
       <div id="layoutList" class="layoutList"></div>
     </div>
   `;
-  shell.insertBefore(panel, topbar.nextElementSibling);
+  container.appendChild(panel);
   document.getElementById("toggleCustomizeBtn").addEventListener("click", () => {
     document.getElementById("customizeBody").classList.toggle("hidden");
   });
@@ -154,7 +154,8 @@ window.addEventListener("DOMContentLoaded", () => {
   applyCustomizeLanguage();
   registerDynamicBlocks();
   const shell = document.querySelector(".shell");
-  if (shell) {
-    new MutationObserver(registerDynamicBlocks).observe(shell, { childList: true, subtree: false });
+  const container = document.getElementById("dashboardContent") || shell;
+  if (container) {
+    new MutationObserver(registerDynamicBlocks).observe(container, { childList: true, subtree: false });
   }
 });

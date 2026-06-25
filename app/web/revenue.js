@@ -76,7 +76,8 @@ function ensureRevenuePanel() {
   if (!adminPanel) return;
   const panel = document.createElement("section");
   panel.id = "revenuePanel";
-  panel.className = "panel hidden";
+  panel.className = "panel hidden dashboardBlock";
+  panel.dataset.blockId = "revenue";
   panel.innerHTML = `
     <div class="panelHeader">
       <div>

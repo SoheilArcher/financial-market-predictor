@@ -211,7 +211,8 @@ function addReasonAndFeedbackPanel() {
 
   const panel = document.createElement("section");
   panel.id = "feedbackPanel";
-  panel.className = "panel";
+  panel.className = "panel dashboardBlock";
+  panel.dataset.blockId = "feedback";
   panel.innerHTML = `
     <div class="panelHeader">
       <div>
