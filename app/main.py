@@ -65,6 +65,11 @@ async def iran_income():
     return FileResponse(web_dir / "iran-income.html")
 
 
+@app.get("/admin-panel", include_in_schema=False)
+async def admin_panel():
+    return FileResponse(web_dir / "admin-panel.html")
+
+
 @app.get("/robots.txt", include_in_schema=False)
 async def robots_txt():
     return FileResponse(web_dir / "robots.txt", media_type="text/plain")

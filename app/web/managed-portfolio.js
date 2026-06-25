@@ -1,5 +1,8 @@
 function ensureManagedPortfolioPanel() {
-  if (document.getElementById("managedPortfolioPanel")) return;
+  if (document.getElementById("managedPortfolioPanel")) {
+    bindManagedPortfolioPanel();
+    return;
+  }
   const accountSection = document.querySelector('[data-block-id="account"]');
   if (!accountSection) return;
   const panel = document.createElement("section");
@@ -66,6 +69,13 @@ function ensureManagedPortfolioPanel() {
     </div>
   `;
   accountSection.insertAdjacentElement("afterend", panel);
+  bindManagedPortfolioPanel();
+}
+
+function bindManagedPortfolioPanel() {
+  const panel = document.getElementById("managedPortfolioPanel");
+  if (!panel || panel.dataset.bound === "true") return;
+  panel.dataset.bound = "true";
   document.getElementById("managedPortfolioForm").addEventListener("submit", submitManagedPortfolio);
   document.getElementById("iranYieldQuoteBtn").addEventListener("click", loadIranYieldQuote);
   document.getElementById("loadManagedRequestsBtn").addEventListener("click", loadManagedRequests);

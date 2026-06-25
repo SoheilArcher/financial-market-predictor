@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NexTrade Admin</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="/static/managed-portfolio.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>پنل ادمین NexTrade</h1>
+          <p id="adminSessionText">برای مشاهده اطلاعات باید با حساب ادمین وارد شده باشید.</p>
+        </div>
+        <a class="ghost" href="/app">بازگشت به داشبورد</a>
+      </header>
+
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>داشبورد مدیریتی</h2>
+          <div class="reportActions">
+            <button id="adminLoadUsers" class="ghost" type="button">ثبت‌نام‌ها</button>
+            <button id="adminLoadRequests" class="ghost" type="button">درخواست‌ها</button>
+            <button id="adminLoadInvoices" class="ghost" type="button">پرداخت‌ها</button>
+            <button id="adminLoadComments" class="ghost" type="button">پیام‌ها</button>
+          </div>
+        </div>
+        <div class="adminTools">
+          <label>
+            وضعیت درخواست
+            <select id="adminPageRequestStatus">
+              <option value="">همه</option>
+              <option value="pending_review">pending_review</option>
+              <option value="approved">approved</option>
+              <option value="active">active</option>
+              <option value="rejected">rejected</option>
+              <option value="settled">settled</option>
+            </select>
+          </label>
+          <label>
+            وضعیت پرداخت
+            <select id="adminPageInvoiceStatus">
+              <option value="">همه</option>
+              <option value="pending_payment">pending_payment</option>
+              <option value="pending_review">pending_review</option>
+              <option value="confirmed">confirmed</option>
+              <option value="rejected">rejected</option>
+              <option value="refunded">refunded</option>
+            </select>
+          </label>
+          <label>
+            وضعیت پیام
+            <select id="adminPageCommentStatus">
+              <option value="">همه</option>
+              <option value="visible">visible</option>
+              <option value="review">review</option>
+              <option value="hidden">hidden</option>
+            </select>
+          </label>
+        </div>
+        <div id="adminPageBox" class="tableWrap"></div>
+      </section>
+    </main>
+    <div id="toast" class="toast hidden"></div>
+    <script src="/static/admin-panel.js"></script>
+  </body>
+</html>

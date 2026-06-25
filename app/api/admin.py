@@ -9,6 +9,7 @@ from app.api.auth import get_current_user, get_session, to_user_response
 from app.models.subscription import Plan, Subscription
 from app.models.crypto_payment import CryptoPaymentInvoice
 from app.models.managed_portfolio import ManagedPortfolioRequest
+from app.models.comment import Comment
 from app.models.user import User
 from app.schemas.admin import (
     AssignSubscriptionRequest,
@@ -94,6 +95,20 @@ def crypto_invoice_response(item: CryptoPaymentInvoice) -> dict:
         "expires_at": item.expires_at.isoformat() if item.expires_at else None,
         "paid_at": item.paid_at.isoformat() if item.paid_at else None,
         "reviewed_at": item.reviewed_at.isoformat() if item.reviewed_at else None,
+    }
+
+
+def comment_response(comment: Comment, user: User | None = None) -> dict:
+    return {
+        "id": comment.id,
+        "user_id": comment.user_id,
+        "user_email": user.email if user else None,
+        "target_type": comment.target_type,
+        "target_id": comment.target_id,
+        "content": comment.content,
+        "language": comment.language,
+        "status": comment.status,
+        "created_at": comment.created_at.isoformat() if comment.created_at else None,
     }
 
 
@@ -316,3 +331,43 @@ async def admin_update_crypto_invoice(
     await session.commit()
     await session.refresh(item)
     return crypto_invoice_response(item)
+
+
+@router.get("/comments")
+async def admin_comments(
+    status_filter: str | None = None,
+    limit: int = 100,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_admin),
+):
+    stmt = (
+        select(Comment, User)
+        .join(User, User.id == Comment.user_id)
+        .order_by(desc(Comment.created_at))
+        .limit(min(max(limit, 1), 500))
+    )
+    if status_filter:
+        stmt = stmt.where(Comment.status == status_filter)
+    rows = (await session.execute(stmt)).all()
+    return {"items": [comment_response(comment, user) for comment, user in rows], "count": len(rows)}
+
+
+@router.patch("/comments/{comment_id}")
+async def admin_update_comment(
+    comment_id: int,
+    payload: dict,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_admin),
+):
+    item = await session.get(Comment, comment_id)
+    if item is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Comment not found")
+    allowed = {"visible", "hidden", "review"}
+    if "status" in payload:
+        next_status = str(payload["status"])
+        if next_status not in allowed:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid status")
+        item.status = next_status
+    await session.commit()
+    await session.refresh(item)
+    return comment_response(item)
