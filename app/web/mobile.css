@@ -160,6 +160,14 @@
     bottom: 8px;
     max-width: none;
   }
+
+  .symbolSuggestBox {
+    max-height: 260px;
+  }
+
+  .symbolSuggestItem {
+    min-height: 58px;
+  }
 }
 
 @media (min-width: 721px) and (max-width: 1100px) {

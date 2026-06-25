@@ -16,6 +16,7 @@ from app.api.report import router as report_router
 from app.api.revenue import router as revenue_router
 from app.api.social import router as social_router
 from app.api.subscription import router as subscription_router
+from app.api.symbols import router as symbols_router
 
 app = FastAPI(
     title="Market AI Platform",
@@ -37,6 +38,7 @@ app.include_router(performance_router)
 app.include_router(news_router)
 app.include_router(social_router)
 app.include_router(revenue_router)
+app.include_router(symbols_router)
 
 
 @app.get("/")
