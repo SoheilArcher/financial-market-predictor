@@ -3,6 +3,7 @@ from typing import Any
 
 from app.collectors.binance import fetch_binance_klines, save_binance_candles
 from app.services.analyzer import calculate_ema, calculate_rsi
+from app.services.commodity_data import build_commodity_chart_data, is_commodity_symbol, normalize_commodity_symbol
 from app.services.live_price import fetch_live_price
 
 
@@ -39,6 +40,13 @@ def kline_to_candle(kline: list[Any]) -> dict[str, Any]:
 
 
 async def build_chart_data(symbol: str, timeframe: str = "5m", limit: int = 150) -> dict[str, Any]:
+    if is_commodity_symbol(symbol):
+        return await build_commodity_chart_data(
+            symbol=normalize_commodity_symbol(symbol) or symbol,
+            timeframe=timeframe,
+            limit=limit,
+        )
+
     klines = await fetch_binance_klines(symbol=symbol, interval=timeframe, limit=limit)
     candles = [kline_to_candle(item) for item in klines]
     closes = [item["close"] for item in candles]

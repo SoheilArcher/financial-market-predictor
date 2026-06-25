@@ -31,6 +31,50 @@
     "SHIB",
   ];
   const quotes = ["USDT", "USDC", "BTC", "ETH"];
+  const commodities = [
+    {
+      symbol: "XAUUSD",
+      label: "XAUUSD - طلا",
+      type: "commodity",
+      description: "طلا / Gold - USD per troy ounce",
+      aliases: ["GOLD", "XAU", "طلا"],
+    },
+    {
+      symbol: "XAGUSD",
+      label: "XAGUSD - نقره",
+      type: "commodity",
+      description: "نقره / Silver - USD per troy ounce",
+      aliases: ["SILVER", "XAG", "نقره"],
+    },
+    {
+      symbol: "WTIUSD",
+      label: "WTIUSD - نفت خام WTI",
+      type: "commodity",
+      description: "نفت خام WTI / US Oil - USD per barrel",
+      aliases: ["USOIL", "OIL", "WTI", "نفت"],
+    },
+    {
+      symbol: "BRENTUSD",
+      label: "BRENTUSD - نفت برنت",
+      type: "commodity",
+      description: "نفت برنت / Brent Oil - USD per barrel",
+      aliases: ["UKOIL", "BRENT", "برنت"],
+    },
+    {
+      symbol: "NGAS",
+      label: "NGAS - گاز طبیعی",
+      type: "commodity",
+      description: "گاز طبیعی / Natural Gas",
+      aliases: ["NATGAS", "GAS", "گاز"],
+    },
+    {
+      symbol: "COPPER",
+      label: "COPPER - مس",
+      type: "commodity",
+      description: "مس / Copper",
+      aliases: ["HG", "COPPERUSD", "مس"],
+    },
+  ];
   const inputIds = ["chartSymbol", "symbol", "reportSymbols", "newsSymbols"];
   const multiValueInputs = new Set(["reportSymbols", "newsSymbols"]);
   const box = document.createElement("div");
@@ -62,11 +106,22 @@
     });
   }
 
+  function addItem(items, seen, item) {
+    if (items.length >= 12 || seen.has(item.symbol)) return;
+    seen.add(item.symbol);
+    items.push(item);
+  }
+
   function localSuggestions(query) {
     const q = clean(query);
     const items = [];
     const seen = new Set();
     if (!q) return items;
+
+    commodities.forEach((item) => {
+      const haystack = [item.symbol, item.label, item.description, ...item.aliases].join(" ").toUpperCase();
+      if (haystack.includes(q)) addItem(items, seen, item);
+    });
 
     if (q.includes("/")) {
       const [baseQuery, quoteQuery = ""] = q.split("/");
@@ -161,7 +216,7 @@
               <b>${item.label || item.symbol}</b>
               <small>${item.description || ""}</small>
             </span>
-            <em>${item.type === "pair" ? "PAIR" : "SPOT"}</em>
+            <em>${item.type === "pair" ? "PAIR" : item.type === "commodity" ? "CMDTY" : "SPOT"}</em>
           </button>
         `
       )

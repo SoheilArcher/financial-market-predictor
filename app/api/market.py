@@ -7,6 +7,7 @@ from app.database import AsyncSessionLocal
 from app.models.market import Exchange, Symbol, Candle
 from app.models.user import User
 from app.services.analyzer import analyze_market
+from app.services.commodity_data import analyze_commodity_symbol, is_commodity_symbol, normalize_commodity_symbol
 from app.services.live_price import attach_live_price, fetch_live_price
 from app.services.pair_data import analyze_pair_symbol, parse_pair
 from app.services.signal_journal import record_signal
@@ -74,6 +75,12 @@ async def analyze_symbol(
     )
     if pair:
         result = await analyze_pair_symbol(symbol=symbol, timeframe=timeframe, limit=limit)
+    elif is_commodity_symbol(symbol):
+        result = await analyze_commodity_symbol(
+            symbol=normalize_commodity_symbol(symbol) or symbol,
+            timeframe=timeframe,
+            limit=limit,
+        )
     else:
         candles = await fetch_candles(exchange_name, symbol, timeframe, limit)
         result = analyze_market(

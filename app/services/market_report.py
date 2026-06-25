@@ -4,6 +4,7 @@ from typing import Any
 
 from app.collectors.binance import fetch_binance_klines, save_binance_candles
 from app.services.analyzer import analyze_market
+from app.services.commodity_data import analyze_commodity_symbol, fetch_commodity_candles, is_commodity_symbol, normalize_commodity_symbol
 from app.services.live_price import attach_live_price, fetch_live_price
 
 
@@ -18,6 +19,9 @@ DEFAULT_MARKET_SYMBOLS = [
     "LINKUSDT",
     "AVAXUSDT",
     "TONUSDT",
+    "XAUUSD",
+    "XAGUSD",
+    "WTIUSD",
 ]
 
 
@@ -113,6 +117,15 @@ def build_market_summary(items: list[dict[str, Any]], timeframe: str) -> dict[st
 
 async def analyze_symbol_live(symbol: str, timeframe: str, limit: int) -> dict[str, Any]:
     try:
+        if is_commodity_symbol(symbol):
+            normalized = normalize_commodity_symbol(symbol) or symbol
+            result = await analyze_commodity_symbol(normalized, timeframe=timeframe, limit=limit)
+            candles = await fetch_commodity_candles(normalized, timeframe=timeframe, limit=limit)
+            result["change_percent"] = price_change_percent(candles)
+            result["source"] = "Yahoo Finance"
+            result["last_candle_at"] = candles[-1]["timestamp"] if candles else None
+            return result
+
         klines = await fetch_binance_klines(symbol=symbol, interval=timeframe, limit=limit)
         candles = [kline_to_candle(kline) for kline in klines]
         result = analyze_market(candles=candles, symbol=symbol, timeframe=timeframe)
@@ -152,7 +165,7 @@ async def build_market_report(
     items = await asyncio.gather(*tasks)
     summary = build_market_summary(items, timeframe=timeframe)
     return {
-        "exchange": "Binance",
+        "exchange": "Multi-source",
         "generated_at": datetime.now(timezone.utc),
         "summary": summary,
         "items": sorted(

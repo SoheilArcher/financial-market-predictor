@@ -1,3 +1,5 @@
+from app.services.commodity_data import commodity_suggestions
+
 POPULAR_ASSETS = [
     "BTC",
     "ETH",
@@ -38,6 +40,8 @@ def _clean_symbol(value: str) -> str:
 
 
 def _description(symbol: str, kind: str) -> str:
+    if kind == "commodity":
+        return f"کالای جهانی {symbol}"
     if kind == "pair":
         return f"جفت ارز {symbol} برای مقایسه نسبی دو دارایی"
     return f"نماد معاملاتی {symbol} در بازار اسپات"
@@ -65,6 +69,13 @@ def build_symbol_suggestions(query: str, limit: int = 12) -> list[dict]:
             return
         seen.add(symbol)
         suggestions.append(_item(symbol, kind))
+
+    for item in commodity_suggestions(query):
+        if len(suggestions) >= max_items:
+            break
+        if item["symbol"] not in seen:
+            seen.add(item["symbol"])
+            suggestions.append(item)
 
     if "/" in q:
         base_query, quote_query = (q.split("/", 1) + [""])[:2]
