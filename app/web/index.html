@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Market AI Platform</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>Market AI Platform</h1>
+          <p id="sessionText">برای تست محصول وارد حساب شوید یا ثبت‌نام کنید.</p>
+        </div>
+        <button id="logoutBtn" class="ghost hidden" type="button">خروج</button>
+      </header>
+
+      <section class="grid two">
+        <form id="authForm" class="panel">
+          <div class="panelHeader">
+            <h2>ورود / ثبت‌نام</h2>
+            <div class="segmented">
+              <button class="active" data-auth-mode="login" type="button">ورود</button>
+              <button data-auth-mode="register" type="button">ثبت‌نام</button>
+            </div>
+          </div>
+          <label>
+            ایمیل
+            <input id="email" type="email" autocomplete="email" required />
+          </label>
+          <label>
+            رمز عبور
+            <input id="password" type="password" autocomplete="current-password" minlength="8" required />
+          </label>
+          <label id="nameField" class="hidden">
+            نام
+            <input id="fullName" type="text" autocomplete="name" />
+          </label>
+          <button class="primary" type="submit">ادامه</button>
+        </form>
+
+        <section class="panel">
+          <div class="panelHeader">
+            <h2>اشتراک من</h2>
+            <button id="refreshMeBtn" class="ghost" type="button">بروزرسانی</button>
+          </div>
+          <div id="meBox" class="empty">هنوز وارد نشده‌اید.</div>
+        </section>
+      </section>
+
+      <section class="panel">
+        <div class="panelHeader">
+          <h2>تحلیل بازار</h2>
+          <span class="hint">نیازمند اشتراک فعال</span>
+        </div>
+        <form id="analysisForm" class="tools">
+          <label>
+            صرافی
+            <input id="exchange" value="Binance" />
+          </label>
+          <label>
+            نماد
+            <input id="symbol" value="BTCUSDT" />
+          </label>
+          <label>
+            تایم‌فریم
+            <select id="timeframe">
+              <option>1m</option>
+              <option selected>5m</option>
+              <option>15m</option>
+              <option>1h</option>
+              <option>4h</option>
+              <option>1d</option>
+            </select>
+          </label>
+          <button class="primary" type="submit">تحلیل</button>
+        </form>
+        <pre id="analysisResult" class="result">خروجی تحلیل اینجا نمایش داده می‌شود.</pre>
+      </section>
+
+      <section id="adminPanel" class="panel hidden">
+        <div class="panelHeader">
+          <h2>مدیریت کاربران</h2>
+          <button id="loadAdminBtn" class="ghost" type="button">دریافت اطلاعات</button>
+        </div>
+        <div class="adminTools">
+          <label>
+            شناسه کاربر
+            <input id="targetUserId" type="number" min="1" />
+          </label>
+          <label>
+            پلن
+            <select id="targetPlan">
+              <option value="free">free</option>
+              <option value="pro">pro</option>
+              <option value="vip">vip</option>
+            </select>
+          </label>
+          <label>
+            روز
+            <input id="targetDays" type="number" min="1" value="30" />
+          </label>
+          <button id="assignPlanBtn" class="primary" type="button">اختصاص اشتراک</button>
+        </div>
+        <div id="adminBox" class="tableWrap"></div>
+      </section>
+    </main>
+    <div id="toast" class="toast hidden"></div>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
