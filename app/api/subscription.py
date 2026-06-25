@@ -3,12 +3,13 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
 from app.api.auth import get_current_user, get_session
-from app.models.subscription import Plan, Subscription
+from app.models.subscription import Plan
+from app.models.usage import AnalysisUsage
 from app.models.user import User
 from app.schemas.admin import PlanResponse, SubscriptionResponse
+from app.services.subscription import get_active_subscription
 
 router = APIRouter(prefix="/subscription", tags=["subscription"])
 
@@ -27,7 +28,7 @@ def plan_response(plan: Plan) -> PlanResponse:
     )
 
 
-def subscription_response(subscription: Subscription) -> SubscriptionResponse:
+def subscription_response(subscription) -> SubscriptionResponse:
     return SubscriptionResponse(
         id=subscription.id,
         user_id=subscription.user_id,
@@ -48,22 +49,26 @@ async def public_plans(session: AsyncSession = Depends(get_session)):
     return [plan_response(plan) for plan in plans]
 
 
-@router.get("/me", response_model=SubscriptionResponse | None)
+@router.get("/me")
 async def my_subscription(
     current_user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_session),
 ):
-    now = datetime.now(timezone.utc)
-    subscription = await session.scalar(
-        select(Subscription)
-        .options(selectinload(Subscription.plan))
-        .where(
-            Subscription.user_id == current_user.id,
-            Subscription.status == "active",
-            Subscription.ends_at > now,
-        )
-        .order_by(Subscription.ends_at.desc())
-        .limit(1)
-    )
-    return subscription_response(subscription) if subscription else None
+    subscription = await get_active_subscription(session, current_user.id)
+    if subscription is None:
+        return None
 
+    today = datetime.now(timezone.utc).date()
+    usage = await session.scalar(
+        select(AnalysisUsage).where(
+            AnalysisUsage.user_id == current_user.id,
+            AnalysisUsage.usage_date == today,
+        )
+    )
+    payload = subscription_response(subscription).model_dump()
+    payload["usage_today"] = {
+        "used": usage.count if usage else 0,
+        "limit": subscription.plan.max_analyses_per_day,
+        "remaining": max(subscription.plan.max_analyses_per_day - (usage.count if usage else 0), 0),
+    }
+    return payload

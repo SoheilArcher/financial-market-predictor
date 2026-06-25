@@ -3,6 +3,7 @@ import asyncio
 from app.database import Base, engine
 from app.models.market import Exchange, Symbol, Candle
 from app.models.subscription import Plan, Subscription
+from app.models.usage import AnalysisUsage
 from app.models.user import User
 
 
