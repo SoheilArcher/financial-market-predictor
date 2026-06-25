@@ -25,6 +25,7 @@ function ensureManagedPortfolioPanel() {
       </label>
       <label>بازار
         <select id="managedMarket">
+          <option value="iran_fixed_income" selected>درآمد ثابت بورس ایران</option>
           <option value="crypto">کریپتو</option>
           <option value="global">بازار جهانی</option>
           <option value="iran">بورس ایران</option>
@@ -39,6 +40,7 @@ function ensureManagedPortfolioPanel() {
         </select>
       </label>
       <label>درصد سود/زیان گزارش <input id="managedGrossProfit" type="number" step="0.1" value="0" /></label>
+      <label>بازده هدف سالانه % <input id="iranYieldAnnual" type="number" step="0.1" value="35" /></label>
       <label>کارمزد شما % <input id="managedFee" type="number" min="0" max="50" step="0.1" value="5" /></label>
       <label>مالیات/هزینه % <input id="managedTax" type="number" min="0" max="50" step="0.1" value="0" /></label>
       <label>تسویه
@@ -57,6 +59,7 @@ function ensureManagedPortfolioPanel() {
       </label>
       <label class="wide">توضیحات <input id="managedNotes" placeholder="مثلاً فقط معاملات کم‌ریسک یا فقط بیت‌کوین" /></label>
       <button class="primary" type="submit">ثبت درخواست</button>
+      <button id="iranYieldQuoteBtn" class="ghost" type="button">محاسبه پلن ایران</button>
     </form>
     <div id="managedPortfolioBox" class="empty">بعد از ثبت درخواست، گزارش خالص و وضعیت بررسی اینجا نمایش داده می‌شود.</div>
     <div class="cryptoWalletBox">
@@ -86,13 +89,52 @@ function ensureManagedPortfolioPanel() {
   `;
   assistantPanel.insertAdjacentElement("afterend", panel);
   document.getElementById("managedPortfolioForm").addEventListener("submit", submitManagedPortfolio);
+  document.getElementById("iranYieldQuoteBtn").addEventListener("click", loadIranYieldQuote);
   document.getElementById("loadManagedRequestsBtn").addEventListener("click", loadManagedRequests);
   document.getElementById("cryptoWalletForm").addEventListener("submit", submitCryptoWallet);
   loadCryptoWallets();
 }
 
+function renderIranYieldQuote(quote) {
+  document.getElementById("managedPortfolioBox").className = "reportBox";
+  document.getElementById("managedPortfolioBox").innerHTML = `
+    <div class="managedNotice">${quote.summary_fa}</div>
+    <div class="cryptoInvoice">
+      <div><span>سرمایه</span><b>${quote.capital_amount}</b></div>
+      <div><span>بازده هدف سالانه</span><b>${quote.annual_return_percent}%</b></div>
+      <div><span>سود ناخالص سالانه</span><b>${quote.gross_yearly_profit}</b></div>
+      <div><span>سود ناخالص ماهانه</span><b>${quote.gross_monthly_profit}</b></div>
+      <div><span>کارمزد پلتفرم</span><b>${quote.platform_fee_amount}</b></div>
+      <div><span>هزینه/مالیات</span><b>${quote.tax_amount}</b></div>
+      <div><span>سود خالص سالانه</span><b>${quote.net_yearly_profit}</b></div>
+      <div><span>بازده خالص</span><b>${quote.net_return_percent}%</b></div>
+    </div>
+  `;
+}
+
+async function loadIranYieldQuote() {
+  const box = document.getElementById("managedPortfolioBox");
+  try {
+    box.className = "empty";
+    box.textContent = "در حال محاسبه پلن درآمد ثابت ایران...";
+    const quote = await api("/iran-yield/quote", {
+      method: "POST",
+      body: JSON.stringify({
+        capital_amount: Number(document.getElementById("managedCapital").value || 0),
+        annual_return_percent: Number(document.getElementById("iranYieldAnnual").value || 35),
+        platform_fee_percent: Number(document.getElementById("managedFee").value || 5),
+        tax_percent: Number(document.getElementById("managedTax").value || 0),
+      }),
+    });
+    renderIranYieldQuote(quote);
+  } catch (error) {
+    box.className = "empty";
+    box.textContent = error.message;
+  }
+}
+
 function managedPayload() {
-  return {
+  const payload = {
     capital_amount: Number(document.getElementById("managedCapital").value || 0),
     capital_currency: document.getElementById("managedCurrency").value,
     preferred_market: document.getElementById("managedMarket").value,
@@ -104,6 +146,11 @@ function managedPayload() {
     notes: document.getElementById("managedNotes").value.trim(),
     country: state.user?.country || "",
   };
+  if (payload.preferred_market === "iran_fixed_income") {
+    payload.gross_profit_percent = Number(document.getElementById("iranYieldAnnual").value || 35);
+    payload.risk_level = "low";
+  }
+  return payload;
 }
 
 function renderManagedRequests(items) {

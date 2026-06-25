@@ -12,6 +12,7 @@ from app.api.comments import router as comments_router
 from app.api.crypto_payments import router as crypto_payments_router
 from app.api.crypto_wallets import router as crypto_wallets_router
 from app.api.iran_market import router as iran_market_router
+from app.api.iran_yield import router as iran_yield_router
 from app.api.managed_portfolio import router as managed_portfolio_router
 from app.api.market import router as market_router
 from app.api.news import router as news_router
@@ -44,6 +45,7 @@ app.include_router(comments_router)
 app.include_router(crypto_payments_router)
 app.include_router(crypto_wallets_router)
 app.include_router(iran_market_router)
+app.include_router(iran_yield_router)
 app.include_router(managed_portfolio_router)
 app.include_router(performance_router)
 app.include_router(news_router)
