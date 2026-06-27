@@ -6,6 +6,7 @@ TARGET_HOST = "127.0.0.1"
 TARGET_PORT = 8000
 HOP_BY_HOP = {
     "connection",
+    "content-length",
     "keep-alive",
     "proxy-authenticate",
     "proxy-authorization",
@@ -37,7 +38,10 @@ class ProxyHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self._proxy()
 
-    def _proxy(self):
+    def do_HEAD(self):
+        self._proxy(send_body=False)
+
+    def _proxy(self, send_body=True):
         length = int(self.headers.get("Content-Length") or 0)
         body = self.rfile.read(length) if length else None
         headers = {
@@ -52,25 +56,36 @@ class ProxyHandler(BaseHTTPRequestHandler):
         try:
             conn.request(self.command, self.path, body=body, headers=headers)
             response = conn.getresponse()
-            data = response.read()
+            data = response.read() if send_body else b""
             self.send_response(response.status, response.reason)
             for key, value in response.getheaders():
                 if key.lower() not in HOP_BY_HOP:
                     self.send_header(key, value)
             self.send_header("Content-Length", str(len(data)))
+            self.send_header("Connection", "close")
             self.end_headers()
-            self.wfile.write(data)
+            if send_body:
+                self.wfile.write(data)
+            self.close_connection = True
         except Exception as exc:
             message = f"Proxy error: {exc}".encode()
             self.send_response(502)
             self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.send_header("Content-Length", str(len(message)))
+            self.send_header("Connection", "close")
             self.end_headers()
             self.wfile.write(message)
+            self.close_connection = True
         finally:
             conn.close()
 
 
+class NexTradeHTTPServer(ThreadingHTTPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+    request_queue_size = 128
+
+
 if __name__ == "__main__":
-    server = ThreadingHTTPServer(("0.0.0.0", 80), ProxyHandler)
+    server = NexTradeHTTPServer(("0.0.0.0", 80), ProxyHandler)
     server.serve_forever()
