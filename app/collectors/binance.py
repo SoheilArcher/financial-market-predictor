@@ -52,17 +52,27 @@ async def get_or_create_symbol(session, exchange_id: int, symbol: str):
     return db_symbol
 
 
-async def fetch_binance_klines(symbol: str = "BTCUSDT", interval: str = "5m", limit: int = 100):
-    params = {
-        "symbol": symbol,
-        "interval": interval,
-        "limit": limit,
-    }
+_KLINES_CACHE = {}
+_KLINES_CACHE_TTL = 10.0
 
+
+async def fetch_binance_klines(symbol="BTCUSDT", interval="5m", limit=100):
+    import time
+    key = (symbol, interval, limit)
+    now = time.monotonic()
+    cached = _KLINES_CACHE.get(key)
+    if cached and (now - cached[0]) < _KLINES_CACHE_TTL:
+        return cached[1]
+    params = {"symbol": symbol, "interval": interval, "limit": limit}
     async with httpx.AsyncClient(timeout=20) as client:
         response = await client.get(BINANCE_KLINES_URL, params=params)
         response.raise_for_status()
-        return response.json()
+        data = response.json()
+    _KLINES_CACHE[key] = (now, data)
+    if len(_KLINES_CACHE) > 500:
+        oldest = min(_KLINES_CACHE, key=lambda k: _KLINES_CACHE[k][0])
+        _KLINES_CACHE.pop(oldest, None)
+    return data
 
 
 async def save_binance_candles(symbol: str = "BTCUSDT", interval: str = "5m", limit: int = 100):
