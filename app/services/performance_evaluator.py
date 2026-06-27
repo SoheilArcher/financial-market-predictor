@@ -82,6 +82,7 @@ async def evaluate_prediction(
         await session.refresh(prediction)
         return prediction
 
+    selected.sort(key=lambda c: _parse_time(c.get("timestamp")) or now)
     prediction.max_price_after = max(float(item["high"]) for item in selected)
     prediction.min_price_after = min(float(item["low"]) for item in selected)
 

@@ -148,9 +148,9 @@ async def register(payload: RegisterRequest, session: AsyncSession = Depends(get
         country=payload.country,
         referral_code=await _new_referral_code(session),
         referred_by_user_id=referrer.id if referrer else None,
-        role="admin" if user_count == 0 else "user",
-        status="active" if user_count == 0 else "pending_email",
-        email_verified_at=datetime.now(timezone.utc) if user_count == 0 else None,
+        role="user",
+        status="pending_email",
+        email_verified_at=None,
     )
     session.add(user)
     await session.flush()

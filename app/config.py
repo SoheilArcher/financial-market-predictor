@@ -3,6 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     database_url: str
+    db_echo: bool = False
     telegram_bot_token: str = ""
     telegram_channel_id: str = ""
     jwt_secret_key: str = "change-this-secret-key"
