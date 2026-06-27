@@ -71,6 +71,41 @@
     box-shadow: none;
   }
 
+  .loggedOut .authBlock,
+  .loggedIn .authBlock {
+    grid-template-columns: 1fr !important;
+    margin-top: 4px;
+  }
+
+  .authHero {
+    min-height: auto;
+    padding: 16px;
+    gap: 14px;
+    box-shadow: none;
+  }
+
+  .authHero h2 {
+    font-size: 28px;
+    line-height: 1.35;
+  }
+
+  .authHero p {
+    font-size: 13px;
+    line-height: 1.9;
+  }
+
+  .authFeatureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .authFeatureGrid div {
+    min-height: auto;
+  }
+
+  .authPreview {
+    max-width: 100%;
+  }
+
   .panelHeader {
     gap: 8px;
     margin-bottom: 10px;

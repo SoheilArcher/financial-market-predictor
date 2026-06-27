@@ -17,6 +17,15 @@ const uiText = {
     loginRegister: "ورود / ثبت‌نام",
     authHint: "برای دیدن چارت، گزارش‌ها و ابزارهای مدیریت سرمایه وارد حساب خود شوید.",
     authIntro: "تحلیل بازار، گزارش عملکرد مدل و برنامه معامله در یک محیط یکپارچه.",
+    heroTitle: "دستیار معامله‌گر برای تصمیم‌های سریع‌تر و دقیق‌تر",
+    heroText: "بازارهای جهانی، رمزارز، طلا، نفت و بازار سرمایه ایران را در یک داشبورد دنبال کن؛ سیستم دلیل تحلیل، نقطه ورود، حد ضرر و عملکرد واقعی سیگنال‌ها را کنار هم نشان می‌دهد.",
+    heroFeatureOneTitle: "تحلیل قابل توضیح",
+    heroFeatureOneText: "هر سیگنال با دلیل، حمایت، مقاومت و ریسک نمایش داده می‌شود.",
+    heroFeatureTwoTitle: "عملکرد واقعی مدل",
+    heroFeatureTwoText: "برد، باخت، انقضا و PnL سیگنال‌ها با داده واقعی بررسی می‌شود.",
+    heroFeatureThreeTitle: "بازار ایران و جهانی",
+    heroFeatureThreeText: "بورس ایران، کریپتو، طلا، نفت و جفت‌ارزها در مسیر توسعه هستند.",
+    heroPreviewLabel: "نمونه وضعیت",
     login: "ورود",
     register: "ثبت‌نام",
     email: "ایمیل",
@@ -67,6 +76,15 @@ const uiText = {
     loginRegister: "Login / Register",
     authHint: "Log in to access charts, reports, and capital management tools.",
     authIntro: "Market analysis, model performance, and trade planning in one workspace.",
+    heroTitle: "A trading assistant for faster, clearer decisions",
+    heroText: "Track global markets, crypto, gold, oil, and Iran's capital market in one dashboard, with reasoning, entries, stop loss, and real signal performance side by side.",
+    heroFeatureOneTitle: "Explainable analysis",
+    heroFeatureOneText: "Each signal shows reasoning, support, resistance, and risk context.",
+    heroFeatureTwoTitle: "Real model performance",
+    heroFeatureTwoText: "Wins, losses, expirations, and PnL are checked against real candle data.",
+    heroFeatureThreeTitle: "Iran and global markets",
+    heroFeatureThreeText: "Iran market, crypto, gold, oil, and pairs are part of the product path.",
+    heroPreviewLabel: "Sample status",
     login: "Login",
     register: "Register",
     email: "Email",
@@ -149,6 +167,15 @@ function applyLanguage() {
   setText("#authForm .panelHeader h2", t("loginRegister"));
   setText("#authForm .panelHeader .hint", t("authHint"));
   setText(".authIntro span", t("authIntro"));
+  setText("#authHeroTitle", t("heroTitle"));
+  setText("#authHeroText", t("heroText"));
+  setText("#authFeatureOneTitle", t("heroFeatureOneTitle"));
+  setText("#authFeatureOneText", t("heroFeatureOneText"));
+  setText("#authFeatureTwoTitle", t("heroFeatureTwoTitle"));
+  setText("#authFeatureTwoText", t("heroFeatureTwoText"));
+  setText("#authFeatureThreeTitle", t("heroFeatureThreeTitle"));
+  setText("#authFeatureThreeText", t("heroFeatureThreeText"));
+  setText("#authPreviewLabel", t("heroPreviewLabel"));
   setText('[data-auth-mode="login"]', t("login"));
   setText('[data-auth-mode="register"]', t("register"));
   setLabel('label:has(#email)', t("email"));
