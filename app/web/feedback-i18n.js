@@ -34,6 +34,9 @@ const uiText = {
     hidePassword: "مخفی کردن رمز عبور",
     name: "نام",
     country: "اهل کجایی؟",
+    referralCode: "کد معرف",
+    referralPlaceholder: "اختیاری",
+    yourReferralCode: "کد معرف شما",
     continue: "ادامه",
     logout: "خروج",
     account: "حساب کاربری",
@@ -93,6 +96,9 @@ const uiText = {
     hidePassword: "Hide password",
     name: "Name",
     country: "Where are you from?",
+    referralCode: "Referral code",
+    referralPlaceholder: "Optional",
+    yourReferralCode: "Your referral code",
     continue: "Continue",
     logout: "Logout",
     account: "Account",
@@ -186,6 +192,11 @@ function applyLanguage() {
   }
   setLabel("#nameField", t("name"));
   setLabel("#countryField", t("country"));
+  setLabel("#referralField", t("referralCode"));
+  const referralCode = document.getElementById("referralCode");
+  if (referralCode) referralCode.placeholder = t("referralPlaceholder");
+  const accountReferralCode = document.getElementById("accountReferralCode");
+  if (accountReferralCode?.previousSibling) accountReferralCode.previousSibling.textContent = `${t("yourReferralCode")}: `;
   setText("#authForm button.primary", t("continue"));
   setText("#logoutBtn", t("logout"));
   setText("#accountPanel h2", t("account"));

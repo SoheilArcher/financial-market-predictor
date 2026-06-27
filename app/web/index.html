@@ -103,6 +103,10 @@
               <option value="OTHER">Other</option>
             </select>
           </label>
+          <label id="referralField" class="hidden">
+            کد معرف
+            <input id="referralCode" type="text" autocomplete="off" placeholder="اختیاری" />
+          </label>
           <button id="resendVerificationBtn" class="ghost hidden" type="button">ارسال دوباره لینک تایید ایمیل</button>
           <button class="primary" type="submit">ادامه</button>
         </form>
@@ -115,7 +119,8 @@
           <div class="empty">
             ایمیل: <b id="accountEmail">-</b><br />
             کشور: <b id="accountCountry">-</b><br />
-            وضعیت: <b id="accountStatus">-</b>
+            وضعیت: <b id="accountStatus">-</b><br />
+            کد معرف شما: <b id="accountReferralCode" dir="ltr">-</b>
           </div>
         </section>
 

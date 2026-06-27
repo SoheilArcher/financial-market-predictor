@@ -71,16 +71,19 @@ function renderSession() {
     $("accountEmail").textContent = state.user.email;
     $("accountStatus").textContent = state.user.status;
     $("accountCountry").textContent = state.user.country || "-";
+    $("accountReferralCode").textContent = state.user.referral_code || "-";
     $("roleBadge").textContent = state.user.role;
     $("roleBadge").className = `badge ${state.user.role}`;
     $("email").value = "";
     $("password").value = "";
     $("fullName").value = "";
+    $("referralCode").value = "";
   } else {
     $("meBox").textContent = "هنوز وارد نشده‌اید.";
     $("accountEmail").textContent = "-";
     $("accountStatus").textContent = "-";
     $("accountCountry").textContent = "-";
+    $("accountReferralCode").textContent = "-";
     $("roleBadge").textContent = "";
     $("roleBadge").className = "badge";
   }
@@ -99,9 +102,21 @@ async function refreshMe() {
   state.user = user;
   localStorage.setItem("market_ai_user", JSON.stringify(user));
   const sub = await api("/subscription/me");
-  $("meBox").innerHTML = sub
-    ? `پلن فعال: <b>${sub.plan.code}</b><br>مصرف امروز: ${sub.usage_today.used} از ${sub.usage_today.limit}<br>پایان: ${new Date(sub.ends_at).toLocaleString("fa-IR")}`
-    : "اشتراک فعال ندارید.";
+  if (sub) {
+    const locale = typeof currentLanguage === "function" && currentLanguage() === "en" ? "en-US" : "fa-IR";
+    const endsAt = new Date(sub.ends_at);
+    const hoursLeft = Math.max((endsAt.getTime() - Date.now()) / 36e5, 0);
+    const remaining = sub.usage_today.remaining ?? Math.max((sub.usage_today.limit || 0) - (sub.usage_today.used || 0), 0);
+    $("meBox").innerHTML = `
+      پلن فعال: <b>${sub.plan.code}</b><br>
+      مصرف امروز: <b>${sub.usage_today.used}</b> از <b>${sub.usage_today.limit}</b><br>
+      باقی‌مانده امروز: <b>${remaining}</b> تحلیل<br>
+      اعتبار باقی‌مانده: <b>${hoursLeft.toFixed(1)}</b> ساعت<br>
+      پایان: ${endsAt.toLocaleString(locale)}
+    `;
+  } else {
+    $("meBox").textContent = "اشتراک فعال ندارید.";
+  }
   renderSession();
 }
 
@@ -341,6 +356,7 @@ document.querySelectorAll("[data-auth-mode]").forEach((button) => {
     });
     $("nameField").classList.toggle("hidden", state.authMode !== "register");
     $("countryField").classList.toggle("hidden", state.authMode !== "register");
+    $("referralField").classList.toggle("hidden", state.authMode !== "register");
   });
 });
 
@@ -354,6 +370,7 @@ $("authForm").addEventListener("submit", async (event) => {
     if (state.authMode === "register") {
       payload.full_name = $("fullName").value.trim() || null;
       payload.country = $("country").value || null;
+      payload.referral_code = $("referralCode").value.trim() || null;
     }
     const data = await api(`/auth/${state.authMode}`, {
       method: "POST",

@@ -33,11 +33,27 @@ def to_user_response(user: User) -> UserResponse:
         email_verified=bool(user.email_verified_at),
         role=user.role,
         status=user.status,
+        referral_code=user.referral_code,
+        referred_by_user_id=user.referred_by_user_id,
     )
 
 
 def _new_email_token() -> str:
     return secrets.token_urlsafe(48)
+
+
+def _normalize_referral_code(code: str | None) -> str | None:
+    normalized = (code or "").strip().upper().replace(" ", "")
+    return normalized or None
+
+
+async def _new_referral_code(session: AsyncSession) -> str:
+    for _ in range(12):
+        code = secrets.token_urlsafe(6).replace("-", "").replace("_", "").upper()[:8]
+        existing = await session.scalar(select(User.id).where(User.referral_code == code))
+        if existing is None:
+            return code
+    raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Could not generate referral code")
 
 
 def _verification_url(token: str) -> str:
@@ -117,12 +133,21 @@ async def register(payload: RegisterRequest, session: AsyncSession = Depends(get
     if existing_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
 
+    referral_code = _normalize_referral_code(payload.referral_code)
+    referrer = None
+    if referral_code:
+        referrer = await session.scalar(select(User).where(User.referral_code == referral_code))
+        if referrer is None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid referral code")
+
     user_count = await session.scalar(select(func.count(User.id)))
     user = User(
         email=email,
         password_hash=hash_password(payload.password),
         full_name=payload.full_name,
         country=payload.country,
+        referral_code=await _new_referral_code(session),
+        referred_by_user_id=referrer.id if referrer else None,
         role="admin" if user_count == 0 else "user",
         status="active" if user_count == 0 else "pending_email",
         email_verified_at=datetime.now(timezone.utc) if user_count == 0 else None,

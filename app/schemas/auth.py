@@ -6,6 +6,7 @@ class RegisterRequest(BaseModel):
     password: str = Field(min_length=8, max_length=128)
     full_name: str | None = Field(default=None, max_length=120)
     country: str | None = Field(default=None, max_length=80)
+    referral_code: str | None = Field(default=None, max_length=40)
 
 
 class LoginRequest(BaseModel):
@@ -25,6 +26,8 @@ class UserResponse(BaseModel):
     email_verified: bool
     role: str
     status: str
+    referral_code: str | None = None
+    referred_by_user_id: int | None = None
 
 
 class TokenResponse(BaseModel):
