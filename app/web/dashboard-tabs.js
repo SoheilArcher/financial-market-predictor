@@ -3,7 +3,6 @@
   const tabOrder = [
     "account",
     "managed-portfolio",
-    "chart",
     "report",
     "iran-market",
     "news",
@@ -22,7 +21,6 @@
     fa: {
       account: "حساب",
       "managed-portfolio": "درآمد ثابت ایران",
-      chart: "چارت زنده",
       report: "گزارش بازار",
       "iran-market": "بورس ایران",
       news: "اخبار",
@@ -39,7 +37,6 @@
     en: {
       account: "Account",
       "managed-portfolio": "Iran Income",
-      chart: "Live Chart",
       report: "Market Report",
       "iran-market": "Iran Market",
       news: "News",

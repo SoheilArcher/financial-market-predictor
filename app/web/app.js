@@ -211,7 +211,6 @@ function renderMarketReport(report) {
       <td>${item.risk || "-"}</td>
       <td>
         <div class="reportActions">
-          <button class="ghost" type="button" data-report-action="chart" data-symbol="${item.symbol}">${label("چارت", "Chart")}</button>
           <button class="ghost" type="button" data-report-action="plan" data-symbol="${item.symbol}">${label("پلن", "Plan")}</button>
         </div>
       </td>
@@ -251,15 +250,6 @@ function renderMarketReport(report) {
 
 async function openReportSymbol(symbol, action) {
   const timeframe = $("reportTimeframe").value;
-  if (action === "chart") {
-    $("chartSymbol").value = symbol;
-    $("chartTimeframe").value = timeframe;
-    document.querySelector('[data-block-id="chart"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
-    if (typeof loadChart === "function") {
-      await loadChart();
-    }
-    return;
-  }
   if (action === "plan") {
     if (typeof window.ensureTradePanel === "function") {
       window.ensureTradePanel();

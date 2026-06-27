@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.database import AsyncSessionLocal
+from app.models.subscription import Plan, Subscription
 from app.models.user import User
 from app.schemas.auth import LoginRequest, RegisterRequest, ResendVerificationRequest, TokenResponse, UserResponse
 from app.services.emailer import send_verification_email
@@ -49,6 +50,40 @@ async def _issue_verification_email(session: AsyncSession, user: User) -> None:
     user.email_verification_sent_at = datetime.now(timezone.utc)
     await session.commit()
     await send_verification_email(user.email, _verification_url(user.email_verification_token))
+
+
+async def _grant_free_registration_day(session: AsyncSession, user: User) -> None:
+    existing_subscription = await session.scalar(
+        select(Subscription).where(Subscription.user_id == user.id)
+    )
+    if existing_subscription is not None:
+        return
+
+    free_plan = await session.scalar(select(Plan).where(Plan.code == "free"))
+    if free_plan is None:
+        free_plan = Plan(
+            code="free",
+            name="Free",
+            price=0,
+            currency="USD",
+            interval_days=30,
+            max_analyses_per_day=10,
+            allowed_timeframes=["5m", "15m"],
+            status="active",
+        )
+        session.add(free_plan)
+        await session.flush()
+
+    now = datetime.now(timezone.utc)
+    session.add(
+        Subscription(
+            user_id=user.id,
+            plan_id=free_plan.id,
+            status="active",
+            starts_at=now,
+            ends_at=now + timedelta(days=1),
+        )
+    )
 
 
 async def get_current_user(
@@ -93,6 +128,9 @@ async def register(payload: RegisterRequest, session: AsyncSession = Depends(get
         email_verified_at=datetime.now(timezone.utc) if user_count == 0 else None,
     )
     session.add(user)
+    await session.flush()
+    if user.status == "active":
+        await _grant_free_registration_day(session, user)
     await session.commit()
     await session.refresh(user)
     if user.status == "pending_email":
@@ -154,6 +192,7 @@ async def verify_email(token: str, session: AsyncSession = Depends(get_session))
     user.email_verified_at = datetime.now(timezone.utc)
     user.email_verification_token = None
     user.status = "active"
+    await _grant_free_registration_day(session, user)
     await session.commit()
     return """
     <html lang="fa" dir="rtl">

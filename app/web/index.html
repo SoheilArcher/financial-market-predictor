@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>NexTrade</title>
     <link rel="stylesheet" href="/static/styles.css" />
-    <link rel="stylesheet" href="/static/chart.css" />
     <link rel="stylesheet" href="/static/feedback.css" />
     <link rel="stylesheet" href="/static/iran-market.css" />
     <link rel="stylesheet" href="/static/managed-portfolio.css" />
@@ -189,43 +188,6 @@
         </div>
       </section>
 
-      <section class="panel dashboardBlock" data-block-id="chart">
-        <div class="panelHeader">
-          <h2>چارت زنده</h2>
-          <span class="hint">کندل‌ها همراه با EMA20، EMA50 و RSI</span>
-        </div>
-        <form id="chartForm" class="chartTools">
-          <label>
-            نماد
-            <input id="chartSymbol" value="BTC/ETH" />
-          </label>
-          <label>
-            تایم‌فریم
-            <select id="chartTimeframe">
-              <option>1m</option>
-              <option selected>5m</option>
-              <option>15m</option>
-              <option>1h</option>
-              <option>4h</option>
-              <option>1d</option>
-            </select>
-          </label>
-          <button class="primary" type="submit">نمایش چارت</button>
-        </form>
-        <div class="chartShell">
-          <div id="chartMeta" class="chartMeta">برای دریافت چارت وارد حساب شوید و اشتراک فعال داشته باشید.</div>
-          <canvas id="priceCanvas" class="priceCanvas"></canvas>
-          <canvas id="rsiCanvas" class="rsiCanvas"></canvas>
-          <div class="legend">
-            <span class="legendCandle">Candle</span>
-            <span class="legendEma20">EMA20</span>
-            <span class="legendEma50">EMA50</span>
-            <span class="legendRsi">RSI14</span>
-          </div>
-          <div id="chartAnalysisBox" class="chartAnalysisBox">بعد از نمایش چارت، خلاصه تحلیل اینجا نمایش داده می‌شود.</div>
-        </div>
-      </section>
-
       <section class="panel dashboardBlock" data-block-id="report">
         <div class="panelHeader">
           <h2>گزارش کلی بازار</h2>
@@ -368,11 +330,9 @@
       </div>
     </main>
     <div id="toast" class="toast hidden"></div>
-    <script src="/static/chart.js"></script>
     <script src="/static/customize.js"></script>
     <script src="/static/app.js"></script>
     <script src="/static/symbol-search.js"></script>
-    <script src="/static/chart-app.js"></script>
     <script src="/static/assistant.js"></script>
     <script src="/static/managed-portfolio.js"></script>
     <script src="/static/trade-plan.js"></script>
