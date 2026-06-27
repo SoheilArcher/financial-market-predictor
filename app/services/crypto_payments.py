@@ -121,3 +121,24 @@ async def submit_payment_proof(
     await session.commit()
     await session.refresh(invoice)
     return invoice
+
+
+def validate_tx_hash(tx_hash: str, network: str) -> str:
+    value = (tx_hash or "").strip()
+    net = (network or "").upper()
+    if net in {"ERC20", "BEP20"}:
+        body = value[2:] if value.lower().startswith("0x") else value
+        if not (len(body) == 64 and all(c in "0123456789abcdefABCDEF" for c in body)):
+            raise ValueError("Invalid EVM transaction hash format")
+        return "0x" + body.lower()
+    if net == "TRC20":
+        if not (len(value) == 64 and all(c in "0123456789abcdefABCDEF" for c in value)):
+            raise ValueError("Invalid TRC20 transaction hash format")
+        return value.lower()
+    if net == "BTC":
+        if not (len(value) == 64 and all(c in "0123456789abcdefABCDEF" for c in value)):
+            raise ValueError("Invalid BTC transaction hash format")
+        return value.lower()
+    if len(value) < 16:
+        raise ValueError("Transaction hash is too short")
+    return value

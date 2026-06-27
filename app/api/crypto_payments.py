@@ -5,6 +5,7 @@ from app.api.auth import get_current_user, get_session
 from app.models.crypto_payment import CryptoPaymentInvoice
 from app.models.user import User
 from app.services.crypto_payments import (
+    validate_tx_hash,
     create_crypto_invoice,
     list_user_invoices,
     serialize_invoice,
@@ -59,9 +60,10 @@ async def submit_proof(
     invoice = await session.get(CryptoPaymentInvoice, invoice_id)
     if not invoice or invoice.user_id != current_user.id:
         raise HTTPException(status_code=404, detail="Invoice not found")
-    tx_hash = str(payload.get("tx_hash") or "").strip()
-    if len(tx_hash) < 10:
-        raise HTTPException(status_code=400, detail="tx_hash is required")
+    try:
+        tx_hash = validate_tx_hash(str(payload.get("tx_hash") or ""), invoice.network)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     updated = await submit_payment_proof(
         session=session,
         invoice=invoice,
