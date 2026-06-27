@@ -44,8 +44,8 @@ select {
   margin: 0 auto;
   padding: 14px 0 32px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
-  gap: 14px;
+  grid-template-columns: 1fr;
+  gap: 10px;
   align-items: start;
 }
 
@@ -65,36 +65,15 @@ select {
   border-bottom: 1px solid var(--line-soft);
 }
 
-html[dir="rtl"] .dashboardTabs {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-html[dir="rtl"] .dashboardContent {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-html[dir="ltr"] .shell {
-  grid-template-columns: 220px minmax(0, 1fr);
-}
-
-html[dir="ltr"] .dashboardTabs {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-html[dir="ltr"] .dashboardContent {
-  grid-column: 2;
-  grid-row: 2;
-}
-
 .dashboardTabs {
   position: sticky;
-  top: 76px;
+  top: 70px;
   z-index: 8;
-  display: grid;
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
   gap: 8px;
+  overflow-x: auto;
   padding: 10px;
   background: rgba(17, 23, 34, 0.82);
   border: 1px solid var(--line);
@@ -104,7 +83,8 @@ html[dir="ltr"] .dashboardContent {
 }
 
 .dashboardTabs button {
-  width: 100%;
+  width: auto;
+  min-width: max-content;
   min-height: 40px;
   display: flex;
   align-items: center;
@@ -135,11 +115,96 @@ html[dir="ltr"] .dashboardContent {
 }
 
 .dashboardContent {
+  grid-column: 1;
+  grid-row: 3;
   min-width: 0;
 }
 
 .dashboardBlock.tabHidden {
   display: none !important;
+}
+
+.loggedOut .dashboardTabs {
+  display: none;
+}
+
+.loggedOut .dashboardContent {
+  grid-row: 2;
+}
+
+.loggedOut .authBlock {
+  grid-template-columns: minmax(0, 540px);
+  justify-content: center;
+}
+
+.loggedIn .authBlock {
+  grid-template-columns: 1fr 1fr;
+}
+
+.authBlock {
+  align-items: stretch;
+}
+
+.authCard {
+  display: grid;
+  gap: 12px;
+  max-width: 540px;
+}
+
+.authIntro {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid rgba(47, 129, 247, 0.32);
+  border-radius: 8px;
+  background: rgba(47, 129, 247, 0.08);
+}
+
+.authIntro b {
+  color: var(--text-strong);
+  font-size: 16px;
+}
+
+.authIntro span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.passwordField {
+  position: relative;
+  display: block;
+}
+
+.passwordField input {
+  padding-inline-end: 48px;
+}
+
+.passwordToggle {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 6px;
+  width: 34px;
+  height: 28px;
+  min-height: 0;
+  transform: translateY(-50%);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.passwordToggle:hover {
+  color: var(--text-strong);
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.passwordToggle.active {
+  color: var(--brand);
+  border-color: rgba(47, 129, 247, 0.45);
+  background: rgba(47, 129, 247, 0.12);
 }
 
 h1,

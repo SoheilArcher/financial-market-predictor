@@ -15,10 +15,14 @@ const uiText = {
     reportTitle: "گزارش کلی بازار",
     singleTitle: "تحلیل تک‌نماد",
     loginRegister: "ورود / ثبت‌نام",
+    authHint: "برای دیدن چارت، گزارش‌ها و ابزارهای مدیریت سرمایه وارد حساب خود شوید.",
+    authIntro: "تحلیل بازار، گزارش عملکرد مدل و برنامه معامله در یک محیط یکپارچه.",
     login: "ورود",
     register: "ثبت‌نام",
     email: "ایمیل",
     password: "رمز عبور",
+    showPassword: "نمایش رمز عبور",
+    hidePassword: "مخفی کردن رمز عبور",
     name: "نام",
     country: "اهل کجایی؟",
     continue: "ادامه",
@@ -61,10 +65,14 @@ const uiText = {
     reportTitle: "Market-Wide Report",
     singleTitle: "Single Symbol Analysis",
     loginRegister: "Login / Register",
+    authHint: "Log in to access charts, reports, and capital management tools.",
+    authIntro: "Market analysis, model performance, and trade planning in one workspace.",
     login: "Login",
     register: "Register",
     email: "Email",
     password: "Password",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
     name: "Name",
     country: "Where are you from?",
     continue: "Continue",
@@ -139,10 +147,16 @@ function applyLanguage() {
   const sessionText = document.getElementById("sessionText");
   if (sessionText && !(window.state && state.token)) sessionText.textContent = t("marketView");
   setText("#authForm .panelHeader h2", t("loginRegister"));
+  setText("#authForm .panelHeader .hint", t("authHint"));
+  setText(".authIntro span", t("authIntro"));
   setText('[data-auth-mode="login"]', t("login"));
   setText('[data-auth-mode="register"]', t("register"));
   setLabel('label:has(#email)', t("email"));
   setLabel('label:has(#password)', t("password"));
+  const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+  if (togglePasswordBtn) {
+    togglePasswordBtn.setAttribute("aria-label", document.getElementById("password")?.type === "text" ? t("hidePassword") : t("showPassword"));
+  }
   setLabel("#nameField", t("name"));
   setLabel("#countryField", t("country"));
   setText("#authForm button.primary", t("continue"));

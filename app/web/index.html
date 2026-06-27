@@ -27,14 +27,21 @@
       <nav id="dashboardTabs" class="dashboardTabs" aria-label="بخش‌های داشبورد"></nav>
 
       <div id="dashboardContent" class="dashboardContent">
-      <section class="grid two dashboardBlock" data-block-id="account">
-        <form id="authForm" class="panel">
+      <section id="accountSection" class="grid two dashboardBlock authBlock" data-block-id="account">
+        <form id="authForm" class="panel authCard">
           <div class="panelHeader">
-            <h2>ورود / ثبت‌نام</h2>
+            <div>
+              <h2>ورود / ثبت‌نام</h2>
+              <p class="hint">برای دیدن چارت، گزارش‌ها و ابزارهای مدیریت سرمایه وارد حساب خود شوید.</p>
+            </div>
             <div class="segmented">
               <button class="active" data-auth-mode="login" type="button">ورود</button>
               <button data-auth-mode="register" type="button">ثبت‌نام</button>
             </div>
+          </div>
+          <div class="authIntro">
+            <b>NexTrade</b>
+            <span>تحلیل بازار، گزارش عملکرد مدل و برنامه معامله در یک محیط یکپارچه.</span>
           </div>
           <label>
             ایمیل
@@ -42,7 +49,10 @@
           </label>
           <label>
             رمز عبور
-            <input id="password" type="password" autocomplete="current-password" minlength="8" required />
+            <span class="passwordField">
+              <input id="password" type="password" autocomplete="current-password" minlength="8" required />
+              <button id="togglePasswordBtn" class="passwordToggle" type="button" aria-label="نمایش رمز عبور">◉</button>
+            </span>
           </label>
           <label id="nameField" class="hidden">
             نام
@@ -75,7 +85,7 @@
           </div>
         </section>
 
-        <section class="panel">
+        <section id="subscriptionPanel" class="panel hidden">
           <div class="panelHeader">
             <h2>اشتراک من</h2>
             <button id="refreshMeBtn" class="ghost" type="button">بروزرسانی</button>

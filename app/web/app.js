@@ -56,9 +56,12 @@ function clearSession() {
 
 function renderSession() {
   const isLoggedIn = Boolean(state.token && state.user);
+  document.body.classList.toggle("loggedIn", isLoggedIn);
+  document.body.classList.toggle("loggedOut", !isLoggedIn);
   $("logoutBtn").classList.toggle("hidden", !isLoggedIn);
   $("authForm").classList.toggle("hidden", isLoggedIn);
   $("accountPanel").classList.toggle("hidden", !isLoggedIn);
+  $("subscriptionPanel")?.classList.toggle("hidden", !isLoggedIn);
   $("adminPanel").classList.toggle("hidden", !isLoggedIn || state.user?.role !== "admin");
   $("sessionText").textContent = isLoggedIn
     ? "وارد حساب شدید. حالا می‌توانید اشتراک، تحلیل‌ها و گزارش بازار را مدیریت کنید."
@@ -449,6 +452,23 @@ $("refreshMeBtn").addEventListener("click", () => refreshMe().catch((error) => t
 $("loadAdminBtn").addEventListener("click", () => loadAdmin().catch((error) => toast(error.message)));
 $("loadManagedAdminBtn").addEventListener("click", () => loadManagedAdmin().catch((error) => toast(error.message)));
 $("loadInvoicesAdminBtn").addEventListener("click", () => loadInvoicesAdmin().catch((error) => toast(error.message)));
+
+const togglePasswordBtn = $("togglePasswordBtn");
+if (togglePasswordBtn) {
+  togglePasswordBtn.addEventListener("click", () => {
+    const password = $("password");
+    const showing = password.type === "text";
+    const isEnglish = typeof currentLanguage === "function" && currentLanguage() === "en";
+    password.type = showing ? "password" : "text";
+    togglePasswordBtn.classList.toggle("active", !showing);
+    togglePasswordBtn.setAttribute(
+      "aria-label",
+      showing
+        ? (isEnglish ? "Show password" : "نمایش رمز عبور")
+        : (isEnglish ? "Hide password" : "مخفی کردن رمز عبور")
+    );
+  });
+}
 
 renderSession();
 if (state.token) refreshMe().catch(() => clearSession());
