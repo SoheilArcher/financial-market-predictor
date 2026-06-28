@@ -4,52 +4,33 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>NexTrade | تحلیل هوشمند بازارهای مالی</title>
-    <meta
-      name="description"
-      content="NexTrade سامانه تحلیل هوشمند بازارهای مالی، ارز دیجیتال، جفت ارز، طلا، نفت، اخبار، چارت زنده، مدیریت ریسک و گزارش سیگنال است."
-    />
-    <meta
-      name="keywords"
-      content="NexTrade, nextrade.ir, نکس ترید, تحلیل بازار مالی, تحلیل ارز دیجیتال, سیگنال ترید, چارت زنده, مدیریت ریسک, بورس ایران, تحلیل اخبار بازار"
-    />
+    <meta name="description" content="NexTrade سامانه تحلیل هوشمند بازارهای مالی، ارز دیجیتال، جفت ارز، طلا، نفت، اخبار، پلن معامله، مدیریت ریسک و گزارش سیگنال است." />
+    <meta name="keywords" content="NexTrade, nextrade.ir, نکس ترید, تحلیل بازار مالی, تحلیل ارز دیجیتال, سیگنال ترید, پلن معامله, مدیریت ریسک, بورس ایران, تحلیل اخبار بازار" />
     <meta name="author" content="سهیل سعیدی" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://nextrade.ir/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="NexTrade | تحلیل هوشمند بازارهای مالی" />
-    <meta
-      property="og:description"
-      content="داشبورد تحلیل بازار با چارت زنده، اندیکاتورها، اخبار، مدیریت سرمایه، ارزیابی تحلیل‌گران و گزارش چندبازاری."
-    />
+    <meta property="og:description" content="داشبورد تحلیل بازار با گزارش چندبازاری، پلن معامله، اخبار، مدیریت سرمایه و ارزیابی عملکرد تحلیل‌گران." />
     <meta property="og:url" content="https://nextrade.ir/" />
     <meta property="og:image" content="https://nextrade.ir/static/assets/nextrade-hero.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="NexTrade" />
-    <meta
-      name="twitter:description"
-      content="سامانه هوشمند گزارش بازارهای مالی، تحلیل تکنیکال، اخبار، ریسک و چارت زنده."
-    />
-    <meta name="theme-color" content="#08111f" />
+    <meta name="twitter:description" content="سامانه هوشمند گزارش بازارهای مالی، تحلیل تکنیکال، اخبار، ریسک و پلن معامله." />
+    <meta name="theme-color" content="#0f7a52" />
     <link rel="stylesheet" href="/static/landing.css" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "NexTrade",
-        "creator": {
-          "@type": "Person",
-          "name": "سهیل سعیدی"
-        },
+        "creator": { "@type": "Person", "name": "سهیل سعیدی" },
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Web, Android",
-        "description": "سامانه تحلیل هوشمند بازارهای مالی با چارت زنده، اندیکاتور، اخبار، مدیریت ریسک و گزارش سیگنال.",
+        "description": "سامانه تحلیل هوشمند بازارهای مالی با گزارش چندبازاری، اخبار، مدیریت ریسک و پلن معامله.",
         "url": "https://nextrade.ir/",
         "telephone": "+989126343638",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        }
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
       }
     </script>
   </head>
@@ -59,138 +40,147 @@
         <span class="brandMark"></span>
         <span>NexTrade</span>
       </a>
-      <nav class="navLinks" aria-label="صفحه اصلی">
-        <a href="#features">امکانات</a>
-        <a href="#iran-income">درآمد ثابت ایران</a>
-        <a href="#markets">بازارها</a>
-        <a href="#workflow">روش کار</a>
-        <a href="#contact">تماس</a>
+      <nav class="navLinks" aria-label="Main">
+        <a href="#features" data-i18n="nav_features">امکانات</a>
+        <a href="#iran-income" data-i18n="nav_iran">درآمد ثابت ایران</a>
+        <a href="#markets" data-i18n="nav_markets">بازارها</a>
+        <a href="#workflow" data-i18n="nav_workflow">روش کار</a>
+        <a href="#contact" data-i18n="nav_contact">تماس</a>
       </nav>
-      <a class="headerAction" href="/app">ورود به داشبورد</a>
+      <div class="headerSide">
+        <div class="langSwitch" role="group" aria-label="Language">
+          <button type="button" data-lang="fa" class="langActive">فا</button>
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="ar">ع</button>
+        </div>
+        <a class="headerAction" href="/app" data-i18n="cta_dashboard">ورود به داشبورد</a>
+      </div>
     </header>
 
     <main>
       <section class="hero">
-        <img class="heroImage" src="/static/assets/nextrade-hero.jpg" alt="نمای داشبورد تحلیل هوشمند بازارهای مالی" />
-        <div class="heroOverlay"></div>
         <div class="heroContent">
-          <p class="eyebrow">تحلیل هوشمند بازارهای مالی</p>
-          <h1>گزارش بازار، چارت زنده و مدیریت ریسک در یک پلتفرم</h1>
-          <p class="heroText">
-            NexTrade برای تحلیل ارز دیجیتال، جفت ارزها، طلا، نفت، بورس ایران، اخبار و عملکرد تحلیل‌گران طراحی شده است؛
-            هدف این است که کاربر فقط سیگنال نبیند، دلیل، ریسک و سناریوی بعدی را هم بفهمد.
-          </p>
-          <p class="ownerLine">ارائه و توسعه: سهیل سعیدی</p>
+          <p class="eyebrow" data-i18n="hero_eyebrow">تحلیل هوشمند بازارهای مالی</p>
+          <h1 data-i18n="hero_title">گزارش بازار، پلن معامله و مدیریت ریسک در یک پلتفرم</h1>
+          <p class="heroText" data-i18n="hero_text">NexTrade برای تحلیل ارز دیجیتال، جفت ارزها، طلا، نفت، بورس ایران، اخبار و عملکرد تحلیل‌گران طراحی شده است؛ هدف این است که کاربر فقط سیگنال نبیند، دلیل، ریسک و سناریوی بعدی را هم بفهمد.</p>
+          <p class="ownerLine" data-i18n="hero_owner">ارائه و توسعه: سهیل سعیدی</p>
           <div class="heroActions">
-            <a class="primaryAction" href="/app">شروع تحلیل</a>
-            <a class="secondaryAction" href="tel:+989126343638">تماس: +98 912 634 3638</a>
-            <a class="secondaryAction whatsappAction" href="https://wa.me/989126343638" target="_blank" rel="noopener">واتس‌اپ</a>
+            <a class="primaryAction" href="/app" data-i18n="cta_start">شروع تحلیل</a>
+            <a class="secondaryAction" href="tel:+989126343638" dir="ltr">+98 912 634 3638</a>
+            <a class="secondaryAction" href="https://wa.me/989126343638" target="_blank" rel="noopener" data-i18n="cta_whatsapp">واتس‌اپ</a>
           </div>
+        </div>
+        <div class="heroPanel" aria-hidden="true">
+          <div class="heroPanelRow"><span class="dotUp"></span><span>BTC / USDT</span><b class="up">+2.4%</b></div>
+          <div class="heroPanelRow"><span class="dotUp"></span><span>ETH / USDT</span><b class="up">+1.1%</b></div>
+          <div class="heroPanelRow"><span class="dotDown"></span><span>XAU / Gold</span><b class="down">-0.3%</b></div>
+          <div class="heroPanelRow"><span class="dotUp"></span><span>Oil / WTI</span><b class="up">+0.8%</b></div>
+          <div class="heroPanelChart"></div>
         </div>
       </section>
 
       <section id="features" class="section">
         <div class="sectionLead">
-          <p class="eyebrow">قابلیت‌ها</p>
-          <h2>از چارت تا خبر، از سیگنال تا ارزیابی نتیجه</h2>
+          <p class="eyebrow" data-i18n="feat_eyebrow">قابلیت‌ها</p>
+          <h2 data-i18n="feat_title">از گزارش بازار تا خبر، از سیگنال تا ارزیابی نتیجه</h2>
         </div>
         <div class="featureGrid">
           <article>
-            <h3>چارت زنده و اندیکاتورها</h3>
-            <p>نمایش کندل، EMA20، EMA50، RSI و خلاصه تحلیل روی همان چارت برای فهم سریع‌تر دلیل خرید، فروش یا صبر.</p>
+            <span class="featIcon">📈</span>
+            <h3 data-i18n="feat1_h">گزارش بازار و اندیکاتورها</h3>
+            <p data-i18n="feat1_p">ترکیب RSI، EMA20، EMA50، قیمت لحظه‌ای و خلاصه فارسی برای فهم سریع‌تر دلیل خرید، فروش یا صبر.</p>
           </article>
           <article>
-            <h3>گزارش چندبازاری</h3>
-            <p>بررسی ارز دیجیتال، جفت ارز، طلا، نفت، نقره و در ادامه بورس ایران برای ساخت یک تصویر کامل از وضعیت بازار.</p>
+            <span class="featIcon">🌐</span>
+            <h3 data-i18n="feat2_h">گزارش چندبازاری</h3>
+            <p data-i18n="feat2_p">بررسی ارز دیجیتال، جفت ارز، طلا، نفت، نقره و در ادامه بورس ایران برای ساخت یک تصویر کامل از وضعیت بازار.</p>
           </article>
           <article>
-            <h3>مدیریت ریسک و معامله</h3>
-            <p>پیشنهاد نقطه ورود، خروج، حد ضرر، حد سود و سناریوی واکنش در صورت حرکت بازار خلاف تحلیل.</p>
+            <span class="featIcon">🛡️</span>
+            <h3 data-i18n="feat3_h">مدیریت ریسک و معامله</h3>
+            <p data-i18n="feat3_p">پیشنهاد نقطه ورود، خروج، حد ضرر، حد سود و سناریوی واکنش در صورت حرکت بازار خلاف تحلیل.</p>
           </article>
           <article>
-            <h3>اخبار و زبان کاربر</h3>
-            <p>نمایش و تحلیل خبرها متناسب با زبان کاربر؛ فارسی برای کاربران فارسی‌زبان و انگلیسی برای کاربران بین‌المللی.</p>
+            <span class="featIcon">📰</span>
+            <h3 data-i18n="feat4_h">اخبار و زبان کاربر</h3>
+            <p data-i18n="feat4_p">نمایش و تحلیل خبرها متناسب با زبان کاربر؛ فارسی برای کاربران فارسی‌زبان و انگلیسی برای کاربران بین‌المللی.</p>
           </article>
           <article>
-            <h3>تحلیل‌گران و دنبال‌کننده‌ها</h3>
-            <p>امکان ارائه تحلیل توسط کاربران، جمع‌آوری دنبال‌کننده و مقایسه عملکرد تحلیل‌گران بر اساس نتیجه واقعی.</p>
+            <span class="featIcon">👥</span>
+            <h3 data-i18n="feat5_h">تحلیل‌گران و دنبال‌کننده‌ها</h3>
+            <p data-i18n="feat5_p">امکان ارائه تحلیل توسط کاربران، جمع‌آوری دنبال‌کننده و مقایسه عملکرد تحلیل‌گران بر اساس نتیجه واقعی.</p>
           </article>
           <article>
-            <h3>اشتراک و مشارکت درآمد</h3>
-            <p>زیرساختی برای مدیریت کاربران، پلن‌ها، مشارکت‌کننده‌های فعال و تقسیم سود بر اساس نقش و عملکرد.</p>
+            <span class="featIcon">💠</span>
+            <h3 data-i18n="feat6_h">اشتراک و مشارکت درآمد</h3>
+            <p data-i18n="feat6_p">زیرساختی برای مدیریت کاربران، پلن‌ها، مشارکت‌کننده‌های فعال و تقسیم سود بر اساس نقش و عملکرد.</p>
           </article>
         </div>
       </section>
 
       <section id="iran-income" class="section split">
         <div>
-          <p class="eyebrow">محصول مستقل</p>
-          <h2>درآمد ثابت بورس ایران، جدا از کریپتو و بازار جهانی</h2>
-          <p>
-            این بخش برای کاربرانی طراحی شده که می‌خواهند سناریوی سرمایه‌گذاری در ابزارهای درآمد ثابت بازار سرمایه ایران را ببینند.
-            محاسبه سود، کارمزد پلتفرم و سود خالص جدا از داشبورد ترید، ارز دیجیتال و بازارهای جهانی انجام می‌شود.
-          </p>
+          <p class="eyebrow" data-i18n="iran_eyebrow">محصول مستقل</p>
+          <h2 data-i18n="iran_title">درآمد ثابت بورس ایران، جدا از کریپتو و بازار جهانی</h2>
+          <p data-i18n="iran_text">این بخش برای کاربرانی طراحی شده که می‌خواهند سناریوی سرمایه‌گذاری در ابزارهای درآمد ثابت بازار سرمایه ایران را ببینند. محاسبه سود، کارمزد پلتفرم و سود خالص جدا از داشبورد ترید، ارز دیجیتال و بازارهای جهانی انجام می‌شود.</p>
           <div class="heroActions">
-            <a class="primaryAction" href="/app">محاسبه پلن ایران</a>
+            <a class="primaryAction" href="/app" data-i18n="iran_cta">محاسبه پلن ایران</a>
           </div>
         </div>
-        <div class="marketList" aria-label="درآمد ثابت بورس ایران">
-          <span>Iran Fixed Income</span>
-          <span>هدف سالانه 35٪</span>
-          <span>محاسبه سود خالص</span>
-          <span>ثبت درخواست</span>
-          <span>پرداخت USDT</span>
-          <span>بررسی دستی</span>
+        <div class="marketList">
+          <span data-i18n="iran_t1">درآمد ثابت ایران</span>
+          <span data-i18n="iran_t2">هدف سالانه ۳۵٪</span>
+          <span data-i18n="iran_t3">محاسبه سود خالص</span>
+          <span data-i18n="iran_t4">ثبت درخواست</span>
+          <span data-i18n="iran_t5">پرداخت USDT</span>
+          <span data-i18n="iran_t6">بررسی دستی</span>
         </div>
       </section>
 
       <section id="markets" class="section split">
         <div>
-          <p class="eyebrow">بازارهای هدف</p>
-          <h2>یک نگاه برای کل بازار مالی</h2>
-          <p>
-            این پروژه قرار است فقط یک ابزار سیگنال‌دهی ساده نباشد؛ مسیر محصول، ساخت یک مرکز تصمیم‌گیری مالی است که قیمت لحظه‌ای،
-            اخبار، تحلیل تکنیکال، رفتار تحلیل‌گران و مدیریت سرمایه را کنار هم قرار می‌دهد.
-          </p>
+          <p class="eyebrow" data-i18n="mkt_eyebrow">بازارهای هدف</p>
+          <h2 data-i18n="mkt_title">یک نگاه برای کل بازار مالی</h2>
+          <p data-i18n="mkt_text">این پروژه قرار است فقط یک ابزار سیگنال‌دهی ساده نباشد؛ مسیر محصول، ساخت یک مرکز تصمیم‌گیری مالی است که قیمت لحظه‌ای، اخبار، تحلیل تکنیکال، رفتار تحلیل‌گران و مدیریت سرمایه را کنار هم قرار می‌دهد.</p>
         </div>
-        <div class="marketList" aria-label="بازارهای پشتیبانی‌شده">
+        <div class="marketList">
           <span>Crypto</span>
           <span>BTC/ETH</span>
           <span>Forex</span>
           <span>Gold</span>
           <span>Oil</span>
           <span>Silver</span>
-          <span>Iran Stock Market</span>
-          <span>News Sentiment</span>
+          <span data-i18n="mkt_iran">بورس ایران</span>
+          <span data-i18n="mkt_news">تحلیل اخبار</span>
         </div>
       </section>
 
       <section id="workflow" class="section process">
         <div class="sectionLead">
-          <p class="eyebrow">روش کار</p>
-          <h2>گزارش قابل فهم، نه فقط عدد خام</h2>
+          <p class="eyebrow" data-i18n="wf_eyebrow">روش کار</p>
+          <h2 data-i18n="wf_title">گزارش قابل فهم، نه فقط عدد خام</h2>
         </div>
         <div class="steps">
-          <div><b>1</b><span>دریافت قیمت و کندل از بازار</span></div>
-          <div><b>2</b><span>تحلیل تکنیکال، خبر و چند تایم‌فریم</span></div>
-          <div><b>3</b><span>نمایش دلیل سیگنال، ریسک، SL و TP</span></div>
-          <div><b>4</b><span>ثبت نتیجه و ارزیابی صحت تحلیل‌ها</span></div>
+          <div><b>1</b><span data-i18n="wf1">دریافت قیمت و کندل از بازار</span></div>
+          <div><b>2</b><span data-i18n="wf2">تحلیل تکنیکال، خبر و چند تایم‌فریم</span></div>
+          <div><b>3</b><span data-i18n="wf3">نمایش دلیل سیگنال، ریسک، SL و TP</span></div>
+          <div><b>4</b><span data-i18n="wf4">ثبت نتیجه و ارزیابی صحت تحلیل‌ها</span></div>
         </div>
       </section>
 
       <section id="contact" class="section contact">
         <div>
-          <p class="eyebrow">تماس و همکاری</p>
-          <h2>برای تست، همکاری یا توسعه محصول تماس بگیرید</h2>
-          <p>اگر می‌خواهید به عنوان کاربر، تحلیل‌گر یا مشارکت‌کننده وارد سیستم شوید، با سهیل سعیدی از طریق شماره یا واتس‌اپ زیر در ارتباط باشید.</p>
+          <p class="eyebrow" data-i18n="ct_eyebrow">تماس و همکاری</p>
+          <h2 data-i18n="ct_title">برای تست، همکاری یا توسعه محصول تماس بگیرید</h2>
+          <p data-i18n="ct_text">اگر می‌خواهید به عنوان کاربر، تحلیل‌گر یا مشارکت‌کننده وارد سیستم شوید، با سهیل سعیدی از طریق شماره یا واتس‌اپ زیر در ارتباط باشید.</p>
         </div>
         <div class="contactCards">
           <a class="phoneBox" href="tel:+989126343638">
-            <span>شماره تماس</span>
+            <span data-i18n="ct_phone">شماره تماس</span>
             <strong dir="ltr">+98 912 634 3638</strong>
           </a>
-          <a class="phoneBox whatsappBox" href="https://wa.me/989126343638" target="_blank" rel="noopener">
-            <span>واتس‌اپ</span>
+          <a class="phoneBox" href="https://wa.me/989126343638" target="_blank" rel="noopener">
+            <span data-i18n="cta_whatsapp">واتس‌اپ</span>
             <strong dir="ltr">wa.me/989126343638</strong>
           </a>
         </div>
@@ -199,10 +189,12 @@
 
     <footer class="footer">
       <span>NexTrade</span>
-      <span>سهیل سعیدی</span>
-      <span>تحلیل هوشمند بازارهای مالی</span>
+      <span data-i18n="hero_owner_name">سهیل سعیدی</span>
+      <span data-i18n="hero_eyebrow">تحلیل هوشمند بازارهای مالی</span>
       <a href="tel:+989126343638" dir="ltr">+98 912 634 3638</a>
-      <a href="https://wa.me/989126343638" target="_blank" rel="noopener">واتس‌اپ</a>
+      <a href="https://wa.me/989126343638" target="_blank" rel="noopener" data-i18n="cta_whatsapp">واتس‌اپ</a>
     </footer>
+
+    <script src="/static/landing-i18n.js"></script>
   </body>
 </html>

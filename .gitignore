@@ -16,3 +16,5 @@ app/api/*.save
 app/web/index-patch-note.txt
 app/web/assets/*.png
 .env.backup-*
+
+app/web/*.bak
