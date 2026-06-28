@@ -84,6 +84,9 @@
   }
 
   function activeId() {
+    if (window.location.pathname.replace(/\/+$/, "") === "/login") {
+      return isAvailable(blockById("account")) ? "account" : firstAvailableId();
+    }
     const saved = localStorage.getItem(storageKey);
     return isAvailable(blockById(saved)) ? saved : firstAvailableId();
   }

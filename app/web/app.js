@@ -1,3 +1,11 @@
+const isLoginPage = window.location.pathname.replace(/\/+$/, "") === "/login";
+
+if (isLoginPage) {
+  localStorage.removeItem("market_ai_token");
+  localStorage.removeItem("market_ai_user");
+  localStorage.setItem("market_ai_active_tab", "account");
+}
+
 const state = {
   token: localStorage.getItem("market_ai_token") || "",
   user: JSON.parse(localStorage.getItem("market_ai_user") || "null"),
@@ -40,6 +48,10 @@ function setSession(token, user) {
   state.user = user;
   localStorage.setItem("market_ai_token", token);
   localStorage.setItem("market_ai_user", JSON.stringify(user));
+  localStorage.setItem("market_ai_active_tab", "account");
+  if (isLoginPage) {
+    window.history.replaceState({}, "", "/app");
+  }
   renderSession();
 }
 
