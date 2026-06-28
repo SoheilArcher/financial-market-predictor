@@ -86,7 +86,13 @@ async def health():
         "status": "ok",
         "project": "NexTrade",
         "dashboard": "/app",
+        "login": "/login",
     }
+
+
+@app.get("/login", include_in_schema=False)
+async def login_page():
+    return FileResponse(web_dir / "index.html")
 
 
 @app.get("/app", include_in_schema=False)
